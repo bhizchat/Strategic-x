@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Strategic X - My Shop</title>
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --charcoal: #1c1c1e;
+      --charcoal-light: #232326;
+      --silver: #c7c9cc;
+      --silver-light: #e5e6e8;
+      --silver-dark: #8a8d91;
+      --border: rgba(255, 255, 255, 0.08);
+      --text-muted: #9a9ba0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #ffffff;
+      line-height: 1.4;
+      background: var(--black);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ---- Sidebar ---- */
+    .sidebar {
+      width: 230px;
+      flex-shrink: 0;
+      background: var(--charcoal);
+      border-right: 1px solid var(--border);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 18px;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 26px;
+    }
+
+    .sidebar-logo img {
+      width: 130px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .shop-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--charcoal-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 22px;
+    }
+
+    .shop-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 9px;
+      background: var(--silver-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .shop-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .shop-avatar span {
+      font-weight: 800;
+      color: var(--black);
+      font-size: 0.9rem;
+    }
+
+    .shop-card-info {
+      min-width: 0;
+    }
+
+    .shop-card-name {
+      font-size: 0.84rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .shop-card-meta {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    .shop-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: #9fe3b4;
+      background: rgba(159, 227, 180, 0.12);
+      border: 1px solid rgba(159, 227, 180, 0.3);
+      border-radius: 6px;
+      padding: 2px 6px;
+      margin-top: 4px;
+    }
+
+    .nav-groups {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      flex: 1;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 9px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--silver);
+      cursor: pointer;
+    }
+
+    .nav-item-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      color: inherit;
+    }
+
+    .nav-item:hover {
+      background: var(--charcoal-light);
+      color: #ffffff;
+    }
+
+    .nav-item.active {
+      background: #ffffff;
+      color: var(--black);
+    }
+
+    .nav-icon {
+      width: 18px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .nav-item-label {
+      flex: 1;
+    }
+
+    .nav-badge {
+      background: var(--silver-dark);
+      color: var(--black);
+      font-size: 0.62rem;
+      font-weight: 800;
+      border-radius: 999px;
+      padding: 1px 7px;
+    }
+
+    .nav-item.active .nav-badge {
+      background: var(--black);
+      color: #ffffff;
+    }
+
+    .promo-card {
+      background: var(--charcoal-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .promo-card h4 {
+      font-size: 0.82rem;
+      margin-bottom: 4px;
+    }
+
+    .promo-card p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .promo-btn {
+      display: block;
+      text-align: center;
+      background: #ffffff;
+      color: var(--black);
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 8px 10px;
+      border-radius: 8px;
+    }
+
+    /* ---- Main content ---- */
+    .main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .menu-toggle {
+      font-size: 1.1rem;
+      color: var(--silver);
+      cursor: pointer;
+      display: none;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-left: auto;
+    }
+
+    .icon-btn {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .icon-btn .dot {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 15px;
+      height: 15px;
+      border-radius: 999px;
+      background: #e04b4b;
+      color: #ffffff;
+      font-size: 0.58rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--black);
+    }
+
+    .profile-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .profile-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--silver-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--black);
+      font-weight: 800;
+      font-size: 0.82rem;
+      overflow: hidden;
+    }
+
+    .profile-text {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.2;
+    }
+
+    .profile-text strong {
+      display: block;
+      font-size: 0.82rem;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .content {
+      padding: 28px 32px 48px;
+      flex: 1;
+    }
+
+    .content h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .content > p.subtitle {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      margin-bottom: 22px;
+    }
+
+    /* ---- My Shop grid ---- */
+    .shop-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .shop-col-main,
+    .shop-col-side {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .shop-card-panel {
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .panel-header h2 {
+      font-size: 0.98rem;
+      font-weight: 700;
+    }
+
+    .edit-link {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--silver);
+      border-bottom: 1px solid var(--silver-dark);
+    }
+
+    .edit-link:hover {
+      color: #ffffff;
+    }
+
+    .shop-overview-body {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .shop-overview-left {
+      display: flex;
+      gap: 14px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .shop-overview-logo {
+      width: 68px;
+      height: 68px;
+      border-radius: 12px;
+      background: var(--silver-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .shop-overview-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .shop-overview-logo span {
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: var(--black);
+    }
+
+    .shop-overview-info {
+      min-width: 0;
+    }
+
+    .shop-overview-name-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .shop-overview-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+    }
+
+    .status-badge {
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: var(--black);
+      background: var(--silver);
+      border-radius: 999px;
+      padding: 3px 10px;
+    }
+
+    .shop-overview-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .shop-overview-contact {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+      color: var(--silver);
+      margin-top: 10px;
+    }
+
+    .shop-overview-location {
+      font-size: 0.8rem;
+      color: var(--silver);
+      margin-top: 6px;
+    }
+
+    .shop-overview-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+      max-width: 420px;
+    }
+
+    .shop-overview-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .overview-stat {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stat-icon-sm {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: var(--charcoal-light);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .stat-sm-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .stat-sm-value {
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .stars {
+      color: var(--silver);
+      font-size: 0.72rem;
+    }
+
+    .info-table {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .info-row:first-child {
+      padding-top: 0;
+    }
+
+    .info-label {
+      width: 160px;
+      flex-shrink: 0;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .info-value {
+      flex: 1;
+      font-size: 0.84rem;
+      font-weight: 600;
+      min-width: 0;
+    }
+
+    .visuals-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .visual-label {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .visual-thumb {
+      width: 100%;
+      height: 90px;
+      border-radius: 10px;
+      background: var(--charcoal-light);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .visual-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .visual-thumb.empty {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .footer {
+      margin-top: auto;
+      padding: 18px 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 18px;
+    }
+
+    @media (max-width: 980px) {
+      .shop-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .sidebar { display: none; }
+      .menu-toggle { display: block; }
+      .content { padding: 22px 18px 40px; }
+      .topbar { padding: 16px 18px; }
+      .footer { padding: 16px 18px; flex-direction: column; gap: 10px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="assets/sxlogo.png" alt="Strategic X logo" />
+    </div>
+
+    <div class="shop-card">
+      <div class="shop-avatar" id="shopAvatar"><span id="shopInitial">S</span></div>
+      <div class="shop-card-info">
+        <div class="shop-card-name" id="shopNameText">Your Shop</div>
+        <div class="shop-card-meta" id="shopMetaText">&nbsp;</div>
+        <div class="shop-status">&#9679; Shop Open</div>
+      </div>
+    </div>
+
+    <div class="nav-groups">
+      <ul class="nav-list">
+        <li class="nav-item"><a class="nav-item-link" href="dashboard.html">
+          <span class="nav-icon">&#8862;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a></li>
+        <li class="nav-item active"><a class="nav-item-link" href="my-shop.html">
+          <span class="nav-icon">&#127978;</span>
+          <span class="nav-item-label">My Shop</span>
+        </a></li>
+        <li class="nav-item"><a class="nav-item-link" href="products.html">
+          <span class="nav-icon">&#128717;</span>
+          <span class="nav-item-label">Products</span>
+        </a></li>
+        <li class="nav-item"><a class="nav-item-link" href="#">
+          <span class="nav-icon">&#9733;</span>
+          <span class="nav-item-label">Reviews</span>
+          <span class="nav-badge">0</span>
+        </a></li>
+        <li class="nav-item"><a class="nav-item-link" href="#">
+          <span class="nav-icon">&#128179;</span>
+          <span class="nav-item-label">Payments &amp; Billing</span>
+        </a></li>
+      </ul>
+
+      <ul class="nav-list">
+        <li class="nav-item"><a class="nav-item-link" href="#">
+          <span class="nav-icon">&#9881;</span>
+          <span class="nav-item-label">Shop Settings</span>
+        </a></li>
+        <li class="nav-item"><a class="nav-item-link" href="#">
+          <span class="nav-icon">&#128276;</span>
+          <span class="nav-item-label">Notifications</span>
+          <span class="nav-badge">3</span>
+        </a></li>
+      </ul>
+
+      <ul class="nav-list">
+        <li class="nav-item"><a class="nav-item-link" href="#">
+          <span class="nav-icon">&#10067;</span>
+          <span class="nav-item-label">Support &amp; Help</span>
+        </a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="menu-toggle">&#9776;</span>
+      <div class="topbar-actions">
+        <div class="icon-btn">&#128276;<span class="dot">1</span></div>
+        <div class="icon-btn">?</div>
+        <div class="profile-chip">
+          <div class="profile-avatar" id="profileAvatar"><span id="profileInitial">U</span></div>
+          <div class="profile-text">Good morning,<strong id="profileName">there</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <h1>My Shop</h1>
+      <p class="subtitle">Manage your shop information, products and settings.</p>
+
+      <div class="shop-grid">
+        <div class="shop-col-main">
+          <div class="shop-card-panel">
+            <div class="panel-header">
+              <h2>Shop Overview</h2>
+              <a href="#" class="edit-link">&#9998; Edit Profile</a>
+            </div>
+            <div class="shop-overview-body">
+              <div class="shop-overview-left">
+                <div class="shop-overview-logo" id="overviewLogo"><span id="overviewInitial">S</span></div>
+                <div class="shop-overview-info">
+                  <div class="shop-overview-name-row">
+                    <span class="shop-overview-name" id="overviewShopName">Your Shop</span>
+                    <span class="status-badge">Open</span>
+                  </div>
+                  <div class="shop-overview-meta" id="overviewMeta">Category &middot; Market Platform</div>
+                  <div class="shop-overview-contact">
+                    <span>&#128222; <span id="overviewPhone">&mdash;</span></span>
+                    <span>&#128172; <span id="overviewWhatsapp">&mdash;</span></span>
+                  </div>
+                  <div class="shop-overview-location">&#128205; <span id="overviewLocation">&mdash;</span></div>
+                  <p class="shop-overview-desc" id="overviewTagline"></p>
+                </div>
+              </div>
+              <div class="shop-overview-stats">
+                <div class="overview-stat">
+                  <div class="stat-icon-sm">&#128197;</div>
+                  <div><div class="stat-sm-label">Member Since</div><div class="stat-sm-value" id="overviewMemberSince">&mdash;</div></div>
+                </div>
+                <div class="overview-stat">
+                  <div class="stat-icon-sm">&#128101;</div>
+                  <div><div class="stat-sm-label">Followers</div><div class="stat-sm-value" id="overviewFollowers">&mdash;</div></div>
+                </div>
+                <div class="overview-stat">
+                  <div class="stat-icon-sm">&#128188;</div>
+                  <div><div class="stat-sm-label">Total Products</div><div class="stat-sm-value" id="overviewProducts">&mdash;</div></div>
+                </div>
+                <div class="overview-stat">
+                  <div class="stat-icon-sm">&#11088;</div>
+                  <div><div class="stat-sm-label">Shop Rating</div><div class="stat-sm-value" id="overviewRating">&mdash; <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="shop-card-panel">
+            <div class="panel-header">
+              <h2>Shop Information</h2>
+            </div>
+            <div class="info-table">
+              <div class="info-row">
+                <span class="info-label">Shop Name</span>
+                <span class="info-value" id="infoShopName">&mdash;</span>
+                <a href="#" class="edit-link">Edit</a>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Category</span>
+                <span class="info-value" id="infoCategory">&mdash;</span>
+                <a href="#" class="edit-link">Edit</a>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Market Platform</span>
+                <span class="info-value" id="infoMarketPlatform">&mdash;</span>
+                <a href="onboarding-step2.html" class="edit-link">Edit</a>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Phone Number (Public)</span>
+                <span class="info-value" id="infoPhone">&mdash;</span>
+                <a href="#" class="edit-link">Edit</a>
+              </div>
+              <div class="info-row">
+                <span class="info-label">WhatsApp Number (Public)</span>
+                <span class="info-value" id="infoWhatsapp">&mdash;</span>
+                <a href="#" class="edit-link">Edit</a>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Shop Address</span>
+                <span class="info-value" id="infoLocation">&mdash;</span>
+                <a href="#" class="edit-link">Edit</a>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Shop Tagline</span>
+                <span class="info-value" id="infoTagline">&mdash;</span>
+                <a href="#" class="edit-link">Edit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="shop-col-side">
+          <div class="shop-card-panel">
+            <div class="panel-header">
+              <h2>Shop Visuals</h2>
+              <a href="#" class="edit-link">Edit</a>
+            </div>
+            <div class="visuals-grid">
+              <div>
+                <div class="visual-label">Shop Logo</div>
+                <div class="visual-thumb empty" id="visualLogo">No logo yet</div>
+              </div>
+              <div>
+                <div class="visual-label">Shop Banner</div>
+                <div class="visual-thumb empty" id="visualBanner">No banner yet</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div>&copy; 2026 Strategic X. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="terms.html">Terms &amp; Conditions</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="#">Contact Support</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="sx-supabase-config.js"></script>
+  <script src="sx-auth.js"></script>
+  <script>
+    function formatMemberSince(dateString) {
+      if (!dateString) return '\u2014';
+      var date = new Date(dateString);
+      if (isNaN(date.getTime())) return '\u2014';
+      return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+
+    (async function guardMyShop() {
+      var sessionResult = await sxSupabaseClient.auth.getSession();
+      var session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+      if (!session) {
+        window.location.href = 'index.html';
+        return;
+      }
+      var user = session.user;
+      if (!SXAuth.isOnboarded(user)) {
+        window.location.href = 'onboarding.html';
+        return;
+      }
+
+      var meta = user.user_metadata || {};
+      var fullName = (meta.sx_full_name || '').trim();
+      var firstName = fullName ? fullName.split(' ')[0] : 'there';
+
+      document.getElementById('profileName').textContent = firstName;
+      document.getElementById('profileInitial').textContent = firstName.charAt(0).toUpperCase() || 'U';
+
+      // sx_shops holds the richer shop record created at the end of
+      // onboarding (location, tagline, whatsapp, logo/banner) — fall back
+      // to user_metadata for anything missing (e.g. row not created yet).
+      var shopRowResult = await sxSupabaseClient
+        .from('sx_shops')
+        .select('*')
+        .eq('owner_id', user.id)
+        .maybeSingle();
+      var shop = (shopRowResult && shopRowResult.data) || {};
+
+      var shopName = shop.shop_name || meta.sx_shop_name || 'Your Shop';
+      var category = shop.category || meta.sx_category || '';
+      var marketPlatform = shop.market_platform || meta.sx_market_platform || 'Not set yet';
+      var phone = shop.phone || meta.sx_phone || '';
+      var whatsapp = shop.whatsapp || meta.sx_whatsapp || '';
+      var location = shop.location || meta.sx_shop_address || '';
+      var tagline = shop.tagline || meta.sx_shop_tagline || '';
+      var logoUrl = shop.logo_url || meta.sx_shop_logo_url || '';
+      var bannerUrl = shop.banner_url || meta.sx_shop_banner_url || '';
+      var memberSince = formatMemberSince(shop.created_at || user.created_at);
+
+      document.getElementById('shopNameText').textContent = shopName;
+      document.getElementById('shopMetaText').textContent = category ? (category + (marketPlatform !== 'Not set yet' ? ' \u00b7 ' + marketPlatform : '')) : marketPlatform;
+      document.getElementById('shopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
+
+      document.getElementById('overviewShopName').textContent = shopName;
+      document.getElementById('overviewMeta').textContent = category ? (category + (marketPlatform !== 'Not set yet' ? ' \u00b7 ' + marketPlatform : '')) : marketPlatform;
+      document.getElementById('overviewPhone').textContent = phone || '\u2014';
+      document.getElementById('overviewWhatsapp').textContent = whatsapp || '\u2014';
+      document.getElementById('overviewLocation').textContent = location || '\u2014';
+      document.getElementById('overviewTagline').textContent = tagline || '';
+      document.getElementById('overviewMemberSince').textContent = memberSince;
+      document.getElementById('overviewInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
+
+      document.getElementById('infoShopName').textContent = shopName;
+      document.getElementById('infoCategory').textContent = category || '\u2014';
+      document.getElementById('infoMarketPlatform').textContent = marketPlatform;
+      document.getElementById('infoPhone').textContent = phone || '\u2014';
+      document.getElementById('infoWhatsapp').textContent = whatsapp || '\u2014';
+      document.getElementById('infoLocation').textContent = location || '\u2014';
+      document.getElementById('infoTagline').textContent = tagline || '\u2014';
+
+      if (logoUrl) {
+        document.getElementById('shopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
+        document.getElementById('overviewLogo').innerHTML = '<img src="' + logoUrl + '" alt="" />';
+        document.getElementById('visualLogo').classList.remove('empty');
+        document.getElementById('visualLogo').innerHTML = '<img src="' + logoUrl + '" alt="Shop logo" />';
+      }
+      if (bannerUrl) {
+        document.getElementById('visualBanner').classList.remove('empty');
+        document.getElementById('visualBanner').innerHTML = '<img src="' + bannerUrl + '" alt="Shop banner" />';
+      }
+    })();
+  </script>
+</body>
+</html>
+

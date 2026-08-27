@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Strategic X - Add New Product</title>
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --charcoal: #1c1c1e;
+      --charcoal-light: #232326;
+      --silver: #c7c9cc;
+      --silver-light: #e5e6e8;
+      --silver-dark: #8a8d91;
+      --border: rgba(255, 255, 255, 0.08);
+      --text-muted: #9a9ba0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #ffffff;
+      line-height: 1.4;
+      background: var(--black);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ---- Sidebar ---- */
+    .sidebar {
+      width: 230px;
+      flex-shrink: 0;
+      background: var(--charcoal);
+      border-right: 1px solid var(--border);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 18px;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 26px;
+    }
+
+    .sidebar-logo img {
+      width: 130px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .shop-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--charcoal-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 22px;
+    }
+
+    .shop-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 9px;
+      background: var(--silver-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .shop-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .shop-avatar span {
+      font-weight: 800;
+      color: var(--black);
+      font-size: 0.9rem;
+    }
+
+    .shop-card-info {
+      min-width: 0;
+    }
+
+    .shop-card-name {
+      font-size: 0.84rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .shop-card-meta {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    .shop-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: #9fe3b4;
+      background: rgba(159, 227, 180, 0.12);
+      border: 1px solid rgba(159, 227, 180, 0.3);
+      border-radius: 6px;
+      padding: 2px 6px;
+      margin-top: 4px;
+    }
+
+    .nav-groups {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      flex: 1;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 9px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--silver);
+      cursor: pointer;
+    }
+
+    .nav-item-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      color: inherit;
+    }
+
+    .nav-item:hover {
+      background: var(--charcoal-light);
+      color: #ffffff;
+    }
+
+    .nav-item.active {
+      background: #ffffff;
+      color: var(--black);
+    }
+
+    .nav-icon {
+      width: 18px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .nav-item-label {
+      flex: 1;
+    }
+
+    .nav-badge {
+      background: var(--silver-dark);
+      color: var(--black);
+      font-size: 0.62rem;
+      font-weight: 800;
+      border-radius: 999px;
+      padding: 1px 7px;
+    }
+
+    .nav-item.active .nav-badge {
+      background: var(--black);
+      color: #ffffff;
+    }
+
+    /* ---- Main content ---- */
+    .main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .menu-toggle {
+      font-size: 1.1rem;
+      color: var(--silver);
+      cursor: pointer;
+      display: none;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-left: auto;
+    }
+
+    .icon-btn {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .icon-btn .dot {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 15px;
+      height: 15px;
+      border-radius: 999px;
+      background: #e04b4b;
+      color: #ffffff;
+      font-size: 0.58rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--black);
+    }
+
+    .profile-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .profile-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--silver-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--black);
+      font-weight: 800;
+      font-size: 0.82rem;
+      overflow: hidden;
+    }
+
+    .profile-text {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.2;
+    }
+
+    .profile-text strong {
+      display: block;
+      font-size: 0.82rem;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .content {
+      padding: 24px 32px 48px;
+      flex: 1;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--silver);
+    }
+
+    .breadcrumb .current {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .content h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .content > p.subtitle {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      margin-bottom: 22px;
+    }
+
+    /* ---- Form layout ---- */
+    .form-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .form-col-main,
+    .form-col-side {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-card {
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .card-step {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--black);
+      font-size: 0.7rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .card-subtitle {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-field label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .form-field label .required {
+      color: #e04b4b;
+    }
+
+    .form-field label .optional {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .form-field input[type="text"],
+    .form-field input[type="number"],
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--charcoal-light);
+      color: #ffffff;
+      font-size: 0.84rem;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      border-color: var(--silver-dark);
+    }
+
+    .form-field input::placeholder,
+    .form-field textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .field-hint {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    .tags-input {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--charcoal-light);
+    }
+
+    .tag-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+
+    .tag-chip button {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.8rem;
+      line-height: 1;
+      padding: 0;
+    }
+
+    .tags-input input {
+      flex: 1;
+      min-width: 100px;
+      border: none;
+      background: transparent;
+      color: #ffffff;
+      font-size: 0.84rem;
+      outline: none;
+      padding: 4px 2px;
+      font-family: inherit;
+    }
+
+    .tags-input input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .description-field {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--charcoal-light);
+      overflow: hidden;
+    }
+
+    .description-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toolbar-select {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--silver);
+      font-size: 0.74rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      margin-right: 4px;
+    }
+
+    .toolbar-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: transparent;
+      border: none;
+      color: var(--silver);
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toolbar-btn:hover {
+      background: var(--charcoal);
+      color: #ffffff;
+    }
+
+    .description-field textarea {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: #ffffff;
+      font-size: 0.84rem;
+      padding: 14px;
+      min-height: 130px;
+      resize: vertical;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .description-field textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      padding: 6px 12px;
+    }
+
+    .upload-area {
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 32px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+      background: var(--charcoal-light);
+    }
+
+    .upload-area:hover {
+      border-color: var(--silver-dark);
+    }
+
+    .upload-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .upload-area .upload-title {
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .upload-area .upload-sub {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .image-guidelines {
+      margin-top: 14px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .image-guidelines span {
+      color: #9fe3b4;
+    }
+
+    .image-count {
+      text-align: right;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .price-input-wrap {
+      position: relative;
+    }
+
+    .price-input-wrap input {
+      padding-right: 32px;
+    }
+
+    .price-stepper {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      color: var(--text-muted);
+      font-size: 0.6rem;
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .actions-right {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-outline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--silver);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 10px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-outline:hover {
+      background: var(--charcoal-light);
+      color: #ffffff;
+    }
+
+    .btn-solid {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      border: none;
+      color: var(--black);
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 10px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-solid:hover {
+      background: var(--silver-light);
+    }
+
+    .footer {
+      margin-top: auto;
+      padding: 18px 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 18px;
+    }
+
+    @media (max-width: 980px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .sidebar { display: none; }
+      .menu-toggle { display: block; }
+      .content { padding: 20px 18px 40px; }
+      .topbar { padding: 16px 18px; }
+      .footer { padding: 16px 18px; flex-direction: column; gap: 10px; align-items: flex-start; }
+      .form-actions { flex-direction: column-reverse; align-items: stretch; }
+      .actions-right { flex-direction: column-reverse; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="assets/sxlogo.png" alt="Strategic X logo" />
+    </div>
+
+    <div class="shop-card">
+      <div class="shop-avatar" id="shopAvatar"><span id="shopInitial">S</span></div>
+      <div class="shop-card-info">
+        <div class="shop-card-name" id="shopNameText">Your Shop</div>
+        <div class="shop-card-meta" id="shopMetaText">&nbsp;</div>
+        <div class="shop-status">&#9679; Shop Open</div>
+      </div>
+    </div>
+
+    <div class="nav-groups">
+      <ul class="nav-list">
+        <li class="nav-item"><a class="nav-item-link" href="dashboard.html">
+          <span class="nav-icon">&#8862;</span>
+          <span class="nav-item-label">Dashboard</span>
+        </a></li>
+        <li class="nav-item"><a class="nav-item-link" href="my-shop.html">
+          <span class="nav-icon">&#127978;</span>
+          <span class="nav-item-label">My Shop</span>
+        </a></li>
+        <li class="nav-item active"><a class="nav-item-link" href="products.html">
+          <span class="nav-icon">&#128717;</span>
+          <span class="nav-item-label">Products</span>
+        </a></li>
+        <li class="nav-item"><a class="nav-item-link" href="#">
+          <span class="nav-icon">&#9733;</span>
+          <span class="nav-item-label">Reviews</span>
+          <span class="nav-badge">0</span>
+        </a></li>
+        <li class="nav-item"><a class="nav-item-link" href="#">
+          <span class="nav-icon">&#128179;</span>
+          <span class="nav-item-label">Payments &amp; Billing</span>
+        </a></li>
+      </ul>
+
+      <ul class="nav-list">
+        <li class="nav-item"><a class="nav-item-link" href="#">
+          <span class="nav-icon">&#9881;</span>
+          <span class="nav-item-label">Shop Settings</span>
+        </a></li>
+        <li class="nav-item"><a class="nav-item-link" href="#">
+          <span class="nav-icon">&#128276;</span>
+          <span class="nav-item-label">Notifications</span>
+          <span class="nav-badge">3</span>
+        </a></li>
+      </ul>
+
+      <ul class="nav-list">
+        <li class="nav-item"><a class="nav-item-link" href="#">
+          <span class="nav-icon">&#10067;</span>
+          <span class="nav-item-label">Support &amp; Help</span>
+        </a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="menu-toggle">&#9776;</span>
+      <div class="topbar-actions">
+        <div class="icon-btn">&#128276;<span class="dot">1</span></div>
+        <div class="icon-btn">?</div>
+        <div class="profile-chip">
+          <div class="profile-avatar" id="profileAvatar"><span id="profileInitial">U</span></div>
+          <div class="profile-text">Good morning,<strong id="profileName">there</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="breadcrumb">
+        <a href="my-shop.html">My Shop</a>
+        <span>&rsaquo;</span>
+        <a href="products.html">Products</a>
+        <span>&rsaquo;</span>
+        <span class="current">Add New Product</span>
+      </div>
+
+      <h1>Add New Product</h1>
+      <p class="subtitle">Add detailed information about your product to attract more customers.</p>
+
+      <form id="addProductForm">
+        <div class="form-grid">
+          <div class="form-col-main">
+            <div class="form-card">
+              <div class="card-title"><span class="card-step">1</span> Product Information</div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="productName">Product Name <span class="required">*</span></label>
+                  <input type="text" id="productName" name="productName" placeholder="Enter product name" required />
+                  <div class="field-hint">Choose a clear and descriptive name for your product.</div>
+                </div>
+                <div class="form-field">
+                  <label for="productTags">Product Tags <span class="optional">(Optional)</span></label>
+                  <div class="tags-input" id="tagsInput">
+                    <input type="text" id="productTagsEntry" placeholder="Enter tags and press Enter" />
+                  </div>
+                  <div class="field-hint">Add relevant tags to help customers find your product.</div>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label for="productDescription">Product Description <span class="required">*</span></label>
+                <div class="description-field">
+                  <div class="description-toolbar">
+                    <select class="toolbar-select"><option>Normal</option></select>
+                    <button type="button" class="toolbar-btn"><strong>B</strong></button>
+                    <button type="button" class="toolbar-btn"><em>I</em></button>
+                    <button type="button" class="toolbar-btn"><u>U</u></button>
+                    <button type="button" class="toolbar-btn">&#8226;&#8226;&#8226;</button>
+                    <button type="button" class="toolbar-btn">&#9776;</button>
+                    <button type="button" class="toolbar-btn">&#128279;</button>
+                  </div>
+                  <textarea id="productDescription" name="productDescription" maxlength="1000" placeholder="Describe your product features, benefits and specifications..." required></textarea>
+                  <div class="char-count"><span id="descCount">0</span> / 1000</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-card">
+              <div class="card-title"><span class="card-step">2</span> Product Images</div>
+              <div class="card-subtitle">Upload clear images of your product. You can add up to 8 images.</div>
+
+              <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">&#8593;</div>
+                <div class="upload-title">Click to upload or drag and drop</div>
+                <div class="upload-sub">PNG, JPG or WEBP (Max 5MB each)</div>
+              </div>
+              <input type="file" id="productImages" accept="image/png,image/jpeg,image/webp" multiple hidden />
+
+              <div class="image-guidelines">
+                <div><span>&#10003;</span> Use clear, high-quality images</div>
+                <div><span>&#10003;</span> Show different angles if possible</div>
+                <div><span>&#10003;</span> Image size ratio 1:1 is recommended</div>
+              </div>
+              <div class="image-count"><span id="imageCount">0</span> / 8 images</div>
+            </div>
+          </div>
+
+          <div class="form-col-side">
+            <div class="form-card">
+              <div class="card-title"><span class="card-step">3</span> Pricing &amp; Stock</div>
+
+              <div class="form-field" style="margin-bottom: 16px;">
+                <label for="sellingPrice">Selling Price (&#8358;) <span class="required">*</span></label>
+                <div class="price-input-wrap">
+                  <input type="number" id="sellingPrice" name="sellingPrice" placeholder="Enter price" min="0" step="0.01" required />
+                </div>
+              </div>
+
+              <div class="form-field" style="margin-bottom: 16px;">
+                <label for="comparePrice">Compare at Price <span class="optional">(Optional)</span></label>
+                <input type="number" id="comparePrice" name="comparePrice" placeholder="Enter original price" min="0" step="0.01" />
+                <div class="field-hint">Leave empty if not on sale</div>
+              </div>
+
+              <div class="form-field">
+                <label for="stockQuantity">Stock Quantity <span class="required">*</span></label>
+                <input type="number" id="stockQuantity" name="stockQuantity" placeholder="Enter quantity" min="0" step="1" required />
+                <div class="field-hint">Number of items available in stock</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a href="products.html" class="btn-outline">&#10005; Cancel</a>
+          <div class="actions-right">
+            <button type="button" class="btn-outline" id="saveDraftBtn">&#128190; Save as Draft</button>
+            <button type="submit" class="btn-solid" id="publishBtn">&#10003; Publish Product</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="footer">
+      <div>&copy; 2026 Strategic X. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="terms.html">Terms &amp; Conditions</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="#">Contact Support</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="sx-supabase-config.js"></script>
+  <script src="sx-auth.js"></script>
+  <script>
+    (async function guardAddProduct() {
+      var sessionResult = await sxSupabaseClient.auth.getSession();
+      var session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+      if (!session) {
+        window.location.href = 'index.html';
+        return;
+      }
+      var user = session.user;
+      if (!SXAuth.isOnboarded(user)) {
+        window.location.href = 'onboarding.html';
+        return;
+      }
+
+      var meta = user.user_metadata || {};
+      var fullName = (meta.sx_full_name || '').trim();
+      var firstName = fullName ? fullName.split(' ')[0] : 'there';
+
+      document.getElementById('profileName').textContent = firstName;
+      document.getElementById('profileInitial').textContent = firstName.charAt(0).toUpperCase() || 'U';
+
+      var shopRowResult = await sxSupabaseClient
+        .from('sx_shops')
+        .select('shop_name, category, market_platform, logo_url')
+        .eq('owner_id', user.id)
+        .maybeSingle();
+      var shop = (shopRowResult && shopRowResult.data) || {};
+
+      var shopName = shop.shop_name || meta.sx_shop_name || 'Your Shop';
+      var category = shop.category || meta.sx_category || '';
+      var marketPlatform = shop.market_platform || meta.sx_market_platform || 'Not set yet';
+      var logoUrl = shop.logo_url || meta.sx_shop_logo_url || '';
+
+      document.getElementById('shopNameText').textContent = shopName;
+      document.getElementById('shopMetaText').textContent = category ? (category + (marketPlatform !== 'Not set yet' ? ' \u00b7 ' + marketPlatform : '')) : marketPlatform;
+      document.getElementById('shopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
+
+      if (logoUrl) {
+        document.getElementById('shopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
+      }
+    })();
+
+    // ---- Product description character counter ----
+    var descriptionField = document.getElementById('productDescription');
+    var descCount = document.getElementById('descCount');
+    descriptionField.addEventListener('input', function () {
+      descCount.textContent = descriptionField.value.length;
+    });
+
+    // ---- Product tags (type + press Enter to add a chip) ----
+    var tagsInput = document.getElementById('tagsInput');
+    var tagsEntry = document.getElementById('productTagsEntry');
+    var tags = [];
+
+    function renderTags() {
+      tagsInput.querySelectorAll('.tag-chip').forEach(function (chip) { chip.remove(); });
+      tags.forEach(function (tag, index) {
+        var chip = document.createElement('span');
+        chip.className = 'tag-chip';
+        chip.innerHTML = tag.replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        }) + ' <button type="button" aria-label="Remove tag">&times;</button>';
+        chip.querySelector('button').addEventListener('click', function () {
+          tags.splice(index, 1);
+          renderTags();
+        });
+        tagsInput.insertBefore(chip, tagsEntry);
+      });
+    }
+
+    tagsEntry.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      var value = tagsEntry.value.trim();
+      if (!value) return;
+      if (tags.indexOf(value) === -1) tags.push(value);
+      tagsEntry.value = '';
+      renderTags();
+    });
+
+    // ---- Product images (click-to-upload preview, up to 8) ----
+    var uploadArea = document.getElementById('uploadArea');
+    var imagesInput = document.getElementById('productImages');
+    var imageCount = document.getElementById('imageCount');
+
+    uploadArea.addEventListener('click', function () {
+      imagesInput.click();
+    });
+
+    imagesInput.addEventListener('change', function () {
+      var count = Math.min(imagesInput.files.length, 8);
+      imageCount.textContent = count;
+    });
+
+    // NOTE: There is no sx_products table yet, so this form has no backend
+    // to save to. Submitting shows a friendly notice instead of failing
+    // silently or fabricating a save. Wire this up once a products schema
+    // exists.
+    var addProductForm = document.getElementById('addProductForm');
+    var saveDraftBtn = document.getElementById('saveDraftBtn');
+
+    function notImplementedYet() {
+      SXAuth.showFormError(addProductForm, 'Product saving isn\u2019t set up yet \u2014 this form is a preview of the Add Product experience.');
+    }
+
+    saveDraftBtn.addEventListener('click', notImplementedYet);
+    addProductForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      notImplementedYet();
+    });
+  </script>
+</body>
+</html>

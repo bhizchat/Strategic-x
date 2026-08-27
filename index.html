@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Strategic X - Sign In</title>
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --charcoal: #1c1c1e;
+      --silver: #c7c9cc;
+      --silver-light: #e5e6e8;
+      --silver-dark: #8a8d91;
+      --border: #dcdde0;
+      --text: #111113;
+      --text-muted: #6b6f76;
+      --bg: #f5f5f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .split {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ---- Left panel: brand / marketing ---- */
+    .brand-panel {
+      flex: 1.15;
+      position: relative;
+      background: linear-gradient(180deg, #f7f7f8 0%, #ececee 100%);
+      padding: 48px 56px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .brand-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 20%, rgba(0,0,0,0.05), transparent 60%);
+      z-index: 0;
+    }
+
+    .brand-panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-logo-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-logo-img {
+      width: 150px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .logo-placeholder {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--silver-light), var(--silver-dark));
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: var(--black);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .logo-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .brand-tag {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .brand-copy {
+      margin-top: auto;
+      max-width: 460px;
+      color: var(--black);
+    }
+
+    .brand-copy h1 {
+      font-size: 2.4rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 14px;
+      color: var(--black);
+    }
+
+    .brand-copy h1 .accent {
+      color: var(--silver-dark);
+    }
+
+    .brand-copy p.lead {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .feature-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--silver-light), var(--silver));
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      flex-shrink: 0;
+    }
+
+    .feature-text .title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 2px;
+      color: var(--black);
+    }
+
+    .feature-text .desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .stats-bar {
+      background: rgba(10, 10, 10, 0.72);
+      backdrop-filter: blur(4px);
+      border-radius: 14px;
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: #ffffff;
+    }
+
+    .stats-bar .cta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .stats-bar .cta-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1rem;
+    }
+
+    .stats-bar .cta-text {
+      font-size: 0.78rem;
+      line-height: 1.3;
+    }
+
+    .stats-bar .cta-text strong {
+      color: var(--silver);
+    }
+
+    .stat {
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .stat .num {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--silver);
+    }
+
+    .stat .label {
+      font-size: 0.68rem;
+      color: #cfcfd1;
+    }
+
+    /* ---- Right panel: sign-in form ---- */
+    .form-panel {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 32px;
+      background: #ffffff;
+    }
+
+    .form-inner {
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .form-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .form-logo .logo-placeholder {
+      width: 220px;
+      height: auto;
+      background: none;
+      border: none;
+      border-radius: 0;
+    }
+
+    .form-title {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .form-title h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .form-title h2 span {
+      color: var(--silver-dark);
+    }
+
+    .form-title p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .field {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 16px 13px 42px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.88rem;
+      color: var(--text);
+      background: #fbfbfc;
+      outline: none;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .field input:focus {
+      border-color: var(--silver-dark);
+      background: #ffffff;
+    }
+
+    .field .field-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      pointer-events: none;
+    }
+
+    .field .field-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0.55;
+    }
+
+    .field .toggle-visibility {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .field .toggle-visibility img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0.6;
+    }
+
+    .row-between {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      margin: 4px 0 18px;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+    }
+
+    .remember-me input {
+      accent-color: var(--black);
+    }
+
+    .forgot-link {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .btn-signin {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #2b2b2d, #000000);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-signin:hover {
+      background: linear-gradient(180deg, #3a3a3c, #0a0a0a);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 22px 0;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .btn-oauth {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 11px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #ffffff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .btn-oauth:hover {
+      background: var(--bg);
+    }
+
+    .btn-oauth .oauth-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+
+    .signup-line {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 22px;
+    }
+
+    .signup-line a {
+      color: var(--black);
+      font-weight: 800;
+    }
+
+    .sx-form-error {
+      background: #fdecec;
+      border: 1px solid #f3b9b9;
+      color: #9c2b2b;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+    }
+
+    .sx-form-success {
+      background: #eaf6ee;
+      border: 1px solid #b7dfc4;
+      color: #1e6b38;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 14px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .split { flex-direction: column; }
+      .brand-panel { min-height: 340px; padding: 32px; }
+      .brand-copy h1 { font-size: 1.7rem; }
+      .stats-bar { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="split">
+    <!-- Left: brand / marketing panel -->
+    <section class="brand-panel">
+      <div class="brand-logo-block">
+        <img class="brand-logo-img" src="assets/sxlogo.png" alt="Strategic X logo" />
+        <div class="brand-tag">Local Markets. Limitless Possibilities.</div>
+      </div>
+
+      <div class="brand-copy">
+        <h1>Bringing Local<br />Markets <span class="accent">Online.</span></h1>
+        <p class="lead">Strategic X empowers local vendors and shoppers by connecting markets to more people, more efficiently.</p>
+
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-icon">&#127978;</div>
+            <div class="feature-text">
+              <div class="title">For Local Vendors</div>
+              <div class="desc">Expand your reach and grow your business online.</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">&#128717;</div>
+            <div class="feature-text">
+              <div class="title">For Shoppers</div>
+              <div class="desc">Discover trusted local products and shop with ease.</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">&#128200;</div>
+            <div class="feature-text">
+              <div class="title">For Communities</div>
+              <div class="desc">Stronger local economies, built together.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-bar">
+          <div class="cta">
+            <div class="cta-icon">&#128101;</div>
+            <div class="cta-text">Together, we can make local go further.<br /><strong>Join Strategic X today.</strong></div>
+          </div>
+          <div class="stat"><div class="num">500+</div><div class="label">Vendors</div></div>
+          <div class="stat"><div class="num">10K+</div><div class="label">Products</div></div>
+          <div class="stat"><div class="num">25K+</div><div class="label">Happy Shoppers</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: sign-in form -->
+    <section class="form-panel">
+      <div class="form-inner">
+        <div class="form-logo">
+          <div class="logo-placeholder" aria-label="Strategic X logo">
+            <img src="assets/sxlogo.png" alt="Strategic X logo" style="object-fit: contain;" />
+          </div>
+        </div>
+
+        <div class="form-title">
+          <h2>Welcome to Strategic<span> X</span></h2>
+          <p>Sign in to continue to your account</p>
+        </div>
+
+        <form id="loginForm">
+          <div class="field">
+            <span class="field-icon"><img src="assets/email.png" alt="" /></span>
+            <input type="email" id="email" name="email" placeholder="Email address" autocomplete="email" required />
+          </div>
+
+          <div class="field">
+            <span class="field-icon"><img src="assets/lock.png" alt="" /></span>
+            <input type="password" id="password" name="password" placeholder="Password" autocomplete="current-password" required />
+            <button type="button" class="toggle-visibility" id="togglePassword" aria-label="Show password"><img src="assets/visible.png" alt="" /></button>
+          </div>
+
+          <div class="row-between">
+            <label class="remember-me">
+              <input type="checkbox" name="remember" />
+              Remember me
+            </label>
+            <a href="#" class="forgot-link">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn-signin">Sign In</button>
+        </form>
+
+        <div class="divider">or continue with</div>
+
+        <button type="button" class="btn-oauth" id="googleSignInBtn">
+          <span class="oauth-icon">G</span> Continue with Google
+        </button>
+
+        <p class="signup-line">Don't have an account? <a href="signup.html">Sign up</a></p>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="sx-supabase-config.js"></script>
+  <script src="sx-auth.js"></script>
+  <script>
+    var toggleBtn = document.getElementById('togglePassword');
+    var passwordInput = document.getElementById('password');
+    toggleBtn.addEventListener('click', function () {
+      var isHidden = passwordInput.type === 'password';
+      passwordInput.type = isHidden ? 'text' : 'password';
+      toggleBtn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+    });
+
+    var loginForm = document.getElementById('loginForm');
+    var signInBtn = loginForm.querySelector('.btn-signin');
+
+    SXAuth.watchAuthAndRoute(loginForm);
+
+    // Supabase redirects back here with ?error=...&error_description=...
+    // when an OAuth attempt fails (e.g. bad_oauth_state from re-using a
+    // stale Google sign-in link via browser back/forward, or a cancelled
+    // consent screen). Surface it instead of failing silently.
+    (function showOAuthErrorIfAny() {
+      var params = new URLSearchParams(window.location.search);
+      var errorDescription = params.get('error_description');
+      if (!errorDescription) return;
+      SXAuth.showFormError(loginForm, errorDescription.replace(/\+/g, ' '));
+      window.history.replaceState({}, document.title, window.location.pathname);
+    })();
+
+    loginForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      SXAuth.showFormError(loginForm, '');
+      var email = document.getElementById('email').value.trim();
+      var password = document.getElementById('password').value;
+
+      SXAuth.setSubmitting(signInBtn, true, 'Sign In');
+      try {
+        var result = await sxSupabaseClient.auth.signInWithPassword({ email: email, password: password });
+        if (result.error) {
+          SXAuth.showFormError(loginForm, result.error.message || 'Unable to sign in. Please check your details.');
+        }
+        // On success, SXAuth.watchAuthAndRoute's SIGNED_IN listener handles
+        // routing to onboarding.html (first time) or a signed-in message.
+      } catch (err) {
+        SXAuth.showFormError(loginForm, 'Something went wrong. Please try again.');
+      } finally {
+        SXAuth.setSubmitting(signInBtn, false, 'Sign In');
+      }
+    });
+
+    document.getElementById('googleSignInBtn').addEventListener('click', function () {
+      SXAuth.signInWithGoogle();
+    });
+  </script>
+</body>
+</html>

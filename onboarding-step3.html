@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Strategic X - Set Up Your Shop Profile</title>
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --charcoal: #1c1c1e;
+      --silver: #c7c9cc;
+      --silver-light: #e5e6e8;
+      --silver-dark: #8a8d91;
+      --border: #dcdde0;
+      --text: #111113;
+      --text-muted: #6b6f76;
+      --bg: #f5f5f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #ffffff;
+      line-height: 1.4;
+      background: var(--black);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .onboard-shell {
+      width: 100%;
+      max-width: 980px;
+      background: linear-gradient(160deg, #1c1c1e 0%, #0a0a0a 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    /* ---- Left: brand / info column ---- */
+    .side-panel {
+      flex: 0 0 300px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .brand-logo-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 28px;
+    }
+
+    .brand-logo-img {
+      width: 130px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .brand-tag {
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--silver-dark);
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+
+    .side-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--silver-light), var(--silver-dark));
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .side-icon img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    .side-panel h2 {
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .side-panel h2 .accent {
+      color: var(--silver);
+    }
+
+    .side-panel p.lead {
+      font-size: 0.85rem;
+      color: #b9babd;
+      margin-bottom: auto;
+    }
+
+    .tips-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 24px;
+    }
+
+    .tips-box .tips-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .tips-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tips-list li {
+      font-size: 0.74rem;
+      color: #b9babd;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .tips-list li::before {
+      content: "\2713";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--silver);
+      font-weight: 700;
+    }
+
+    /* ---- Right: form column ---- */
+    .form-side {
+      flex: 1;
+      padding: 22px 36px;
+      min-width: 0;
+      background: #ffffff;
+      color: var(--text);
+      overflow-y: auto;
+    }
+
+    .step-track {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .step-dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      background: var(--silver-light);
+      color: var(--text-muted);
+    }
+
+    .step-dot.done {
+      background: var(--silver-dark);
+      color: #ffffff;
+    }
+
+    .step-dot.active {
+      background: var(--black);
+      color: #ffffff;
+    }
+
+    .step-line {
+      width: 40px;
+      height: 2px;
+      background: var(--border);
+    }
+
+    .step-label {
+      text-align: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .form-title {
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+      color: var(--black);
+    }
+
+    .form-subtitle {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 16px;
+      margin-bottom: 6px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .field-group label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #fbfbfc;
+      outline: none;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .field-group input::placeholder,
+    .field-group textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .field-group select {
+      color: var(--text);
+    }
+
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus {
+      border-color: var(--silver-dark);
+      background: #ffffff;
+    }
+
+    .field-group textarea {
+      resize: vertical;
+      min-height: 56px;
+    }
+
+    .field-hint {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .section-heading {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--black);
+      margin: 10px 0 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-heading:first-of-type {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .visual-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .upload-box {
+      display: block;
+      width: 100%;
+      border: 1.5px dashed var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      text-align: center;
+      cursor: pointer;
+      background: #fbfbfc;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .upload-box:hover,
+    .upload-box.has-file {
+      border-color: var(--silver-dark);
+      background: #ffffff;
+    }
+
+    .upload-box .upload-icon {
+      font-size: 1.1rem;
+      margin-bottom: 2px;
+      color: var(--text-muted);
+    }
+
+    .upload-box .upload-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .upload-box .upload-hint {
+      font-size: 0.66rem;
+      color: var(--text-muted);
+    }
+
+    .upload-box .file-name {
+      margin-top: 8px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #1e6b38;
+      word-break: break-all;
+    }
+
+    .upload-box .file-error {
+      margin-top: 8px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #9c2b2b;
+    }
+
+    .upload-box input[type="file"] {
+      display: none;
+    }
+
+    .actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 12px;
+    }
+
+    .btn-back {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .btn-back:hover {
+      background: var(--bg);
+    }
+
+    .btn-continue {
+      flex: 1;
+      max-width: 220px;
+      padding: 12px;
+      border: none;
+      border-radius: 9px;
+      background: linear-gradient(180deg, #2b2b2d, #000000);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.88rem;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-continue:hover {
+      background: linear-gradient(180deg, #3a3a3c, #0a0a0a);
+    }
+
+    .btn-continue:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .sx-form-error {
+      background: #fdecec;
+      border: 1px solid #f3b9b9;
+      color: #9c2b2b;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 760px) {
+      .onboard-shell { flex-direction: column; }
+      .side-panel { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); flex: none; }
+      .field-grid,
+      .visual-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="onboard-shell">
+    <!-- Left: brand / info column -->
+    <section class="side-panel">
+      <div class="brand-logo-block">
+        <img class="brand-logo-img" src="assets/sxlogo.png" alt="Strategic X logo" />
+        <div class="brand-tag">Local Markets. Limitless Possibilities.</div>
+      </div>
+
+      <div class="side-icon">
+        <img src="assets/shop.png" alt="" />
+      </div>
+      <h2>Let's build your <span class="accent">digital</span> shop</h2>
+      <p class="lead">Add your shop details, logo and contact information so customers can recognize and reach you easily.</p>
+
+      <div class="tips-box">
+        <div class="tips-title">Tips for a great shop</div>
+        <ul class="tips-list">
+          <li>Use a clear logo and banner</li>
+          <li>Add accurate contact details</li>
+          <li>Write a short and clear description</li>
+          <li>This builds trust and attracts more customers</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Right: shop profile form -->
+    <section class="form-side">
+      <div class="step-track">
+        <div class="step-dot done">&#10003;</div>
+        <div class="step-line"></div>
+        <div class="step-dot done">&#10003;</div>
+        <div class="step-line"></div>
+        <div class="step-dot active">3</div>
+      </div>
+      <div class="step-label">Step 3 of 3</div>
+      <div class="form-title">Set up your shop profile</div>
+      <p class="form-subtitle">Almost done! Add the final details to complete your shop setup.</p>
+
+      <form id="shopProfileForm" novalidate>
+        <div class="section-heading">Shop Visuals</div>
+        <div class="visual-grid">
+          <label class="upload-box" id="logoUploadBox" for="shopLogo">
+            <div class="upload-icon">&#8593;</div>
+            <div class="upload-title">Upload Logo</div>
+            <div class="upload-hint">PNG, JPG or WEBP (Max 2MB)</div>
+            <div class="file-name" id="logoFileName" hidden></div>
+            <div class="file-error" id="logoFileError" hidden></div>
+            <input type="file" id="shopLogo" name="shopLogo" accept="image/png,image/jpeg,image/webp" />
+          </label>
+          <label class="upload-box" id="bannerUploadBox" for="shopBanner">
+            <div class="upload-icon">&#8593;</div>
+            <div class="upload-title">Upload Banner</div>
+            <div class="upload-hint">PNG, JPG or WEBP (Recommended 1200x400px)</div>
+            <div class="file-name" id="bannerFileName" hidden></div>
+            <div class="file-error" id="bannerFileError" hidden></div>
+            <input type="file" id="shopBanner" name="shopBanner" accept="image/png,image/jpeg,image/webp" />
+          </label>
+        </div>
+
+        <div class="section-heading">Identity Verification</div>
+        <label class="upload-box" id="idCardUploadBox" for="idCard">
+          <div class="upload-icon">&#8593;</div>
+          <div class="upload-title">Upload National ID Card</div>
+          <div class="upload-hint">PNG, JPG or WEBP (Max 5MB) &mdash; kept private, used only for verification</div>
+          <div class="file-name" id="idCardFileName" hidden></div>
+          <div class="file-error" id="idCardFileError" hidden></div>
+          <input type="file" id="idCard" name="idCard" accept="image/png,image/jpeg,image/webp" required />
+        </label>
+
+        <div class="section-heading">Contact &amp; Location</div>
+        <div class="field-grid">
+          <div class="field-group full">
+            <label for="shopAddress">Shop Address / Location</label>
+            <input type="text" id="shopAddress" name="shopAddress" placeholder="Enter your shop address or stall location" required />
+            <div class="field-hint">Be as specific as possible so customers can find you easily.</div>
+          </div>
+          <div class="field-group full">
+            <label for="shopTagline">Shop Tagline (Optional)</label>
+            <input type="text" id="shopTagline" name="shopTagline" maxlength="60" placeholder="E.g. Quality products, great prices!" />
+            <div class="field-hint">Short tagline that describes your shop (Max 60 characters)</div>
+          </div>
+        </div>
+
+        <div class="actions-row">
+          <button type="button" class="btn-back" onclick="window.location.href='onboarding-step2.html'">&#8592; Back</button>
+          <button type="submit" class="btn-continue">Complete Setup</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="sx-supabase-config.js"></script>
+  <script src="sx-auth.js"></script>
+  <script>
+    var MAX_LOGO_SIZE_BYTES = 2 * 1024 * 1024;
+    var MAX_BANNER_SIZE_BYTES = 5 * 1024 * 1024;
+    var MAX_ID_CARD_SIZE_BYTES = 5 * 1024 * 1024;
+    var SX_SHOP_ASSETS_BUCKET = 'sx-shop-assets';
+    var SX_VERIFICATION_DOCS_BUCKET = 'sx-verification-docs';
+
+    var currentUserId = null;
+
+    (async function guardOnboarding() {
+      var sessionResult = await sxSupabaseClient.auth.getSession();
+      var session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+      if (!session) {
+        window.location.href = 'index.html';
+        return;
+      }
+      currentUserId = session.user.id;
+    })();
+
+    function wireUpload(boxId, inputId, fileNameId, errorId, maxSizeBytes) {
+      var box = document.getElementById(boxId);
+      var input = document.getElementById(inputId);
+      var fileNameEl = document.getElementById(fileNameId);
+      var errorEl = document.getElementById(errorId);
+
+      input.addEventListener('change', function () {
+        errorEl.hidden = true;
+        errorEl.textContent = '';
+        fileNameEl.hidden = true;
+        box.classList.remove('has-file');
+
+        var file = input.files && input.files[0];
+        if (!file) return;
+
+        if (file.size > maxSizeBytes) {
+          input.value = '';
+          errorEl.textContent = 'File is too large (max ' + Math.round(maxSizeBytes / (1024 * 1024)) + 'MB).';
+          errorEl.hidden = false;
+          return;
+        }
+
+        fileNameEl.textContent = file.name;
+        fileNameEl.hidden = false;
+        box.classList.add('has-file');
+      });
+    }
+
+    wireUpload('logoUploadBox', 'shopLogo', 'logoFileName', 'logoFileError', MAX_LOGO_SIZE_BYTES);
+    wireUpload('bannerUploadBox', 'shopBanner', 'bannerFileName', 'bannerFileError', MAX_BANNER_SIZE_BYTES);
+    wireUpload('idCardUploadBox', 'idCard', 'idCardFileName', 'idCardFileError', MAX_ID_CARD_SIZE_BYTES);
+
+    // Best-effort upload: logo/banner are optional, so any failure here is
+    // swallowed (logged only) and never blocks completing the shop setup.
+    async function uploadOptionalImage(inputId, folder) {
+      var input = document.getElementById(inputId);
+      var file = input.files && input.files[0];
+      if (!file) return null;
+
+      try {
+        var safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        var path = currentUserId + '/' + folder + '/' + Date.now() + '-' + safeName;
+        var uploadResult = await sxSupabaseClient.storage
+          .from(SX_SHOP_ASSETS_BUCKET)
+          .upload(path, file, { upsert: false });
+        if (uploadResult.error) throw uploadResult.error;
+        var publicUrlResult = sxSupabaseClient.storage.from(SX_SHOP_ASSETS_BUCKET).getPublicUrl(path);
+        return (publicUrlResult && publicUrlResult.data) ? publicUrlResult.data.publicUrl : null;
+      } catch (err) {
+        console.warn('Optional image upload failed (' + inputId + '):', err);
+        return null;
+      }
+    }
+
+    // Required upload: the ID card goes to a PRIVATE storage bucket (not
+    // public like sx-shop-assets), so we store the storage path only, not a
+    // public URL. Failure here throws and blocks setup completion.
+    async function uploadRequiredIdCard() {
+      var input = document.getElementById('idCard');
+      var file = input.files && input.files[0];
+      if (!file) throw new Error('National ID Card is required.');
+
+      var safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      var path = currentUserId + '/id-card/' + Date.now() + '-' + safeName;
+      var uploadResult = await sxSupabaseClient.storage
+        .from(SX_VERIFICATION_DOCS_BUCKET)
+        .upload(path, file, { upsert: false });
+      if (uploadResult.error) throw uploadResult.error;
+      return path;
+    }
+
+    var shopProfileForm = document.getElementById('shopProfileForm');
+    var completeBtn = shopProfileForm.querySelector('.btn-continue');
+
+    shopProfileForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      SXAuth.showFormError(shopProfileForm, '');
+
+      var requiredFields = [
+        {
+          label: 'Shop Address / Location',
+          isMissing: function () { return !document.getElementById('shopAddress').value.trim(); },
+          focus: function () { document.getElementById('shopAddress').focus(); }
+        },
+        {
+          label: 'National ID Card',
+          isMissing: function () {
+            var input = document.getElementById('idCard');
+            return !(input.files && input.files.length);
+          },
+          focus: function () { document.getElementById('idCard').focus(); }
+        }
+      ];
+      var missingFields = requiredFields.filter(function (f) { return f.isMissing(); });
+      if (missingFields.length) {
+        var missingLabels = missingFields.map(function (f) { return f.label; }).join(', ');
+        SXAuth.showFormError(shopProfileForm, 'Please fill in the following field(s): ' + missingLabels + '.');
+        missingFields[0].focus();
+        return;
+      }
+
+      completeBtn.disabled = true;
+      completeBtn.textContent = 'Please wait...';
+
+      try {
+        var logoUrl = await uploadOptionalImage('shopLogo', 'logo');
+        var bannerUrl = await uploadOptionalImage('shopBanner', 'banner');
+        var idCardPath = await uploadRequiredIdCard();
+
+        var shopAddress = document.getElementById('shopAddress').value.trim();
+        var shopTagline = document.getElementById('shopTagline').value.trim();
+
+        await sxSupabaseClient.auth.updateUser({
+          data: {
+            sx_shop_address: shopAddress,
+            sx_shop_tagline: shopTagline,
+            sx_shop_logo_url: logoUrl,
+            sx_shop_banner_url: bannerUrl,
+            sx_id_card_path: idCardPath,
+            sx_onboarded: true
+          }
+        });
+
+        // Auto-create the shop record backing this owner's storefront
+        // presence (visible under "Check All Shops" on whichever market
+        // platform they selected in step 2).
+        var sessionResult = await sxSupabaseClient.auth.getSession();
+        var currentUser = sessionResult && sessionResult.data ? sessionResult.data.session.user : null;
+        var meta = (currentUser && currentUser.user_metadata) || {};
+
+        var shopRow = {
+          owner_id: currentUserId,
+          shop_name: meta.sx_shop_name || '',
+          full_name: meta.sx_full_name || '',
+          email: meta.sx_business_email || (currentUser && currentUser.email) || '',
+          phone: meta.sx_phone || '',
+          whatsapp: meta.sx_whatsapp || '',
+          category: meta.sx_category || '',
+          market_platform: meta.sx_market_platform || '',
+          location: shopAddress,
+          tagline: shopTagline,
+          logo_url: logoUrl,
+          banner_url: bannerUrl,
+          id_card_path: idCardPath
+        };
+
+        var shopInsertResult = await sxSupabaseClient
+          .from('sx_shops')
+          .upsert(shopRow, { onConflict: 'owner_id' });
+        if (shopInsertResult.error) throw shopInsertResult.error;
+
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        console.error('Shop profile setup failed:', err);
+        var errMessage = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
+        SXAuth.showFormError(shopProfileForm, errMessage);
+        completeBtn.disabled = false;
+        completeBtn.textContent = 'Complete Setup';
+      }
+    });
+  </script>
+</body>
+</html>

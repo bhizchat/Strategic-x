@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Strategic X - Tell Us About Your Business</title>
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --charcoal: #1c1c1e;
+      --silver: #c7c9cc;
+      --silver-light: #e5e6e8;
+      --silver-dark: #8a8d91;
+      --border: #dcdde0;
+      --text: #111113;
+      --text-muted: #6b6f76;
+      --bg: #f5f5f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #ffffff;
+      line-height: 1.4;
+      background: var(--black);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .onboard-shell {
+      width: 100%;
+      max-width: 980px;
+      background: linear-gradient(160deg, #1c1c1e 0%, #0a0a0a 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    /* ---- Left: brand / info column ---- */
+    .side-panel {
+      flex: 0 0 300px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .brand-logo-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 28px;
+    }
+
+    .brand-logo-img {
+      width: 130px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .brand-tag {
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--silver-dark);
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+
+    .side-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--silver-light), var(--silver-dark));
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .side-icon img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    .side-panel h2 {
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .side-panel h2 .accent {
+      color: var(--silver);
+    }
+
+    .side-panel p.lead {
+      font-size: 0.85rem;
+      color: #b9babd;
+      margin-bottom: auto;
+    }
+
+    .secure-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 24px;
+    }
+
+    .secure-note .icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+    }
+
+    .secure-note .text {
+      font-size: 0.74rem;
+      color: #b9babd;
+    }
+
+    .secure-note .text strong {
+      color: #ffffff;
+    }
+
+    /* ---- Right: form column ---- */
+    .form-side {
+      flex: 1;
+      padding: 32px 36px;
+      min-width: 0;
+      background: #ffffff;
+      color: var(--text);      overflow-y: auto;    }
+
+    .step-track {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .step-dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      background: var(--silver-light);
+      color: var(--text-muted);
+    }
+
+    .step-dot.done {
+      background: var(--silver-dark);
+      color: #ffffff;
+    }
+
+    .step-dot.active {
+      background: var(--black);
+      color: #ffffff;
+    }
+
+    .step-line {
+      width: 40px;
+      height: 2px;
+      background: var(--border);
+    }
+
+    .step-label {
+      text-align: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .form-title {
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+      color: var(--black);
+    }
+
+    .form-subtitle {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 16px;
+      margin-bottom: 8px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .field-group label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #fbfbfc;
+      outline: none;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .field-group input::placeholder,
+    .field-group textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .field-group select {
+      color: var(--text);
+    }
+
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus {
+      border-color: var(--silver-dark);
+      background: #ffffff;
+    }
+
+    .field-group textarea {
+      resize: vertical;
+      min-height: 74px;
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .section-heading {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--black);
+      margin: 18px 0 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 22px;
+      gap: 12px;
+    }
+
+    .btn-back {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .btn-back:hover {
+      background: var(--bg);
+    }
+
+    .btn-continue {
+      flex: 1;
+      max-width: 220px;
+      padding: 12px;
+      border: none;
+      border-radius: 9px;
+      background: linear-gradient(180deg, #2b2b2d, #000000);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.88rem;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-continue:hover {
+      background: linear-gradient(180deg, #3a3a3c, #0a0a0a);
+    }
+
+    .sx-form-error {
+      background: #fdecec;
+      border: 1px solid #f3b9b9;
+      color: #9c2b2b;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 760px) {
+      .onboard-shell { flex-direction: column; }
+      .side-panel { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); flex: none; }
+      .field-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="onboard-shell">
+    <!-- Left: brand / info column -->
+    <section class="side-panel">
+      <div class="brand-logo-block">
+        <img class="brand-logo-img" src="assets/sxlogo.png" alt="Strategic X logo" />
+        <div class="brand-tag">Local Markets. Limitless Possibilities.</div>
+      </div>
+
+      <div class="side-icon">
+        <img src="assets/shop.png" alt="" />
+      </div>
+      <h2>Let's set up your <span class="accent">shop</span></h2>
+      <p class="lead">Tell us about you and your business so we can help you get started.</p>
+
+      <div class="secure-note">
+        <div class="icon">&#128274;</div>
+        <div class="text"><strong>Your Information is Safe.</strong> We take your privacy seriously and your information is protected with top security.</div>
+      </div>
+    </section>
+
+    <!-- Right: business details form -->
+    <section class="form-side">
+      <div class="step-track">
+        <div class="step-dot done">&#10003;</div>
+        <div class="step-line"></div>
+        <div class="step-dot active">2</div>
+        <div class="step-line"></div>
+        <div class="step-dot">3</div>
+      </div>
+      <div class="step-label">Step 2 of 3</div>
+      <div class="form-title">Tell us about your business</div>
+      <p class="form-subtitle">This information helps customers find and trust your shop.</p>
+
+      <form id="businessForm" novalidate>
+        <div class="field-grid">
+          <div class="field-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required />
+          </div>
+          <div class="field-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number" required />
+          </div>
+          <div class="field-group">
+            <label for="bizEmail">Email Address</label>
+            <input type="email" id="bizEmail" name="bizEmail" placeholder="Enter your email address" required />
+          </div>
+          <div class="field-group">
+            <label for="whatsapp">WhatsApp Number</label>
+            <input type="tel" id="whatsapp" name="whatsapp" placeholder="Enter your WhatsApp number" required />
+          </div>
+        </div>
+
+        <div class="section-heading">Business Details</div>
+
+        <div class="field-grid">
+          <div class="field-group full">
+            <label for="shopName">Proposed Shop Name</label>
+            <input type="text" id="shopName" name="shopName" placeholder="Enter your shop name" required />
+          </div>
+          <div class="field-group">
+            <label for="category">Category</label>
+            <select id="category" name="category" required>
+              <option value="" selected disabled>Select a category</option>
+              <option value="fashion">Clothing &amp; Fashion</option>
+              <option value="electronics">Electronics &amp; Gadgets</option>
+              <option value="fabrics">Fabrics &amp; Textiles</option>
+              <option value="foodstuff">Foodstuffs &amp; Oils</option>
+              <option value="accessories">Accessories</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="marketPlatform">Market Platform</label>
+            <select id="marketPlatform" name="marketPlatform" required>
+              <option value="" selected disabled>Select a market platform</option>
+              <option value="oshodi-market-online">Oshodi Market Online</option>
+              <option value="alaba-market-online">Alaba Market Online</option>
+              <option value="lagos-electronics-market">Lagos Electronics Market</option>
+              <option value="lagos-building-materials-market">Lagos Building Materials Market</option>
+              <option value="lagos-trade-fair-market-online">Lagos Trade Fair Market Online</option>
+              <option value="lagos-island-market-online">Lagos Island Market Online</option>
+              <option value="onitsha-electronics-market">Onitsha Electronics Market</option>
+              <option value="onitsha-building-materials-market">Onitsha Building Materials Market</option>
+              <option value="abuja-electronics-market">Abuja Electronics Market</option>
+              <option value="abuja-building-material-market">Abuja Building Material Market</option>
+              <option value="port-harcourt-electronics-market">Port Harcourt Electronics Market</option>
+              <option value="port-harcourt-building-materials-market">Port Harcourt Building Materials Market</option>
+              <option value="aba-textile-market-online">Aba Textile Market Online</option>
+              <option value="aba-tailors-online">Aba Tailors Online</option>
+            </select>
+          </div>
+          <div class="field-group full">
+            <label for="description">Shop Description</label>
+            <textarea id="description" name="description" maxlength="500" placeholder="Tell us about your products / services"></textarea>
+            <div class="char-count"><span id="charCount">0</span> / 500</div>
+          </div>
+        </div>
+
+        <div class="actions-row">
+          <button type="button" class="btn-back" onclick="window.location.href='onboarding.html'">&#8592; Back</button>
+          <button type="submit" class="btn-continue">Continue</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="sx-supabase-config.js"></script>
+  <script src="sx-auth.js"></script>
+  <script>
+    (async function guardOnboarding() {
+      var sessionResult = await sxSupabaseClient.auth.getSession();
+      var session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+      if (!session) {
+        window.location.href = 'index.html';
+      }
+    })();
+
+    var descriptionEl = document.getElementById('description');
+    var charCountEl = document.getElementById('charCount');
+    descriptionEl.addEventListener('input', function () {
+      charCountEl.textContent = descriptionEl.value.length;
+    });
+
+    var businessForm = document.getElementById('businessForm');
+    var continueBtn = businessForm.querySelector('.btn-continue');
+
+    businessForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      SXAuth.showFormError(businessForm, '');
+
+      var requiredFields = [
+        { el: document.getElementById('fullName'), label: 'Full Name' },
+        { el: document.getElementById('phoneNumber'), label: 'Phone Number' },
+        { el: document.getElementById('bizEmail'), label: 'Email Address' },
+        { el: document.getElementById('whatsapp'), label: 'WhatsApp Number' },
+        { el: document.getElementById('shopName'), label: 'Proposed Shop Name' },
+        { el: document.getElementById('category'), label: 'Category' },
+        { el: document.getElementById('marketPlatform'), label: 'Market Platform' }
+      ];
+      var missingFields = requiredFields.filter(function (f) { return !f.el.value.trim(); });
+      if (missingFields.length) {
+        var missingLabels = missingFields.map(function (f) { return f.label; }).join(', ');
+        SXAuth.showFormError(businessForm, 'Please fill in the following field(s): ' + missingLabels + '.');
+        missingFields[0].el.focus();
+        return;
+      }
+
+      continueBtn.disabled = true;
+      continueBtn.textContent = 'Please wait...';
+
+      try {
+        await sxSupabaseClient.auth.updateUser({
+          data: {
+            sx_full_name: document.getElementById('fullName').value.trim(),
+            sx_phone: document.getElementById('phoneNumber').value.trim(),
+            sx_business_email: document.getElementById('bizEmail').value.trim(),
+            sx_whatsapp: document.getElementById('whatsapp').value.trim(),
+            sx_shop_name: document.getElementById('shopName').value.trim(),
+            sx_category: document.getElementById('category').value,
+            sx_market_platform: document.getElementById('marketPlatform').value,
+            sx_description: descriptionEl.value.trim()
+          }
+        });
+        window.location.href = 'onboarding-step3.html';
+      } catch (err) {
+        SXAuth.showFormError(businessForm, 'Something went wrong. Please try again.');
+        continueBtn.disabled = false;
+        continueBtn.textContent = 'Continue';
+      }
+    });
+  </script>
+</body>
+</html>
