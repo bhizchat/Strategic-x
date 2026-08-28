@@ -33,6 +33,58 @@
     return !!(user && user.user_metadata && user.user_metadata.sx_onboarded);
   }
 
+  async function signOut() {
+    var client = window.sxSupabaseClient;
+    if (client) {
+      await client.auth.signOut();
+    }
+    window.location.href = 'index.html';
+  }
+
+  // Wires up the profile chip in the dashboard-style pages' topbar: clicking
+  // it toggles a small dropdown menu (currently just "Log Out"), clicking
+  // outside or pressing Escape closes it.
+  function wireProfileMenu(toggleEl, menuEl, logoutBtnEl) {
+    if (!toggleEl || !menuEl) return;
+    var chipEl = toggleEl.closest ? toggleEl.closest('.profile-chip') : toggleEl.parentElement;
+
+    function closeMenu() {
+      menuEl.classList.remove('open');
+      if (chipEl) chipEl.classList.remove('open');
+    }
+
+    function openMenu() {
+      menuEl.classList.add('open');
+      if (chipEl) chipEl.classList.add('open');
+    }
+
+    toggleEl.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (menuEl.classList.contains('open')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!menuEl.classList.contains('open')) return;
+      if (menuEl.contains(e.target) || toggleEl.contains(e.target)) return;
+      closeMenu();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeMenu();
+    });
+
+    if (logoutBtnEl) {
+      logoutBtnEl.addEventListener('click', function (e) {
+        e.stopPropagation();
+        signOut();
+      });
+    }
+  }
+
   // Watches for a SIGNED_IN auth event (password sign-in, Google OAuth
   // redirect, or email-confirmation redirect all land here) and routes
   // first-time users to the onboarding flow, and returning users to their
@@ -55,6 +107,8 @@
     showFormError: showFormError,
     setSubmitting: setSubmitting,
     isOnboarded: isOnboarded,
-    watchAuthAndRoute: watchAuthAndRoute
+    watchAuthAndRoute: watchAuthAndRoute,
+    signOut: signOut,
+    wireProfileMenu: wireProfileMenu
   };
 })();

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>Strategic X - Add New Product</title>
   <style>
     :root {
@@ -172,9 +173,20 @@
     }
 
     .nav-icon {
-      width: 18px;
-      text-align: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, var(--silver-light), var(--silver));
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
+    }
+
+    .nav-icon img {
+      width: 15px;
+      height: 15px;
+      object-fit: contain;
     }
 
     .nav-item-label {
@@ -261,6 +273,85 @@
       align-items: center;
       gap: 8px;
       cursor: pointer;
+      position: relative;
+    }
+
+    .profile-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      transition: background 0.15s ease;
+    }
+
+    .profile-toggle:hover {
+      background: var(--charcoal-light);
+    }
+
+    .profile-caret {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--silver);
+      margin-left: 4px;
+      line-height: 1;
+      transition: transform 0.15s ease;
+    }
+
+    .profile-chip.open .profile-caret {
+      transform: rotate(180deg);
+      color: #ffffff;
+    }
+
+    .profile-menu {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      min-width: 160px;
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px;
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+      z-index: 200;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    }
+
+    .profile-menu.open {
+      display: flex;
+    }
+
+    .profile-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      color: var(--silver);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 9px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .profile-menu-item:hover {
+      background: var(--charcoal-light);
+      color: #ffffff;
+    }
+
+    .profile-menu-item.danger {
+      color: #e88888;
+    }
+
+    .profile-menu-item.danger:hover {
+      background: rgba(224, 75, 75, 0.14);
+      color: #ff8080;
     }
 
     .profile-avatar {
@@ -323,6 +414,20 @@
       color: var(--text-muted);
       margin-top: 4px;
       margin-bottom: 22px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .page-header-actions {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
     }
 
     /* ---- Form layout ---- */
@@ -593,6 +698,71 @@
       margin-top: 3px;
     }
 
+    .image-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .image-tile {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--charcoal-light);
+    }
+
+    .image-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .image-tile-remove {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(10, 10, 10, 0.75);
+      color: var(--silver-light);
+      font-size: 0.85rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .image-tile-remove:hover {
+      background: var(--black);
+      color: #fff;
+    }
+
+    .image-tile-add {
+      aspect-ratio: 1 / 1;
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      background: var(--charcoal-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 1.6rem;
+      font-weight: 300;
+    }
+
+    .image-tile-add:hover {
+      border-color: var(--silver-dark);
+      color: var(--silver-light);
+    }
+
     .image-guidelines {
       margin-top: 14px;
       font-size: 0.76rem;
@@ -715,6 +885,7 @@
       .footer { padding: 16px 18px; flex-direction: column; gap: 10px; align-items: flex-start; }
       .form-actions { flex-direction: column-reverse; align-items: stretch; }
       .actions-right { flex-direction: column-reverse; }
+      .page-header-actions { width: 100%; flex-direction: column-reverse; }
     }
   </style>
 </head>
@@ -736,35 +907,35 @@
     <div class="nav-groups">
       <ul class="nav-list">
         <li class="nav-item"><a class="nav-item-link" href="dashboard.html">
-          <span class="nav-icon">&#8862;</span>
+          <span class="nav-icon"><img src="assets/dashboard.png" alt="" /></span>
           <span class="nav-item-label">Dashboard</span>
         </a></li>
         <li class="nav-item"><a class="nav-item-link" href="my-shop.html">
-          <span class="nav-icon">&#127978;</span>
+          <span class="nav-icon"><img src="assets/shop.png" alt="" /></span>
           <span class="nav-item-label">My Shop</span>
         </a></li>
         <li class="nav-item active"><a class="nav-item-link" href="products.html">
-          <span class="nav-icon">&#128717;</span>
+          <span class="nav-icon"><img src="assets/parcel.png" alt="" /></span>
           <span class="nav-item-label">Products</span>
         </a></li>
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon">&#9733;</span>
+        <li class="nav-item"><a class="nav-item-link" href="reviews.html">
+          <span class="nav-icon"><img src="assets/star.png" alt="" /></span>
           <span class="nav-item-label">Reviews</span>
           <span class="nav-badge">0</span>
         </a></li>
         <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon">&#128179;</span>
+          <span class="nav-icon"><img src="assets/wallet.png" alt="" /></span>
           <span class="nav-item-label">Payments &amp; Billing</span>
         </a></li>
       </ul>
 
       <ul class="nav-list">
         <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon">&#9881;</span>
+          <span class="nav-icon"><img src="assets/setting.png" alt="" /></span>
           <span class="nav-item-label">Shop Settings</span>
         </a></li>
         <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon">&#128276;</span>
+          <span class="nav-icon"><img src="assets/notification.png" alt="" /></span>
           <span class="nav-item-label">Notifications</span>
           <span class="nav-badge">3</span>
         </a></li>
@@ -772,7 +943,7 @@
 
       <ul class="nav-list">
         <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon">&#10067;</span>
+          <span class="nav-icon"><img src="assets/question.png" alt="" /></span>
           <span class="nav-item-label">Support &amp; Help</span>
         </a></li>
       </ul>
@@ -785,9 +956,15 @@
       <div class="topbar-actions">
         <div class="icon-btn">&#128276;<span class="dot">1</span></div>
         <div class="icon-btn">?</div>
-        <div class="profile-chip">
-          <div class="profile-avatar" id="profileAvatar"><span id="profileInitial">U</span></div>
-          <div class="profile-text">Good morning,<strong id="profileName">there</strong></div>
+        <div class="profile-chip" id="profileChip">
+          <div class="profile-toggle" id="profileToggle">
+            <div class="profile-avatar" id="profileAvatar"><span id="profileInitial">U</span></div>
+            <div class="profile-text">Good morning,<strong id="profileName">there</strong></div>
+            <span class="profile-caret">&#9662;</span>
+          </div>
+          <div class="profile-menu" id="profileMenu">
+            <button type="button" class="profile-menu-item danger" id="logoutBtn">&#10148; Log Out</button>
+          </div>
         </div>
       </div>
     </div>
@@ -801,8 +978,16 @@
         <span class="current">Add New Product</span>
       </div>
 
-      <h1>Add New Product</h1>
-      <p class="subtitle">Add detailed information about your product to attract more customers.</p>
+      <div class="page-header">
+        <div>
+          <h1>Add New Product</h1>
+          <p class="subtitle">Add detailed information about your product to attract more customers.</p>
+        </div>
+        <div class="page-header-actions">
+          <button type="button" form="addProductForm" class="btn-outline" id="saveDraftBtn">&#128190; Save as Draft</button>
+          <button type="submit" form="addProductForm" class="btn-solid" id="publishBtn">&#10003; Publish Product</button>
+        </div>
+      </div>
 
       <form id="addProductForm">
         <div class="form-grid">
@@ -817,11 +1002,17 @@
                   <div class="field-hint">Choose a clear and descriptive name for your product.</div>
                 </div>
                 <div class="form-field">
-                  <label for="productTags">Product Tags <span class="optional">(Optional)</span></label>
-                  <div class="tags-input" id="tagsInput">
-                    <input type="text" id="productTagsEntry" placeholder="Enter tags and press Enter" />
-                  </div>
-                  <div class="field-hint">Add relevant tags to help customers find your product.</div>
+                  <label for="productCategory">Category <span class="required">*</span></label>
+                  <select id="productCategory" name="productCategory" required>
+                    <option value="" selected disabled>Select category</option>
+                    <option value="fashion">Clothing &amp; Fashion</option>
+                    <option value="electronics">Electronics &amp; Gadgets</option>
+                    <option value="fabrics">Fabrics &amp; Textiles</option>
+                    <option value="foodstuff">Foodstuffs &amp; Oils</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <div class="field-hint">Choose the category that best fits your product.</div>
                 </div>
               </div>
 
@@ -853,6 +1044,8 @@
                 <div class="upload-sub">PNG, JPG or WEBP (Max 5MB each)</div>
               </div>
               <input type="file" id="productImages" accept="image/png,image/jpeg,image/webp" multiple hidden />
+
+              <div class="image-preview-grid" id="imagePreviewGrid" style="display: none;"></div>
 
               <div class="image-guidelines">
                 <div><span>&#10003;</span> Use clear, high-quality images</div>
@@ -886,15 +1079,37 @@
                 <div class="field-hint">Number of items available in stock</div>
               </div>
             </div>
+
+            <div class="form-card">
+              <div class="card-title"><span class="card-step">4</span> Additional Details</div>
+
+              <div class="form-field" style="margin-bottom: 16px;">
+                <label for="productCondition">Condition</label>
+                <select id="productCondition" name="productCondition">
+                  <option value="new" selected>New</option>
+                  <option value="used">Used</option>
+                  <option value="refurbished">Refurbished</option>
+                </select>
+              </div>
+
+              <div class="form-field" style="margin-bottom: 16px;">
+                <label for="productWarranty">Warranty <span class="optional">(Optional)</span></label>
+                <input type="text" id="productWarranty" name="productWarranty" placeholder="e.g. 12 months" />
+              </div>
+
+              <div class="form-field">
+                <label for="productTagsEntry">Product Tags <span class="optional">(Optional)</span></label>
+                <div class="tags-input" id="tagsInput">
+                  <input type="text" id="productTagsEntry" placeholder="Enter tags and press Enter" />
+                </div>
+                <div class="field-hint">Add relevant tags to help customers find your product.</div>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="form-actions">
           <a href="products.html" class="btn-outline">&#10005; Cancel</a>
-          <div class="actions-right">
-            <button type="button" class="btn-outline" id="saveDraftBtn">&#128190; Save as Draft</button>
-            <button type="submit" class="btn-solid" id="publishBtn">&#10003; Publish Product</button>
-          </div>
         </div>
       </form>
     </div>
@@ -911,7 +1126,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js"></script>
+  <script src="sx-auth.js?v=2"></script>
   <script>
     (async function guardAddProduct() {
       var sessionResult = await sxSupabaseClient.auth.getSession();
@@ -935,10 +1150,11 @@
 
       var shopRowResult = await sxSupabaseClient
         .from('sx_shops')
-        .select('shop_name, category, market_platform, logo_url')
+        .select('id, shop_name, category, market_platform, logo_url')
         .eq('owner_id', user.id)
         .maybeSingle();
       var shop = (shopRowResult && shopRowResult.data) || {};
+      window.sxCurrentShopId = shop.id || null;
 
       var shopName = shop.shop_name || meta.sx_shop_name || 'Your Shop';
       var category = shop.category || meta.sx_category || '';
@@ -953,6 +1169,12 @@
         document.getElementById('shopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
       }
     })();
+
+    SXAuth.wireProfileMenu(
+      document.getElementById('profileToggle'),
+      document.getElementById('profileMenu'),
+      document.getElementById('logoutBtn')
+    );
 
     // ---- Product description character counter ----
     var descriptionField = document.getElementById('productDescription');
@@ -996,31 +1218,160 @@
     var uploadArea = document.getElementById('uploadArea');
     var imagesInput = document.getElementById('productImages');
     var imageCount = document.getElementById('imageCount');
+    var imagePreviewGrid = document.getElementById('imagePreviewGrid');
+    var selectedImageFiles = [];
+
+    function syncImagesInputFiles() {
+      var dt = new DataTransfer();
+      selectedImageFiles.forEach(function (file) { dt.items.add(file); });
+      imagesInput.files = dt.files;
+    }
+
+    function renderImagePreviews() {
+      imagePreviewGrid.innerHTML = '';
+
+      selectedImageFiles.forEach(function (file, index) {
+        var tile = document.createElement('div');
+        tile.className = 'image-tile';
+
+        var img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.alt = 'Product image ' + (index + 1);
+        tile.appendChild(img);
+
+        var removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'image-tile-remove';
+        removeBtn.setAttribute('aria-label', 'Remove image');
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          selectedImageFiles.splice(index, 1);
+          syncImagesInputFiles();
+          renderImagePreviews();
+        });
+        tile.appendChild(removeBtn);
+
+        imagePreviewGrid.appendChild(tile);
+      });
+
+      if (selectedImageFiles.length < 8) {
+        var addTile = document.createElement('div');
+        addTile.className = 'image-tile-add';
+        addTile.innerHTML = '<span>+</span>';
+        addTile.addEventListener('click', function () {
+          imagesInput.click();
+        });
+        imagePreviewGrid.appendChild(addTile);
+      }
+
+      imagePreviewGrid.style.display = selectedImageFiles.length ? 'grid' : 'none';
+      uploadArea.style.display = selectedImageFiles.length ? 'none' : 'flex';
+      imageCount.textContent = selectedImageFiles.length;
+    }
 
     uploadArea.addEventListener('click', function () {
       imagesInput.click();
     });
 
     imagesInput.addEventListener('change', function () {
-      var count = Math.min(imagesInput.files.length, 8);
-      imageCount.textContent = count;
+      var newFiles = Array.prototype.slice.call(imagesInput.files || []);
+      newFiles.forEach(function (file) {
+        if (selectedImageFiles.length < 8) selectedImageFiles.push(file);
+      });
+      syncImagesInputFiles();
+      renderImagePreviews();
     });
 
-    // NOTE: There is no sx_products table yet, so this form has no backend
-    // to save to. Submitting shows a friendly notice instead of failing
-    // silently or fabricating a save. Wire this up once a products schema
-    // exists.
+    // ---- Save as Draft / Publish Product: uploads any selected images to
+    // the sx-product-images storage bucket, then inserts a row into
+    // sx_products (status 'draft' or 'published'). Requires
+    // sx-products-schema.sql and sx-product-assets-schema.sql to have been
+    // run in Supabase first.
     var addProductForm = document.getElementById('addProductForm');
     var saveDraftBtn = document.getElementById('saveDraftBtn');
+    var publishBtn = document.getElementById('publishBtn');
 
-    function notImplementedYet() {
-      SXAuth.showFormError(addProductForm, 'Product saving isn\u2019t set up yet \u2014 this form is a preview of the Add Product experience.');
+    async function uploadProductImages(userId, productId) {
+      var files = Array.prototype.slice.call(imagesInput.files || []).slice(0, 8);
+      var urls = [];
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+        var path = userId + '/' + productId + '/' + Date.now() + '-' + i + '-' + safeName;
+        var uploadResult = await sxSupabaseClient.storage
+          .from('sx-product-images')
+          .upload(path, file, { cacheControl: '3600', upsert: false });
+        if (uploadResult.error) throw uploadResult.error;
+        var publicUrlResult = sxSupabaseClient.storage.from('sx-product-images').getPublicUrl(path);
+        urls.push(publicUrlResult.data.publicUrl);
+      }
+      return urls;
     }
 
-    saveDraftBtn.addEventListener('click', notImplementedYet);
+    async function saveProduct(status) {
+      var sessionResult = await sxSupabaseClient.auth.getSession();
+      var session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+      if (!session || !session.user) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      var productName = document.getElementById('productName').value.trim();
+      var category = document.getElementById('productCategory').value;
+      var description = document.getElementById('productDescription').value.trim();
+      var sellingPrice = document.getElementById('sellingPrice').value;
+      var stockQuantity = document.getElementById('stockQuantity').value;
+
+      if (status === 'published' && (!productName || !category || !description || !sellingPrice || stockQuantity === '')) {
+        addProductForm.reportValidity();
+        return;
+      }
+      if (!window.sxCurrentShopId) {
+        SXAuth.showFormError(addProductForm, 'Your shop profile isn\u2019t set up yet \u2014 finish onboarding before adding products.');
+        return;
+      }
+
+      SXAuth.setSubmitting(status === 'published' ? publishBtn : saveDraftBtn, true, status === 'published' ? '\u2713 Publish Product' : '\ud83d\udcbe Save as Draft');
+      SXAuth.showFormError(addProductForm, null);
+
+      try {
+        var productId = (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : String(Date.now());
+        var imageUrls = await uploadProductImages(session.user.id, productId);
+
+        var insertResult = await sxSupabaseClient.from('sx_products').insert({
+          id: productId,
+          owner_id: session.user.id,
+          shop_id: window.sxCurrentShopId,
+          product_name: productName || 'Untitled product',
+          category: category || null,
+          description: description,
+          tags: tags,
+          images: imageUrls,
+          selling_price: sellingPrice ? Number(sellingPrice) : 0,
+          compare_price: document.getElementById('comparePrice').value ? Number(document.getElementById('comparePrice').value) : null,
+          stock_quantity: stockQuantity ? Number(stockQuantity) : 0,
+          condition: document.getElementById('productCondition').value || 'new',
+          warranty: document.getElementById('productWarranty').value.trim() || null,
+          status: status
+        });
+
+        if (insertResult.error) throw insertResult.error;
+
+        window.location.href = 'products.html';
+      } catch (err) {
+        SXAuth.showFormError(addProductForm, (err && err.message) || 'Something went wrong saving your product. Please try again.');
+      } finally {
+        SXAuth.setSubmitting(status === 'published' ? publishBtn : saveDraftBtn, false, status === 'published' ? '\u2713 Publish Product' : '\ud83d\udcbe Save as Draft');
+      }
+    }
+
+    saveDraftBtn.addEventListener('click', function () {
+      saveProduct('draft');
+    });
     addProductForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      notImplementedYet();
+      saveProduct('published');
     });
   </script>
 </body>

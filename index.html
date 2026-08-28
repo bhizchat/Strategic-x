@@ -154,6 +154,12 @@
       flex-shrink: 0;
     }
 
+    .feature-icon img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+
     .feature-text .title {
       font-weight: 700;
       font-size: 0.9rem;
@@ -479,21 +485,21 @@
 
         <div class="feature-list">
           <div class="feature-item">
-            <div class="feature-icon">&#127978;</div>
+            <div class="feature-icon"><img src="assets/shop.png" alt="" /></div>
             <div class="feature-text">
               <div class="title">For Local Vendors</div>
               <div class="desc">Expand your reach and grow your business online.</div>
             </div>
           </div>
           <div class="feature-item">
-            <div class="feature-icon">&#128717;</div>
+            <div class="feature-icon"><img src="assets/parcel.png" alt="" /></div>
             <div class="feature-text">
               <div class="title">For Shoppers</div>
               <div class="desc">Discover trusted local products and shop with ease.</div>
             </div>
           </div>
           <div class="feature-item">
-            <div class="feature-icon">&#128200;</div>
+            <div class="feature-icon"><img src="assets/graph.png" alt="" /></div>
             <div class="feature-text">
               <div class="title">For Communities</div>
               <div class="desc">Stronger local economies, built together.</div>
@@ -563,7 +569,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js"></script>
+  <script src="sx-auth.js?v=2"></script>
   <script>
     var toggleBtn = document.getElementById('togglePassword');
     var passwordInput = document.getElementById('password');

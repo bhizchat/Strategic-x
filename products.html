@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>Strategic X - My Products</title>
   <style>
     :root {
@@ -172,9 +173,20 @@
     }
 
     .nav-icon {
-      width: 18px;
-      text-align: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, var(--silver-light), var(--silver));
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
+    }
+
+    .nav-icon img {
+      width: 15px;
+      height: 15px;
+      object-fit: contain;
     }
 
     .nav-item-label {
@@ -291,6 +303,85 @@
       align-items: center;
       gap: 8px;
       cursor: pointer;
+      position: relative;
+    }
+
+    .profile-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      transition: background 0.15s ease;
+    }
+
+    .profile-toggle:hover {
+      background: var(--charcoal-light);
+    }
+
+    .profile-caret {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--silver);
+      margin-left: 4px;
+      line-height: 1;
+      transition: transform 0.15s ease;
+    }
+
+    .profile-chip.open .profile-caret {
+      transform: rotate(180deg);
+      color: #ffffff;
+    }
+
+    .profile-menu {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      min-width: 160px;
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px;
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+      z-index: 200;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    }
+
+    .profile-menu.open {
+      display: flex;
+    }
+
+    .profile-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      color: var(--silver);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 9px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .profile-menu-item:hover {
+      background: var(--charcoal-light);
+      color: #ffffff;
+    }
+
+    .profile-menu-item.danger {
+      color: #e88888;
+    }
+
+    .profile-menu-item.danger:hover {
+      background: rgba(224, 75, 75, 0.14);
+      color: #ff8080;
     }
 
     .profile-avatar {
@@ -523,6 +614,168 @@
       border-bottom: none;
     }
 
+    .product-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .product-thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--charcoal-light);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .product-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-cell-name {
+      font-weight: 700;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 3px 10px;
+    }
+
+    .status-badge.published {
+      background: rgba(159, 227, 180, 0.14);
+      color: #9fe3b4;
+    }
+
+    .status-badge.draft {
+      background: rgba(199, 201, 204, 0.14);
+      color: var(--silver);
+    }
+
+    .stock-value {
+      cursor: default;
+    }
+
+    .row-edit-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--charcoal-light);
+      color: var(--silver);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.86rem;
+    }
+
+    .row-edit-btn:hover {
+      border-color: var(--silver-dark);
+      color: var(--silver-light);
+      background: var(--charcoal);
+    }
+
+    .edit-modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .edit-modal-backdrop.open {
+      display: flex;
+    }
+
+    .edit-modal {
+      width: 100%;
+      max-width: 480px;
+      max-height: 88vh;
+      overflow-y: auto;
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .edit-modal-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .edit-modal .form-field {
+      margin-bottom: 14px;
+    }
+
+    .edit-modal label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .edit-modal input,
+    .edit-modal select,
+    .edit-modal textarea {
+      width: 100%;
+      background: var(--charcoal-light);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--silver-light);
+      font-size: 0.86rem;
+      padding: 9px 12px;
+      font-family: inherit;
+    }
+
+    .edit-modal input:focus,
+    .edit-modal select:focus,
+    .edit-modal textarea:focus {
+      outline: none;
+      border-color: var(--silver-dark);
+    }
+
+    .edit-modal textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .edit-modal-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .edit-modal-error {
+      display: none;
+      color: #e08a8a;
+      font-size: 0.78rem;
+      margin-bottom: 12px;
+    }
+
+    .edit-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
     .empty-state {
       display: flex;
       flex-direction: column;
@@ -650,35 +903,35 @@
     <div class="nav-groups">
       <ul class="nav-list">
         <li class="nav-item"><a class="nav-item-link" href="dashboard.html">
-          <span class="nav-icon">&#8862;</span>
+          <span class="nav-icon"><img src="assets/dashboard.png" alt="" /></span>
           <span class="nav-item-label">Dashboard</span>
         </a></li>
         <li class="nav-item"><a class="nav-item-link" href="my-shop.html">
-          <span class="nav-icon">&#127978;</span>
+          <span class="nav-icon"><img src="assets/shop.png" alt="" /></span>
           <span class="nav-item-label">My Shop</span>
         </a></li>
         <li class="nav-item active"><a class="nav-item-link" href="products.html">
-          <span class="nav-icon">&#128717;</span>
+          <span class="nav-icon"><img src="assets/parcel.png" alt="" /></span>
           <span class="nav-item-label">Products</span>
         </a></li>
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon">&#9733;</span>
+        <li class="nav-item"><a class="nav-item-link" href="reviews.html">
+          <span class="nav-icon"><img src="assets/star.png" alt="" /></span>
           <span class="nav-item-label">Reviews</span>
           <span class="nav-badge">0</span>
         </a></li>
         <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon">&#128179;</span>
+          <span class="nav-icon"><img src="assets/wallet.png" alt="" /></span>
           <span class="nav-item-label">Payments &amp; Billing</span>
         </a></li>
       </ul>
 
       <ul class="nav-list">
         <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon">&#9881;</span>
+          <span class="nav-icon"><img src="assets/setting.png" alt="" /></span>
           <span class="nav-item-label">Shop Settings</span>
         </a></li>
         <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon">&#128276;</span>
+          <span class="nav-icon"><img src="assets/notification.png" alt="" /></span>
           <span class="nav-item-label">Notifications</span>
           <span class="nav-badge">3</span>
         </a></li>
@@ -686,7 +939,7 @@
 
       <ul class="nav-list">
         <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon">&#10067;</span>
+          <span class="nav-icon"><img src="assets/question.png" alt="" /></span>
           <span class="nav-item-label">Support &amp; Help</span>
         </a></li>
       </ul>
@@ -699,9 +952,15 @@
       <div class="topbar-actions">
         <div class="icon-btn">&#128276;<span class="dot">1</span></div>
         <div class="icon-btn">?</div>
-        <div class="profile-chip">
-          <div class="profile-avatar" id="profileAvatar"><span id="profileInitial">U</span></div>
-          <div class="profile-text">Good morning,<strong id="profileName">there</strong></div>
+        <div class="profile-chip" id="profileChip">
+          <div class="profile-toggle" id="profileToggle">
+            <div class="profile-avatar" id="profileAvatar"><span id="profileInitial">U</span></div>
+            <div class="profile-text">Good morning,<strong id="profileName">there</strong></div>
+            <span class="profile-caret">&#9662;</span>
+          </div>
+          <div class="profile-menu" id="profileMenu">
+            <button type="button" class="profile-menu-item danger" id="logoutBtn">&#10148; Log Out</button>
+          </div>
         </div>
       </div>
     </div>
@@ -760,25 +1019,28 @@
         </select>
       </div>
 
-      <div class="products-panel">
-        <div class="empty-state">
+      <div class="products-panel" id="productsPanel">
+        <div class="empty-state" id="productsEmptyState">
           <div class="empty-state-icon">&#128717;</div>
           <h3>No products yet</h3>
           <p>Start building your catalog by adding your first product. Your listings will appear here.</p>
           <a href="add-product.html" class="btn-solid">&#43; Add New Product</a>
         </div>
+        <table class="products-table" id="productsTable" style="display: none;">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody"></tbody>
+        </table>
       </div>
 
-      <div class="tip-banner">
-        <div class="tip-banner-left">
-          <div class="tip-icon">&#128161;</div>
-          <div class="tip-text">
-            <strong>Tips to grow your shop</strong>
-            <span>Add high quality images, accurate prices and detailed descriptions to attract more customers.</span>
-          </div>
-        </div>
-        <a href="#" class="btn-outline">Learn More</a>
-      </div>
     </div>
 
     <div class="footer">
@@ -791,9 +1053,72 @@
     </div>
   </div>
 
+  <div class="edit-modal-backdrop" id="editModalBackdrop">
+    <div class="edit-modal">
+      <div class="edit-modal-title">Edit Product</div>
+      <div class="edit-modal-error" id="editModalError"></div>
+
+      <div class="form-field">
+        <label for="editProductName">Product Name</label>
+        <input type="text" id="editProductName" />
+      </div>
+
+      <div class="form-field">
+        <label for="editProductCategory">Category</label>
+        <select id="editProductCategory">
+          <option value="fashion">Clothing &amp; Fashion</option>
+          <option value="electronics">Electronics &amp; Gadgets</option>
+          <option value="fabrics">Fabrics &amp; Textiles</option>
+          <option value="foodstuff">Foodstuffs &amp; Oils</option>
+          <option value="accessories">Accessories</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="editProductDescription">Description</label>
+        <textarea id="editProductDescription" maxlength="1000"></textarea>
+      </div>
+
+      <div class="edit-modal-row">
+        <div class="form-field">
+          <label for="editSellingPrice">Selling Price (&#8358;)</label>
+          <input type="number" id="editSellingPrice" min="0" step="0.01" />
+        </div>
+        <div class="form-field">
+          <label for="editStockQuantity">Stock Quantity</label>
+          <input type="number" id="editStockQuantity" min="0" step="1" />
+        </div>
+      </div>
+
+      <div class="edit-modal-row">
+        <div class="form-field">
+          <label for="editProductCondition">Condition</label>
+          <select id="editProductCondition">
+            <option value="new">New</option>
+            <option value="used">Used</option>
+            <option value="refurbished">Refurbished</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="editProductStatus">Status</label>
+          <select id="editProductStatus">
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="edit-modal-actions">
+        <button type="button" class="btn-outline" id="editModalCancelBtn">Cancel</button>
+        <button type="button" class="btn-solid" id="editModalSaveBtn">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js"></script>
+  <script src="sx-auth.js?v=2"></script>
   <script>
     (async function guardProducts() {
       var sessionResult = await sxSupabaseClient.auth.getSession();
@@ -817,7 +1142,7 @@
 
       var shopRowResult = await sxSupabaseClient
         .from('sx_shops')
-        .select('shop_name, category, market_platform, logo_url')
+        .select('id, shop_name, category, market_platform, logo_url')
         .eq('owner_id', user.id)
         .maybeSingle();
       var shop = (shopRowResult && shopRowResult.data) || {};
@@ -834,7 +1159,201 @@
       if (logoUrl) {
         document.getElementById('shopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
       }
+
+      await loadProducts(user.id);
     })();
+
+    SXAuth.wireProfileMenu(
+      document.getElementById('profileToggle'),
+      document.getElementById('profileMenu'),
+      document.getElementById('logoutBtn')
+    );
+
+    // ---- Loads the signed-in owner's products (draft + published) from
+    // sx_products and renders them into the table, or shows the empty
+    // state if there are none yet. Requires sx-products-schema.sql to have
+    // been run in Supabase.
+    var currentProducts = [];
+
+    function recomputeStockStats() {
+      var total = currentProducts.length;
+      var inStock = currentProducts.filter(function (p) { return p.stock_quantity > 5; }).length;
+      var lowStock = currentProducts.filter(function (p) { return p.stock_quantity > 0 && p.stock_quantity <= 5; }).length;
+      var outOfStock = currentProducts.filter(function (p) { return p.stock_quantity <= 0; }).length;
+
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statInStock').textContent = inStock;
+      document.getElementById('statLowStock').textContent = lowStock;
+      document.getElementById('statOutOfStock').textContent = outOfStock;
+    }
+
+    async function loadProducts(userId) {
+      var emptyState = document.getElementById('productsEmptyState');
+      var table = document.getElementById('productsTable');
+      var tbody = document.getElementById('productsTableBody');
+
+      var result = await sxSupabaseClient
+        .from('sx_products')
+        .select('id, product_name, category, description, images, selling_price, stock_quantity, condition, status')
+        .eq('owner_id', userId)
+        .order('created_at', { ascending: false });
+
+      currentProducts = (result && result.data) || [];
+
+      recomputeStockStats();
+
+      if (currentProducts.length === 0) {
+        emptyState.style.display = 'flex';
+        table.style.display = 'none';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      table.style.display = 'table';
+      tbody.innerHTML = '';
+
+      currentProducts.forEach(function (product) {
+        var thumbUrl = (product.images && product.images[0]) || '';
+        var row = document.createElement('tr');
+        row.setAttribute('data-product-id', product.id);
+        row.innerHTML =
+          '<td><div class="product-cell">' +
+            '<div class="product-thumb">' + (thumbUrl ? '<img src="' + thumbUrl + '" alt="" />' : '&#128717;') + '</div>' +
+            '<span class="product-cell-name"></span>' +
+          '</div></td>' +
+          '<td></td>' +
+          '<td>\u20a6' + Number(product.selling_price || 0).toLocaleString() + '</td>' +
+          '<td class="stock-cell"><span class="stock-value"><span class="stock-value-text"></span></span></td>' +
+          '<td><span class="status-badge ' + product.status + '"></span></td>' +
+          '<td><button type="button" class="row-edit-btn" title="Edit product">&#9998;</button></td>';
+        row.querySelector('.product-cell-name').textContent = product.product_name;
+        row.children[1].textContent = product.category || '\u2014';
+        row.querySelector('.stock-value-text').textContent = product.stock_quantity;
+        row.querySelector('.status-badge').textContent = product.status === 'published' ? 'Published' : 'Draft';
+        tbody.appendChild(row);
+      });
+    }
+
+    // ---- Edit Product modal: clicking the pencil button on a row opens a
+    // modal pre-filled with that product's data. Saving updates the row in
+    // sx_products directly (RLS still enforces owner_id = auth.uid()).
+    // Because the Oshodi Market Online storefront (and any other
+    // storefront) reads from the sx_products_public view, which is built
+    // on top of this same table, edits made here are reflected there as
+    // soon as the storefront next queries it — no separate sync needed.
+    var productsTableBody = document.getElementById('productsTableBody');
+    var editModalBackdrop = document.getElementById('editModalBackdrop');
+    var editModalError = document.getElementById('editModalError');
+    var editModalSaveBtn = document.getElementById('editModalSaveBtn');
+    var editModalCancelBtn = document.getElementById('editModalCancelBtn');
+    var editingProductId = null;
+
+    productsTableBody.addEventListener('click', function (e) {
+      var editBtn = e.target.closest('.row-edit-btn');
+      if (!editBtn) return;
+      var row = editBtn.closest('tr');
+      var productId = row.getAttribute('data-product-id');
+      openEditModal(productId);
+    });
+
+    function openEditModal(productId) {
+      var product = currentProducts.filter(function (p) { return String(p.id) === productId; })[0];
+      if (!product) return;
+
+      editingProductId = productId;
+      editModalError.style.display = 'none';
+      editModalError.textContent = '';
+
+      document.getElementById('editProductName').value = product.product_name || '';
+      document.getElementById('editProductCategory').value = product.category || 'other';
+      document.getElementById('editProductDescription').value = product.description || '';
+      document.getElementById('editSellingPrice').value = product.selling_price || 0;
+      document.getElementById('editStockQuantity').value = product.stock_quantity || 0;
+      document.getElementById('editProductCondition').value = product.condition || 'new';
+      document.getElementById('editProductStatus').value = product.status || 'published';
+
+      editModalBackdrop.classList.add('open');
+    }
+
+    function closeEditModal() {
+      editModalBackdrop.classList.remove('open');
+      editingProductId = null;
+    }
+
+    editModalCancelBtn.addEventListener('click', closeEditModal);
+    editModalBackdrop.addEventListener('click', function (e) {
+      if (e.target === editModalBackdrop) closeEditModal();
+    });
+
+    editModalSaveBtn.addEventListener('click', async function () {
+      if (!editingProductId) return;
+
+      var productName = document.getElementById('editProductName').value.trim();
+      var category = document.getElementById('editProductCategory').value;
+      var description = document.getElementById('editProductDescription').value.trim();
+      var sellingPrice = parseFloat(document.getElementById('editSellingPrice').value);
+      var stockQuantity = parseInt(document.getElementById('editStockQuantity').value, 10);
+      var condition = document.getElementById('editProductCondition').value;
+      var status = document.getElementById('editProductStatus').value;
+
+      if (!productName || !category || !description || isNaN(sellingPrice) || sellingPrice < 0 || isNaN(stockQuantity) || stockQuantity < 0) {
+        editModalError.textContent = 'Please fill in all fields with valid values.';
+        editModalError.style.display = 'block';
+        return;
+      }
+
+      editModalSaveBtn.disabled = true;
+      editModalSaveBtn.textContent = 'Saving...';
+
+      var updateResult = await sxSupabaseClient
+        .from('sx_products')
+        .update({
+          product_name: productName,
+          category: category,
+          description: description,
+          selling_price: sellingPrice,
+          stock_quantity: stockQuantity,
+          condition: condition,
+          status: status,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', editingProductId);
+
+      editModalSaveBtn.disabled = false;
+      editModalSaveBtn.textContent = 'Save Changes';
+
+      if (updateResult && updateResult.error) {
+        editModalError.textContent = updateResult.error.message;
+        editModalError.style.display = 'block';
+        return;
+      }
+
+      var product = currentProducts.filter(function (p) { return String(p.id) === editingProductId; })[0];
+      if (product) {
+        product.product_name = productName;
+        product.category = category;
+        product.description = description;
+        product.selling_price = sellingPrice;
+        product.stock_quantity = stockQuantity;
+        product.condition = condition;
+        product.status = status;
+      }
+
+      var row = productsTableBody.querySelector('tr[data-product-id="' + editingProductId + '"]');
+      if (row) {
+        row.querySelector('.product-cell-name').textContent = productName;
+        row.children[1].textContent = category || '\u2014';
+        row.children[2].textContent = '\u20a6' + Number(sellingPrice).toLocaleString();
+        row.querySelector('.stock-value-text').textContent = stockQuantity;
+        var badge = row.querySelector('.status-badge');
+        badge.className = 'status-badge ' + status;
+        badge.textContent = status === 'published' ? 'Published' : 'Draft';
+      }
+
+      recomputeStockStats();
+      closeEditModal();
+    });
   </script>
 </body>
 </html>
+
