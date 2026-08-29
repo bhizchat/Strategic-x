@@ -585,6 +585,26 @@
       font-size: 1.3rem;
       font-weight: 800;
       margin-top: 6px;
+      position: relative;
+    }
+
+    .stat-value.is-loading {
+      color: transparent;
+    }
+
+    .stat-value.is-loading::after {
+      content: "";
+      position: absolute;
+      inset: 2px 40% 2px 0;
+      background: linear-gradient(90deg, var(--silver-light) 25%, #f2f2f3 50%, var(--silver-light) 75%);
+      background-size: 200% 100%;
+      border-radius: 6px;
+      animation: statSkeleton 1.2s ease-in-out infinite;
+    }
+
+    @keyframes statSkeleton {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
     .stat-value .stars {
@@ -1268,17 +1288,17 @@
       <div class="reviews-top-row">
         <div class="stat-card">
           <div class="stat-label">Overall Rating</div>
-          <div class="stat-value"><span id="statOverallRating">0.0</span><span class="stars" id="statOverallRatingStars"></span></div>
+          <div class="stat-value is-loading" id="statOverallRatingValue"><span id="statOverallRating">0.0</span><span class="stars" id="statOverallRatingStars"></span></div>
           <div class="stat-sub" id="statOverallRatingSub">Based on 0 reviews</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Total Reviews</div>
-          <div class="stat-value" id="statTotalReviews">0</div>
+          <div class="stat-value is-loading" id="statTotalReviews">0</div>
           <div class="stat-sub">Across all products</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">5 Star Reviews</div>
-          <div class="stat-value" id="statFiveStar">0<span class="stat-sub" id="statFiveStarPct" style="margin-left:6px;"></span></div>
+          <div class="stat-value is-loading" id="statFiveStar">0<span class="stat-sub" id="statFiveStarPct" style="margin-left:6px;"></span></div>
           <div class="stat-progress-track"><div class="stat-progress-fill" id="statFiveStarBar" style="width: 0%;"></div></div>
         </div>
         <div class="rating-breakdown-card">
@@ -1408,7 +1428,19 @@
       }
 
       if (shop.id) {
-        await loadReviews(shop.id);
+        try {
+          await loadReviews(shop.id);
+        } finally {
+          ['statOverallRatingValue', 'statTotalReviews', 'statFiveStar'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.classList.remove('is-loading');
+          });
+        }
+      } else {
+        ['statOverallRatingValue', 'statTotalReviews', 'statFiveStar'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.remove('is-loading');
+        });
       }
     })();
 
