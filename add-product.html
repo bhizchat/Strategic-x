@@ -207,6 +207,117 @@
       color: #ffffff;
     }
 
+    .support-help-item {
+      position: relative;
+    }
+
+    .support-help-panel {
+      position: absolute;
+      left: calc(100% + 12px);
+      bottom: 0;
+      width: 280px;
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 300;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+      cursor: default;
+    }
+
+    .support-help-panel.open {
+      display: flex;
+    }
+
+    .support-help-title-main {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .support-help-subtitle {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .support-help-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .support-help-row + .support-help-row {
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .support-help-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--charcoal-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .support-help-icon img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+
+    .support-help-body {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .support-help-row-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .support-help-row-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .support-help-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 12px;
+      border: 1px solid #f4b740;
+      border-radius: 7px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #f4b740;
+    }
+
+    .support-help-btn:hover {
+      background: rgba(244, 183, 64, 0.12);
+    }
+
+    .support-help-row-meta {
+      font-size: 0.66rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .support-help-link {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #f4b740;
+      border-bottom: 1px solid rgba(244, 183, 64, 0.4);
+    }
+
     /* ---- Main content ---- */
     .main {
       flex: 1;
@@ -266,6 +377,27 @@
       align-items: center;
       justify-content: center;
       border: 2px solid var(--black);
+    }
+
+    .topbar-logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      color: #e88888;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .topbar-logout-btn:hover {
+      background: rgba(224, 75, 75, 0.14);
+      color: #ff8080;
+      border-color: rgba(224, 75, 75, 0.3);
     }
 
     .profile-chip {
@@ -877,8 +1009,32 @@
       .form-row { grid-template-columns: 1fr; }
     }
 
+    /* ---- Mobile sidebar drawer ---- */
+    .sx-sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 490;
+    }
+
+    .sx-sidebar-backdrop.open {
+      display: block;
+    }
+
     @media (max-width: 760px) {
-      .sidebar { display: none; }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow-y: auto;
+        z-index: 500;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+      }
+      .sidebar.open { transform: translateX(0); }
       .menu-toggle { display: block; }
       .content { padding: 20px 18px 40px; }
       .topbar { padding: 16px 18px; }
@@ -886,6 +1042,16 @@
       .form-actions { flex-direction: column-reverse; align-items: stretch; }
       .actions-right { flex-direction: column-reverse; }
       .page-header-actions { width: 100%; flex-direction: column-reverse; }
+      .support-help-panel {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        bottom: auto;
+        transform: translate(-50%, -50%);
+        width: min(280px, calc(100vw - 40px));
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+      }
     }
   </style>
 </head>
@@ -930,32 +1096,52 @@
       </ul>
 
       <ul class="nav-list">
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon"><img src="assets/setting.png" alt="" /></span>
-          <span class="nav-item-label">Shop Settings</span>
-        </a></li>
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon"><img src="assets/notification.png" alt="" /></span>
-          <span class="nav-item-label">Notifications</span>
-          <span class="nav-badge">3</span>
-        </a></li>
-      </ul>
-
-      <ul class="nav-list">
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon"><img src="assets/question.png" alt="" /></span>
-          <span class="nav-item-label">Support &amp; Help</span>
-        </a></li>
+        <li class="nav-item support-help-item">
+          <a class="nav-item-link" href="#" id="supportHelpToggle">
+            <span class="nav-icon"><img src="assets/question.png" alt="" /></span>
+            <span class="nav-item-label">Support &amp; Help</span>
+          </a>
+          <div class="support-help-panel" id="supportHelpPanel">
+            <div class="support-help-header">
+              <div class="support-help-title-main">Need more help?</div>
+              <div class="support-help-subtitle">Our support team is here to assist you personally.</div>
+            </div>
+            <div class="support-help-row">
+              <div class="support-help-icon"><img src="assets/whatsapp.png" alt="" /></div>
+              <div class="support-help-body">
+                <div class="support-help-row-title">Chat with us</div>
+                <div class="support-help-row-desc">Chat live with our support team in real-time.</div>
+                <a class="support-help-btn" href="https://wa.me/2349134333745" target="_blank" rel="noopener">Start Live Chat</a>
+                <div class="support-help-row-meta">Available Mon - Sat, 8AM - 6PM</div>
+              </div>
+            </div>
+            <div class="support-help-row">
+              <div class="support-help-icon"><img src="assets/email.png" alt="" /></div>
+              <div class="support-help-body">
+                <div class="support-help-row-title">Email Support</div>
+                <div class="support-help-row-desc">Send us an email and we'll get back to you.</div>
+                <a class="support-help-link" href="mailto:victoredochie10@gmail.com">victoredochie10@gmail.com</a>
+              </div>
+            </div>
+            <div class="support-help-row">
+              <div class="support-help-icon"><img src="assets/telephone.png" alt="" /></div>
+              <div class="support-help-body">
+                <div class="support-help-row-title">Call Us</div>
+                <div class="support-help-row-desc">Speak with our support team directly.</div>
+                <a class="support-help-link" href="tel:+2349134333745">+234 913 433 3745</a>
+              </div>
+            </div>
+          </div>
+        </li>
       </ul>
     </div>
   </aside>
 
   <div class="main">
     <div class="topbar">
-      <span class="menu-toggle">&#9776;</span>
+      <span class="menu-toggle" id="menuToggle">&#9776;</span>
       <div class="topbar-actions">
-        <div class="icon-btn">&#128276;<span class="dot">1</span></div>
-        <div class="icon-btn">?</div>
+        <button type="button" class="topbar-logout-btn" id="topbarLogoutBtn">&#10148; Log Out</button>
         <div class="profile-chip" id="profileChip">
           <div class="profile-toggle" id="profileToggle">
             <div class="profile-avatar" id="profileAvatar"><span id="profileInitial">U</span></div>
@@ -1013,6 +1199,20 @@
                     <option value="other">Other</option>
                   </select>
                   <div class="field-hint">Choose the category that best fits your product.</div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="productSubcategory">Subcategory <span class="required">*</span></label>
+                  <select id="productSubcategory" name="productSubcategory" disabled required>
+                    <option value="" selected>Select category first</option>
+                  </select>
+                  <div class="field-hint">Choose a subcategory to help buyers find this product faster.</div>
+                </div>
+                <div class="form-field">
+                  <label for="productBrand">Brand <span class="optional">(Optional)</span></label>
+                  <input type="text" id="productBrand" name="productBrand" placeholder="Enter brand name" />
                 </div>
               </div>
 
@@ -1126,7 +1326,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js?v=2"></script>
+  <script src="sx-auth.js?v=4"></script>
   <script>
     (async function guardAddProduct() {
       var sessionResult = await sxSupabaseClient.auth.getSession();
@@ -1175,6 +1375,20 @@
       document.getElementById('profileMenu'),
       document.getElementById('logoutBtn')
     );
+
+    SXAuth.wireSupportHelp(
+      document.getElementById('supportHelpToggle'),
+      document.getElementById('supportHelpPanel')
+    );
+
+    SXAuth.wireMobileSidebar(
+      document.getElementById('menuToggle'),
+      document.querySelector('.sidebar')
+    );
+
+    document.getElementById('topbarLogoutBtn').addEventListener('click', function () {
+      SXAuth.signOut();
+    });
 
     // ---- Product description character counter ----
     var descriptionField = document.getElementById('productDescription');
@@ -1283,6 +1497,48 @@
       renderImagePreviews();
     });
 
+    // ---- Category -> Subcategory mapping, matching the exact subcategory
+    // names used by Oshodi Market Online's own category-products-data.js,
+    // so any subcategory picked here lines up with their storefront
+    // category pages without needing translation on either side.
+    var SUBCATEGORY_MAP = {
+      fabrics: ['Ankara Fabrics', 'Jonkoso', 'Big & Small Lana', '7 Star', 'Brushmouth', 'Checkers', 'White', 'Silk & Damask', 'Italian Pigal', 'Senator Materials'],
+      fashion: ["Women's Wear", "Men's Wear", 'Unisex Wear', 'Shoes & Bags', 'Traditional Wear', 'Kids Wear', 'Jewelry & Accessories', 'Sportswear'],
+      electronics: ['Mobile Phones', 'Laptop & Computers', 'Tablets', 'Accessories', 'Audio & Music', 'Cameras & Photography', 'Gaming', 'Smart Watches'],
+      foodstuff: ['Grains & Cereals', 'Oils & Spices', 'Snacks & Beverages', 'Fresh Produce', 'Frozen Foods', 'Provisions', 'Bakery Items', 'Drinks'],
+      accessories: ['Jewelry', 'Bags & Wallets', 'Belts', 'Sunglasses', 'Watches', 'Hair Accessories', 'Scarves', 'Perfumes']
+    };
+
+    var productCategorySelect = document.getElementById('productCategory');
+    var productSubcategorySelect = document.getElementById('productSubcategory');
+
+    productCategorySelect.addEventListener('change', function () {
+      var subcategories = SUBCATEGORY_MAP[productCategorySelect.value];
+      productSubcategorySelect.innerHTML = '';
+      if (!subcategories || subcategories.length === 0) {
+        productSubcategorySelect.disabled = true;
+        var noneOption = document.createElement('option');
+        noneOption.value = '';
+        noneOption.textContent = 'No subcategories for this category';
+        noneOption.selected = true;
+        productSubcategorySelect.appendChild(noneOption);
+        return;
+      }
+      productSubcategorySelect.disabled = false;
+      var placeholderOption = document.createElement('option');
+      placeholderOption.value = '';
+      placeholderOption.textContent = 'Select subcategory';
+      placeholderOption.selected = true;
+      placeholderOption.disabled = true;
+      productSubcategorySelect.appendChild(placeholderOption);
+      subcategories.forEach(function (name) {
+        var option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        productSubcategorySelect.appendChild(option);
+      });
+    });
+
     // ---- Save as Draft / Publish Product: uploads any selected images to
     // the sx-product-images storage bucket, then inserts a row into
     // sx_products (status 'draft' or 'published'). Requires
@@ -1319,11 +1575,12 @@
 
       var productName = document.getElementById('productName').value.trim();
       var category = document.getElementById('productCategory').value;
+      var subcategory = document.getElementById('productSubcategory').value.trim();
       var description = document.getElementById('productDescription').value.trim();
       var sellingPrice = document.getElementById('sellingPrice').value;
       var stockQuantity = document.getElementById('stockQuantity').value;
 
-      if (status === 'published' && (!productName || !category || !description || !sellingPrice || stockQuantity === '')) {
+      if (status === 'published' && (!productName || !category || !subcategory || !description || !sellingPrice || stockQuantity === '')) {
         addProductForm.reportValidity();
         return;
       }
@@ -1345,6 +1602,8 @@
           shop_id: window.sxCurrentShopId,
           product_name: productName || 'Untitled product',
           category: category || null,
+          subcategory: subcategory || null,
+          brand: document.getElementById('productBrand').value.trim() || null,
           description: description,
           tags: tags,
           images: imageUrls,

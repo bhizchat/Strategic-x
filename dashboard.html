@@ -15,6 +15,11 @@
       --silver-dark: #8a8d91;
       --border: rgba(255, 255, 255, 0.08);
       --text-muted: #9a9ba0;
+      --main-bg: #f5f5f6;
+      --main-surface: #ffffff;
+      --main-border: #e2e3e6;
+      --main-text: #111113;
+      --main-text-muted: #6b6f76;
     }
 
     * {
@@ -207,6 +212,117 @@
       color: #ffffff;
     }
 
+    .support-help-item {
+      position: relative;
+    }
+
+    .support-help-panel {
+      position: absolute;
+      left: calc(100% + 12px);
+      bottom: 0;
+      width: 280px;
+      background: var(--main-surface);
+      border: 1px solid var(--main-border);
+      border-radius: 14px;
+      padding: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 300;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+      cursor: default;
+    }
+
+    .support-help-panel.open {
+      display: flex;
+    }
+
+    .support-help-title-main {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--main-text);
+    }
+
+    .support-help-subtitle {
+      font-size: 0.72rem;
+      color: var(--main-text-muted);
+      margin-top: 2px;
+    }
+
+    .support-help-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .support-help-row + .support-help-row {
+      padding-top: 14px;
+      border-top: 1px solid var(--main-border);
+    }
+
+    .support-help-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--silver-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .support-help-icon img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+
+    .support-help-body {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .support-help-row-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--main-text);
+    }
+
+    .support-help-row-desc {
+      font-size: 0.72rem;
+      color: var(--main-text-muted);
+      margin-top: 2px;
+    }
+
+    .support-help-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 12px;
+      border: 1px solid #f4b740;
+      border-radius: 7px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #f4b740;
+    }
+
+    .support-help-btn:hover {
+      background: rgba(244, 183, 64, 0.12);
+    }
+
+    .support-help-row-meta {
+      font-size: 0.66rem;
+      color: var(--main-text-muted);
+      margin-top: 6px;
+    }
+
+    .support-help-link {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #f4b740;
+      border-bottom: 1px solid rgba(244, 183, 64, 0.4);
+    }
+
     .promo-card {
       background: var(--charcoal-light);
       border: 1px solid var(--border);
@@ -243,6 +359,8 @@
       min-width: 0;
       display: flex;
       flex-direction: column;
+      background: var(--main-bg);
+      color: var(--main-text);
     }
 
     .topbar {
@@ -250,12 +368,12 @@
       align-items: center;
       justify-content: space-between;
       padding: 20px 32px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--main-border);
     }
 
     .menu-toggle {
       font-size: 1.1rem;
-      color: var(--silver);
+      color: var(--main-text-muted);
       cursor: pointer;
       display: none;
     }
@@ -295,7 +413,28 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 2px solid var(--black);
+      border: 2px solid var(--charcoal);
+    }
+
+    .topbar-logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      color: #e88888;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .topbar-logout-btn:hover {
+      background: rgba(224, 75, 75, 0.14);
+      color: #ff8080;
+      border-color: rgba(224, 75, 75, 0.3);
     }
 
     .profile-chip {
@@ -322,7 +461,7 @@
     .profile-caret {
       font-size: 0.95rem;
       font-weight: 800;
-      color: var(--silver);
+      color: var(--main-text-muted);
       margin-left: 4px;
       line-height: 1;
       transition: transform 0.15s ease;
@@ -330,7 +469,7 @@
 
     .profile-chip.open .profile-caret {
       transform: rotate(180deg);
-      color: #ffffff;
+      color: var(--main-text);
     }
 
     .profile-menu {
@@ -400,14 +539,14 @@
 
     .profile-text {
       font-size: 0.72rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       line-height: 1.2;
     }
 
     .profile-text strong {
       display: block;
       font-size: 0.82rem;
-      color: #ffffff;
+      color: var(--main-text);
       font-weight: 700;
     }
 
@@ -423,14 +562,14 @@
 
     .content > p.subtitle {
       font-size: 0.86rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       margin-top: 4px;
       margin-bottom: 22px;
     }
 
     .platform-card {
-      background: var(--charcoal);
-      border: 1px solid var(--border);
+      background: var(--main-surface);
+      border: 1px solid var(--main-border);
       border-radius: 14px;
       padding: 18px 22px;
       margin-bottom: 20px;
@@ -438,7 +577,7 @@
 
     .platform-card .label {
       font-size: 0.74rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
     }
 
     .platform-card .value {
@@ -452,8 +591,18 @@
       margin-top: 10px;
       font-size: 0.78rem;
       font-weight: 700;
-      color: var(--silver);
+      color: var(--silver-dark);
       border-bottom: 1px solid var(--silver-dark);
+    }
+
+    .view-shop-btn {
+      float: right;
+      margin-top: 0 !important;
+      padding: 8px 16px;
+      border: 1px solid var(--border) !important;
+      border-radius: 8px;
+      color: var(--black) !important;
+      background: #f4b740;
     }
 
     .stats-grid {
@@ -463,8 +612,8 @@
     }
 
     .stat-card {
-      background: var(--charcoal);
-      border: 1px solid var(--border);
+      background: var(--main-surface);
+      border: 1px solid var(--main-border);
       border-radius: 14px;
       padding: 16px;
     }
@@ -480,6 +629,7 @@
       font-size: 0.9rem;
       color: var(--black);
       margin-bottom: 10px;
+      border: 1px solid var(--main-border);
     }
 
     .stat-icon img {
@@ -490,7 +640,7 @@
 
     .stat-label {
       font-size: 0.72rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
     }
 
     .stat-value {
@@ -499,14 +649,34 @@
       margin-top: 2px;
     }
 
+    .stat-value.is-loading {
+      color: transparent;
+      position: relative;
+    }
+
+    .stat-value.is-loading::after {
+      content: "";
+      position: absolute;
+      inset: 2px 40% 2px 0;
+      background: linear-gradient(90deg, var(--silver-light) 25%, #f2f2f3 50%, var(--silver-light) 75%);
+      background-size: 200% 100%;
+      border-radius: 6px;
+      animation: statSkeleton 1.2s ease-in-out infinite;
+    }
+
+    @keyframes statSkeleton {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
     .stat-delta {
       font-size: 0.68rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       margin-top: 4px;
     }
 
     .stat-delta.up {
-      color: #9fe3b4;
+      color: #1e8b4a;
     }
 
     .stars {
@@ -517,12 +687,12 @@
     .footer {
       margin-top: auto;
       padding: 18px 32px;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--main-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 0.74rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
     }
 
     .footer-links {
@@ -534,12 +704,52 @@
       .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
+    /* ---- Mobile sidebar drawer ---- */
+    .sx-sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 490;
+    }
+
+    .sx-sidebar-backdrop.open {
+      display: block;
+    }
+
     @media (max-width: 760px) {
-      .sidebar { display: none; }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow-y: auto;
+        z-index: 500;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+      }
+      .sidebar.open { transform: translateX(0); }
       .menu-toggle { display: block; }
       .content { padding: 22px 18px 40px; }
       .topbar { padding: 16px 18px; }
       .footer { flex-direction: column; gap: 8px; align-items: flex-start; padding: 18px; }
+      .support-help-panel {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        bottom: auto;
+        transform: translate(-50%, -50%);
+        width: min(280px, calc(100vw - 40px));
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .topbar-actions { gap: 10px; }
+      .topbar-logout-btn span { display: none; }
     }
   </style>
 </head>
@@ -584,32 +794,52 @@
       </ul>
 
       <ul class="nav-list">
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon"><img src="assets/setting.png" alt="" /></span>
-          <span class="nav-item-label">Shop Settings</span>
-        </a></li>
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon"><img src="assets/notification.png" alt="" /></span>
-          <span class="nav-item-label">Notifications</span>
-          <span class="nav-badge">3</span>
-        </a></li>
-      </ul>
-
-      <ul class="nav-list">
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon"><img src="assets/question.png" alt="" /></span>
-          <span class="nav-item-label">Support &amp; Help</span>
-        </a></li>
+        <li class="nav-item support-help-item">
+          <a class="nav-item-link" href="#" id="supportHelpToggle">
+            <span class="nav-icon"><img src="assets/question.png" alt="" /></span>
+            <span class="nav-item-label">Support &amp; Help</span>
+          </a>
+          <div class="support-help-panel" id="supportHelpPanel">
+            <div class="support-help-header">
+              <div class="support-help-title-main">Need more help?</div>
+              <div class="support-help-subtitle">Our support team is here to assist you personally.</div>
+            </div>
+            <div class="support-help-row">
+              <div class="support-help-icon"><img src="assets/whatsapp.png" alt="" /></div>
+              <div class="support-help-body">
+                <div class="support-help-row-title">Chat with us</div>
+                <div class="support-help-row-desc">Chat live with our support team in real-time.</div>
+                <a class="support-help-btn" href="https://wa.me/2349134333745" target="_blank" rel="noopener">Start Live Chat</a>
+                <div class="support-help-row-meta">Available Mon - Sat, 8AM - 6PM</div>
+              </div>
+            </div>
+            <div class="support-help-row">
+              <div class="support-help-icon"><img src="assets/email.png" alt="" /></div>
+              <div class="support-help-body">
+                <div class="support-help-row-title">Email Support</div>
+                <div class="support-help-row-desc">Send us an email and we'll get back to you.</div>
+                <a class="support-help-link" href="mailto:victoredochie10@gmail.com">victoredochie10@gmail.com</a>
+              </div>
+            </div>
+            <div class="support-help-row">
+              <div class="support-help-icon"><img src="assets/telephone.png" alt="" /></div>
+              <div class="support-help-body">
+                <div class="support-help-row-title">Call Us</div>
+                <div class="support-help-row-desc">Speak with our support team directly.</div>
+                <a class="support-help-link" href="tel:+2349134333745">+234 913 433 3745</a>
+              </div>
+            </div>
+          </div>
+        </li>
       </ul>
     </div>
   </aside>
 
   <div class="main">
     <div class="topbar">
-      <span class="menu-toggle">&#9776;</span>
+      <span class="menu-toggle" id="menuToggle">&#9776;</span>
       <div class="topbar-actions">
-        <div class="icon-btn">&#128276;<span class="dot">1</span></div>
-        <div class="icon-btn">?</div>
+        <button type="button" class="topbar-logout-btn" id="topbarLogoutBtn">&#10148; Log Out</button>
         <div class="profile-chip" id="profileChip">
           <div class="profile-toggle" id="profileToggle">
             <div class="profile-avatar" id="profileAvatar"><span id="profileInitial">U</span></div>
@@ -631,37 +861,38 @@
         <div class="label">You are selling on</div>
         <div class="value" id="platformValue">Your Market Platform</div>
         <a href="onboarding-step2.html">Change Platform</a>
+        <a href="#" id="viewShopLink" class="view-shop-btn" style="display: none;" target="_blank" rel="noopener">View Shop</a>
       </div>
 
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-icon"><img src="assets/visible.png" alt="" /></div>
           <div class="stat-label">Shop Views</div>
-          <div class="stat-value" id="statShopViews">0</div>
+          <div class="stat-value is-loading" id="statShopViews">0</div>
           <div class="stat-delta" id="statShopViewsDelta">No data yet</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon"><img src="assets/telephone.png" alt="" /></div>
           <div class="stat-label">Contact Clicks</div>
-          <div class="stat-value" id="statContactClicks">0</div>
+          <div class="stat-value is-loading" id="statContactClicks">0</div>
           <div class="stat-delta" id="statContactClicksDelta">No data yet</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon"><img src="assets/whatsapp.png" alt="" /></div>
           <div class="stat-label">WhatsApp Clicks</div>
-          <div class="stat-value" id="statWhatsappClicks">0</div>
+          <div class="stat-value is-loading" id="statWhatsappClicks">0</div>
           <div class="stat-delta" id="statWhatsappClicksDelta">No data yet</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon"><img src="assets/parcel.png" alt="" /></div>
           <div class="stat-label">Products</div>
-          <div class="stat-value" id="statProducts">0</div>
+          <div class="stat-value is-loading" id="statProducts">0</div>
           <div class="stat-delta">Active Listings</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon"><img src="assets/star.png" alt="" /></div>
           <div class="stat-label">Shop Rating</div>
-          <div class="stat-value" id="statShopRating">0.0 <span class="stars" id="statShopRatingStars">&#9734;&#9734;&#9734;&#9734;&#9734;</span></div>
+          <div class="stat-value is-loading" id="statShopRating">0.0 <span class="stars" id="statShopRatingStars">&#9734;&#9734;&#9734;&#9734;&#9734;</span></div>
           <div class="stat-delta" id="statShopRatingDelta">(0 reviews)</div>
         </div>
       </div>
@@ -679,7 +910,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js?v=2"></script>
+  <script src="sx-auth.js?v=4"></script>
   <script>
     (async function guardDashboard() {
       var sessionResult = await sxSupabaseClient.auth.getSession();
@@ -713,9 +944,48 @@
         document.getElementById('shopAvatar').innerHTML = '<img src="' + meta.sx_shop_logo_url + '" alt="" />';
       }
 
+      // "View Shop" link: the storefront's own click_events data confirms
+      // its shop-page route is "shops.html?sxshop=<sx_shops.id>", so all
+      // we need from the storefront is its current base URL, kept in the
+      // shared "platform_links" table (one row per market_platform). See
+      // sx-platform-links-schema.sql. Requires that schema to have been
+      // run in Supabase; the button stays hidden otherwise.
+      (async function loadViewShopLink() {
+        var shopIdForLinkResult = await sxSupabaseClient
+          .from('sx_shops')
+          .select('id')
+          .eq('owner_id', user.id)
+          .maybeSingle();
+        var shopIdForLink = shopIdForLinkResult && shopIdForLinkResult.data ? shopIdForLinkResult.data.id : null;
+        if (!shopIdForLink || marketPlatform === 'Not set yet') return;
+
+        var platformLinkResult = await sxSupabaseClient
+          .from('platform_links')
+          .select('base_url')
+          .eq('market_platform', marketPlatform)
+          .maybeSingle();
+        var baseUrl = platformLinkResult && platformLinkResult.data ? platformLinkResult.data.base_url : null;
+        if (!baseUrl) {
+          console.warn('No platform_links row found for market_platform:', marketPlatform);
+          return;
+        }
+
+        var viewShopLink = document.getElementById('viewShopLink');
+        viewShopLink.href = baseUrl.replace(/\/$/, '') + '/shops/shops.html?sxshop=' + shopIdForLink;
+        viewShopLink.style.display = 'inline-block';
+      })();
+
       // Reflect the real product count (draft + published) on the
       // "Products" stat card. Requires sx-products-schema.sql to have
       // been run in Supabase; fails silently (stays "0") otherwise.
+      //
+      // All of the stat cards below start in a "skeleton" loading state
+      // (see .stat-value.is-loading in <style>) instead of showing "0"
+      // while these requests are in flight, so users never see a flash
+      // of "0" before the real number appears. The try/finally below
+      // guarantees every card is revealed exactly once with whatever
+      // value it ended up with, even if a request errors out.
+      try {
       var productsCountResult = await sxSupabaseClient
         .from('sx_products')
         .select('id', { count: 'exact', head: true })
@@ -831,6 +1101,12 @@
         document.getElementById('statWhatsappClicks').textContent = whatsappClicks;
         document.getElementById('statWhatsappClicksDelta').textContent = whatsappClicks > 0 ? 'All time' : 'No data yet';
       }
+      } finally {
+        ['statProducts', 'statShopRating', 'statShopViews', 'statContactClicks', 'statWhatsappClicks'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.remove('is-loading');
+        });
+      }
     })();
 
     SXAuth.wireProfileMenu(
@@ -838,6 +1114,20 @@
       document.getElementById('profileMenu'),
       document.getElementById('logoutBtn')
     );
+
+    SXAuth.wireSupportHelp(
+      document.getElementById('supportHelpToggle'),
+      document.getElementById('supportHelpPanel')
+    );
+
+    SXAuth.wireMobileSidebar(
+      document.getElementById('menuToggle'),
+      document.querySelector('.sidebar')
+    );
+
+    document.getElementById('topbarLogoutBtn').addEventListener('click', function () {
+      SXAuth.signOut();
+    });
   </script>
 </body>
 </html>

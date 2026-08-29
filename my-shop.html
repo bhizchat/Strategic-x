@@ -15,6 +15,11 @@
       --silver-dark: #8a8d91;
       --border: rgba(255, 255, 255, 0.08);
       --text-muted: #9a9ba0;
+      --main-bg: #f5f5f6;
+      --main-surface: #ffffff;
+      --main-border: #e2e3e6;
+      --main-text: #111113;
+      --main-text-muted: #6b6f76;
     }
 
     * {
@@ -207,6 +212,117 @@
       color: #ffffff;
     }
 
+    .support-help-item {
+      position: relative;
+    }
+
+    .support-help-panel {
+      position: absolute;
+      left: calc(100% + 12px);
+      bottom: 0;
+      width: 280px;
+      background: var(--main-surface);
+      border: 1px solid var(--main-border);
+      border-radius: 14px;
+      padding: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 300;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+      cursor: default;
+    }
+
+    .support-help-panel.open {
+      display: flex;
+    }
+
+    .support-help-title-main {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--main-text);
+    }
+
+    .support-help-subtitle {
+      font-size: 0.72rem;
+      color: var(--main-text-muted);
+      margin-top: 2px;
+    }
+
+    .support-help-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .support-help-row + .support-help-row {
+      padding-top: 14px;
+      border-top: 1px solid var(--main-border);
+    }
+
+    .support-help-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--silver-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .support-help-icon img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+
+    .support-help-body {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .support-help-row-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--main-text);
+    }
+
+    .support-help-row-desc {
+      font-size: 0.72rem;
+      color: var(--main-text-muted);
+      margin-top: 2px;
+    }
+
+    .support-help-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 12px;
+      border: 1px solid #f4b740;
+      border-radius: 7px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #f4b740;
+    }
+
+    .support-help-btn:hover {
+      background: rgba(244, 183, 64, 0.12);
+    }
+
+    .support-help-row-meta {
+      font-size: 0.66rem;
+      color: var(--main-text-muted);
+      margin-top: 6px;
+    }
+
+    .support-help-link {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #f4b740;
+      border-bottom: 1px solid rgba(244, 183, 64, 0.4);
+    }
+
     .promo-card {
       background: var(--charcoal-light);
       border: 1px solid var(--border);
@@ -243,6 +359,8 @@
       min-width: 0;
       display: flex;
       flex-direction: column;
+      background: var(--main-bg);
+      color: var(--main-text);
     }
 
     .topbar {
@@ -250,12 +368,12 @@
       align-items: center;
       justify-content: space-between;
       padding: 20px 32px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--main-border);
     }
 
     .menu-toggle {
       font-size: 1.1rem;
-      color: var(--silver);
+      color: var(--main-text-muted);
       cursor: pointer;
       display: none;
     }
@@ -295,7 +413,28 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 2px solid var(--black);
+      border: 2px solid var(--charcoal);
+    }
+
+    .topbar-logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      color: #e88888;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .topbar-logout-btn:hover {
+      background: rgba(224, 75, 75, 0.14);
+      color: #ff8080;
+      border-color: rgba(224, 75, 75, 0.3);
     }
 
     .profile-chip {
@@ -322,7 +461,7 @@
     .profile-caret {
       font-size: 0.95rem;
       font-weight: 800;
-      color: var(--silver);
+      color: var(--main-text-muted);
       margin-left: 4px;
       line-height: 1;
       transition: transform 0.15s ease;
@@ -330,7 +469,7 @@
 
     .profile-chip.open .profile-caret {
       transform: rotate(180deg);
-      color: #ffffff;
+      color: var(--main-text);
     }
 
     .profile-menu {
@@ -400,14 +539,14 @@
 
     .profile-text {
       font-size: 0.72rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       line-height: 1.2;
     }
 
     .profile-text strong {
       display: block;
       font-size: 0.82rem;
-      color: #ffffff;
+      color: var(--main-text);
       font-weight: 700;
     }
 
@@ -423,7 +562,7 @@
 
     .content > p.subtitle {
       font-size: 0.86rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       margin-top: 4px;
       margin-bottom: 22px;
     }
@@ -431,7 +570,7 @@
     /* ---- My Shop grid ---- */
     .shop-grid {
       display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
       gap: 20px;
       align-items: start;
     }
@@ -444,8 +583,8 @@
     }
 
     .shop-card-panel {
-      background: var(--charcoal);
-      border: 1px solid var(--border);
+      background: var(--main-surface);
+      border: 1px solid var(--main-border);
       border-radius: 14px;
       padding: 20px 22px;
     }
@@ -465,12 +604,12 @@
     .edit-link {
       font-size: 0.76rem;
       font-weight: 700;
-      color: var(--silver);
+      color: var(--silver-dark);
       border-bottom: 1px solid var(--silver-dark);
     }
 
     .edit-link:hover {
-      color: #ffffff;
+      color: var(--main-text);
     }
 
     .shop-overview-body {
@@ -538,7 +677,7 @@
 
     .shop-overview-meta {
       font-size: 0.8rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       margin-top: 3px;
     }
 
@@ -547,19 +686,19 @@
       gap: 16px;
       flex-wrap: wrap;
       font-size: 0.8rem;
-      color: var(--silver);
+      color: var(--main-text-muted);
       margin-top: 10px;
     }
 
     .shop-overview-location {
       font-size: 0.8rem;
-      color: var(--silver);
+      color: var(--main-text-muted);
       margin-top: 6px;
     }
 
     .shop-overview-desc {
       font-size: 0.8rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       margin-top: 10px;
       max-width: 420px;
     }
@@ -581,8 +720,8 @@
       width: 30px;
       height: 30px;
       border-radius: 999px;
-      background: var(--charcoal-light);
-      border: 1px solid var(--border);
+      background: var(--silver-light);
+      border: 1px solid var(--main-border);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -592,12 +731,34 @@
 
     .stat-sm-label {
       font-size: 0.68rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
     }
 
     .stat-sm-value {
       font-size: 0.86rem;
       font-weight: 700;
+    }
+
+    .stat-sm-value.is-loading {
+      color: transparent;
+      position: relative;
+      display: inline-block;
+      min-width: 60px;
+    }
+
+    .stat-sm-value.is-loading::after {
+      content: "";
+      position: absolute;
+      inset: 1px 20% 1px 0;
+      background: linear-gradient(90deg, var(--silver-light) 25%, #f2f2f3 50%, var(--silver-light) 75%);
+      background-size: 200% 100%;
+      border-radius: 6px;
+      animation: statSkeleton 1.2s ease-in-out infinite;
+    }
+
+    @keyframes statSkeleton {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
     .stars {
@@ -615,7 +776,7 @@
       align-items: flex-start;
       gap: 12px;
       padding: 12px 0;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--main-border);
     }
 
     .info-row:last-child {
@@ -631,7 +792,7 @@
       width: 160px;
       flex-shrink: 0;
       font-size: 0.78rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
     }
 
     .info-value {
@@ -643,22 +804,31 @@
 
     .visuals-grid {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       gap: 14px;
+    }
+
+    .visuals-grid > div:first-child {
+      flex: 0 0 120px;
+    }
+
+    .visuals-grid > div:last-child {
+      flex: 1;
+      min-width: 0;
     }
 
     .visual-label {
       font-size: 0.74rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       margin-bottom: 6px;
     }
 
     .visual-thumb {
       width: 100%;
-      height: 90px;
+      height: 110px;
       border-radius: 10px;
-      background: var(--charcoal-light);
-      border: 1px solid var(--border);
+      background: var(--silver-light);
+      border: 1px solid var(--main-border);
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -673,18 +843,158 @@
 
     .visual-thumb.empty {
       font-size: 0.72rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
+    }
+
+    /* ---- Edit modal ---- */
+    .edit-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 999;
+    }
+
+    .edit-modal-overlay.open {
+      display: flex;
+    }
+
+    .edit-modal {
+      width: 100%;
+      max-width: 420px;
+      background: var(--main-surface);
+      border: 1px solid var(--main-border);
+      border-radius: 14px;
+      padding: 22px 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    }
+
+    .edit-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .edit-modal-header h3 {
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .edit-modal-close {
+      background: none;
+      border: none;
+      color: var(--main-text-muted);
+      font-size: 1.3rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .edit-modal-close:hover {
+      color: var(--main-text);
+    }
+
+    .edit-modal-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .edit-modal-field label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--main-text-muted);
+    }
+
+    .edit-modal-field input,
+    .edit-modal-field select,
+    .edit-modal-field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--main-border);
+      border-radius: 9px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      color: var(--main-text);
+      background: var(--main-bg);
+      outline: none;
+    }
+
+    .edit-modal-field input:focus,
+    .edit-modal-field select:focus,
+    .edit-modal-field textarea:focus {
+      border-color: var(--silver-dark);
+    }
+
+    .edit-modal-field textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .edit-modal-field input[type='file'] {
+      padding: 8px;
+    }
+
+    .edit-modal-error {
+      font-size: 0.78rem;
+      color: #ff6b6b;
+      margin-bottom: 12px;
+    }
+
+    .edit-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .edit-modal-btn {
+      padding: 9px 18px;
+      border-radius: 9px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .edit-modal-btn.cancel {
+      background: transparent;
+      border-color: var(--main-border);
+      color: var(--main-text-muted);
+    }
+
+    .edit-modal-btn.cancel:hover {
+      color: var(--main-text);
+      border-color: var(--silver-dark);
+    }
+
+    .edit-modal-btn.save {
+      background: var(--silver);
+      color: var(--black);
+    }
+
+    .edit-modal-btn.save:hover {
+      background: #ffffff;
+    }
+
+    .edit-modal-btn.save:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     .footer {
       margin-top: auto;
       padding: 18px 32px;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--main-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 0.74rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
     }
 
     .footer-links {
@@ -696,12 +1006,52 @@
       .shop-grid { grid-template-columns: 1fr; }
     }
 
+    /* ---- Mobile sidebar drawer ---- */
+    .sx-sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 490;
+    }
+
+    .sx-sidebar-backdrop.open {
+      display: block;
+    }
+
     @media (max-width: 760px) {
-      .sidebar { display: none; }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow-y: auto;
+        z-index: 500;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+      }
+      .sidebar.open { transform: translateX(0); }
       .menu-toggle { display: block; }
       .content { padding: 22px 18px 40px; }
       .topbar { padding: 16px 18px; }
       .footer { padding: 16px 18px; flex-direction: column; gap: 10px; align-items: flex-start; }
+      .support-help-panel {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        bottom: auto;
+        transform: translate(-50%, -50%);
+        width: min(280px, calc(100vw - 40px));
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .visuals-grid { flex-direction: column; }
+      .visuals-grid > div:first-child { flex: none; }
+      .topbar-actions { gap: 10px; }
     }
   </style>
 </head>
@@ -746,32 +1096,52 @@
       </ul>
 
       <ul class="nav-list">
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon"><img src="assets/setting.png" alt="" /></span>
-          <span class="nav-item-label">Shop Settings</span>
-        </a></li>
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon"><img src="assets/notification.png" alt="" /></span>
-          <span class="nav-item-label">Notifications</span>
-          <span class="nav-badge">3</span>
-        </a></li>
-      </ul>
-
-      <ul class="nav-list">
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon"><img src="assets/question.png" alt="" /></span>
-          <span class="nav-item-label">Support &amp; Help</span>
-        </a></li>
+        <li class="nav-item support-help-item">
+          <a class="nav-item-link" href="#" id="supportHelpToggle">
+            <span class="nav-icon"><img src="assets/question.png" alt="" /></span>
+            <span class="nav-item-label">Support &amp; Help</span>
+          </a>
+          <div class="support-help-panel" id="supportHelpPanel">
+            <div class="support-help-header">
+              <div class="support-help-title-main">Need more help?</div>
+              <div class="support-help-subtitle">Our support team is here to assist you personally.</div>
+            </div>
+            <div class="support-help-row">
+              <div class="support-help-icon"><img src="assets/whatsapp.png" alt="" /></div>
+              <div class="support-help-body">
+                <div class="support-help-row-title">Chat with us</div>
+                <div class="support-help-row-desc">Chat live with our support team in real-time.</div>
+                <a class="support-help-btn" href="https://wa.me/2349134333745" target="_blank" rel="noopener">Start Live Chat</a>
+                <div class="support-help-row-meta">Available Mon - Sat, 8AM - 6PM</div>
+              </div>
+            </div>
+            <div class="support-help-row">
+              <div class="support-help-icon"><img src="assets/email.png" alt="" /></div>
+              <div class="support-help-body">
+                <div class="support-help-row-title">Email Support</div>
+                <div class="support-help-row-desc">Send us an email and we'll get back to you.</div>
+                <a class="support-help-link" href="mailto:victoredochie10@gmail.com">victoredochie10@gmail.com</a>
+              </div>
+            </div>
+            <div class="support-help-row">
+              <div class="support-help-icon"><img src="assets/telephone.png" alt="" /></div>
+              <div class="support-help-body">
+                <div class="support-help-row-title">Call Us</div>
+                <div class="support-help-row-desc">Speak with our support team directly.</div>
+                <a class="support-help-link" href="tel:+2349134333745">+234 913 433 3745</a>
+              </div>
+            </div>
+          </div>
+        </li>
       </ul>
     </div>
   </aside>
 
   <div class="main">
     <div class="topbar">
-      <span class="menu-toggle">&#9776;</span>
+      <span class="menu-toggle" id="menuToggle">&#9776;</span>
       <div class="topbar-actions">
-        <div class="icon-btn">&#128276;<span class="dot">1</span></div>
-        <div class="icon-btn">?</div>
+        <button type="button" class="topbar-logout-btn" id="topbarLogoutBtn">&#10148; Log Out</button>
         <div class="profile-chip" id="profileChip">
           <div class="profile-toggle" id="profileToggle">
             <div class="profile-avatar" id="profileAvatar"><span id="profileInitial">U</span></div>
@@ -794,7 +1164,7 @@
           <div class="shop-card-panel">
             <div class="panel-header">
               <h2>Shop Overview</h2>
-              <a href="#" class="edit-link">&#9998; Edit Profile</a>
+              <a href="#" class="edit-link" data-field="profile">&#9998; Edit Profile</a>
             </div>
             <div class="shop-overview-body">
               <div class="shop-overview-left">
@@ -820,11 +1190,11 @@
                 </div>
                 <div class="overview-stat">
                   <div class="stat-icon-sm">&#128188;</div>
-                  <div><div class="stat-sm-label">Total Products</div><div class="stat-sm-value" id="overviewProducts">&mdash;</div></div>
+                  <div><div class="stat-sm-label">Total Products</div><div class="stat-sm-value is-loading" id="overviewProducts">&mdash;</div></div>
                 </div>
                 <div class="overview-stat">
                   <div class="stat-icon-sm">&#11088;</div>
-                  <div><div class="stat-sm-label">Shop Rating</div><div class="stat-sm-value" id="overviewRating">&mdash; <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span></div></div>
+                  <div><div class="stat-sm-label">Shop Rating</div><div class="stat-sm-value is-loading" id="overviewRating">&mdash; <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span></div></div>
                 </div>
               </div>
             </div>
@@ -838,12 +1208,12 @@
               <div class="info-row">
                 <span class="info-label">Shop Name</span>
                 <span class="info-value" id="infoShopName">&mdash;</span>
-                <a href="#" class="edit-link">Edit</a>
+                <a href="#" class="edit-link" data-field="shopName">Edit</a>
               </div>
               <div class="info-row">
                 <span class="info-label">Category</span>
                 <span class="info-value" id="infoCategory">&mdash;</span>
-                <a href="#" class="edit-link">Edit</a>
+                <a href="#" class="edit-link" data-field="category">Edit</a>
               </div>
               <div class="info-row">
                 <span class="info-label">Market Platform</span>
@@ -853,22 +1223,22 @@
               <div class="info-row">
                 <span class="info-label">Phone Number (Public)</span>
                 <span class="info-value" id="infoPhone">&mdash;</span>
-                <a href="#" class="edit-link">Edit</a>
+                <a href="#" class="edit-link" data-field="phone">Edit</a>
               </div>
               <div class="info-row">
                 <span class="info-label">WhatsApp Number (Public)</span>
                 <span class="info-value" id="infoWhatsapp">&mdash;</span>
-                <a href="#" class="edit-link">Edit</a>
+                <a href="#" class="edit-link" data-field="whatsapp">Edit</a>
               </div>
               <div class="info-row">
                 <span class="info-label">Shop Address</span>
                 <span class="info-value" id="infoLocation">&mdash;</span>
-                <a href="#" class="edit-link">Edit</a>
+                <a href="#" class="edit-link" data-field="location">Edit</a>
               </div>
               <div class="info-row">
                 <span class="info-label">Shop Tagline</span>
                 <span class="info-value" id="infoTagline">&mdash;</span>
-                <a href="#" class="edit-link">Edit</a>
+                <a href="#" class="edit-link" data-field="tagline">Edit</a>
               </div>
             </div>
           </div>
@@ -878,7 +1248,7 @@
           <div class="shop-card-panel">
             <div class="panel-header">
               <h2>Shop Visuals</h2>
-              <a href="#" class="edit-link">Edit</a>
+              <a href="#" class="edit-link" data-field="visuals">Edit</a>
             </div>
             <div class="visuals-grid">
               <div>
@@ -895,6 +1265,23 @@
       </div>
     </div>
 
+    <div class="edit-modal-overlay" id="editModalOverlay">
+      <div class="edit-modal">
+        <div class="edit-modal-header">
+          <h3 id="editModalTitle">Edit</h3>
+          <button type="button" class="edit-modal-close" id="editModalClose">&times;</button>
+        </div>
+        <form id="editModalForm">
+          <div id="editModalBody"></div>
+          <p class="edit-modal-error" id="editModalError" hidden></p>
+          <div class="edit-modal-actions">
+            <button type="button" class="edit-modal-btn cancel" id="editModalCancel">Cancel</button>
+            <button type="submit" class="edit-modal-btn save" id="editModalSave">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <div class="footer">
       <div>&copy; 2026 Strategic X. All rights reserved.</div>
       <div class="footer-links">
@@ -907,8 +1294,11 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js?v=2"></script>
+  <script src="sx-auth.js?v=4"></script>
   <script>
+    var currentUser = null;
+    var currentShop = {};
+
     function formatMemberSince(dateString) {
       if (!dateString) return '\u2014';
       var date = new Date(dateString);
@@ -916,35 +1306,13 @@
       return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     }
 
-    (async function guardMyShop() {
-      var sessionResult = await sxSupabaseClient.auth.getSession();
-      var session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
-      if (!session) {
-        window.location.href = 'index.html';
-        return;
-      }
-      var user = session.user;
-      if (!SXAuth.isOnboarded(user)) {
-        window.location.href = 'onboarding.html';
-        return;
-      }
-
-      var meta = user.user_metadata || {};
-      var fullName = (meta.sx_full_name || '').trim();
-      var firstName = fullName ? fullName.split(' ')[0] : 'there';
-
-      document.getElementById('profileName').textContent = firstName;
-      document.getElementById('profileInitial').textContent = firstName.charAt(0).toUpperCase() || 'U';
-
-      // sx_shops holds the richer shop record created at the end of
-      // onboarding (location, tagline, whatsapp, logo/banner) — fall back
-      // to user_metadata for anything missing (e.g. row not created yet).
-      var shopRowResult = await sxSupabaseClient
-        .from('sx_shops')
-        .select('*')
-        .eq('owner_id', user.id)
-        .maybeSingle();
-      var shop = (shopRowResult && shopRowResult.data) || {};
+    // Renders currentShop/currentUser into every place on the page that
+    // shows shop info (sidebar card, overview card, info table, visuals).
+    // Called on initial load and again after any successful edit-modal save
+    // so the UI reflects the just-saved value without a full page reload.
+    function renderShopFields() {
+      var meta = (currentUser && currentUser.user_metadata) || {};
+      var shop = currentShop || {};
 
       var shopName = shop.shop_name || meta.sx_shop_name || 'Your Shop';
       var category = shop.category || meta.sx_category || '';
@@ -955,7 +1323,7 @@
       var tagline = shop.tagline || meta.sx_shop_tagline || '';
       var logoUrl = shop.logo_url || meta.sx_shop_logo_url || '';
       var bannerUrl = shop.banner_url || meta.sx_shop_banner_url || '';
-      var memberSince = formatMemberSince(shop.created_at || user.created_at);
+      var memberSince = formatMemberSince(shop.created_at || (currentUser && currentUser.created_at));
 
       document.getElementById('shopNameText').textContent = shopName;
       document.getElementById('shopMetaText').textContent = category ? (category + (marketPlatform !== 'Not set yet' ? ' \u00b7 ' + marketPlatform : '')) : marketPlatform;
@@ -988,9 +1356,53 @@
         document.getElementById('visualBanner').classList.remove('empty');
         document.getElementById('visualBanner').innerHTML = '<img src="' + bannerUrl + '" alt="Shop banner" />';
       }
+    }
+
+    (async function guardMyShop() {
+      var sessionResult = await sxSupabaseClient.auth.getSession();
+      var session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
+      if (!session) {
+        window.location.href = 'index.html';
+        return;
+      }
+      var user = session.user;
+      if (!SXAuth.isOnboarded(user)) {
+        window.location.href = 'onboarding.html';
+        return;
+      }
+      currentUser = user;
+
+      var meta = user.user_metadata || {};
+      var fullName = (meta.sx_full_name || '').trim();
+      var firstName = fullName ? fullName.split(' ')[0] : 'there';
+
+      document.getElementById('profileName').textContent = firstName;
+      document.getElementById('profileInitial').textContent = firstName.charAt(0).toUpperCase() || 'U';
+
+      // sx_shops holds the richer shop record created at the end of
+      // onboarding (location, tagline, whatsapp, logo/banner) — fall back
+      // to user_metadata for anything missing (e.g. row not created yet).
+      // This is the SAME table the Oshodi Market Online storefront reads
+      // from (via sx_shops_public) when rendering the "View Shop" page, so
+      // any edit saved here shows up there the next time that page loads.
+      var shopRowResult = await sxSupabaseClient
+        .from('sx_shops')
+        .select('*')
+        .eq('owner_id', user.id)
+        .maybeSingle();
+      currentShop = (shopRowResult && shopRowResult.data) || {};
+
+      renderShopFields();
 
       // Reflect the real product count on the "Total Products" stat,
       // same source query as dashboard.html's "Products" stat card.
+      //
+      // Both stats below start in a "skeleton" loading state (see
+      // .stat-sm-value.is-loading in <style>) instead of showing the
+      // static "\u2014" placeholder while these requests are in flight. The
+      // try/finally guarantees each is revealed exactly once with its
+      // real value, even if a request errors out.
+      try {
       var productsCountResult = await sxSupabaseClient
         .from('sx_products')
         .select('id', { count: 'exact', head: true })
@@ -1004,11 +1416,11 @@
       // sx_products.id as text, NOT the shop's id) used by dashboard.html
       // and reviews.html. Fetch this shop's product ids first, then match
       // reviews against that list.
-      if (shop.id) {
+      if (currentShop.id) {
         var productIdsResult = await sxSupabaseClient
           .from('sx_products')
           .select('id')
-          .eq('shop_id', shop.id);
+          .eq('shop_id', currentShop.id);
         var productIds = ((productIdsResult && productIdsResult.data) || []).map(function (p) { return p.id; });
 
         if (productIds.length > 0) {
@@ -1025,13 +1437,221 @@
           }
         }
       }
+      } finally {
+        ['overviewProducts', 'overviewRating'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.remove('is-loading');
+        });
+      }
     })();
+
+    // ---- Edit modal: lets the owner edit every editable sx_shops field
+    // (everything except the computed Total Products / Shop Rating stats).
+    // Saves go straight to sx_shops, the same row the storefront reads.
+    var CATEGORY_OPTIONS = [
+      { value: 'fashion', label: 'Clothing & Fashion' },
+      { value: 'electronics', label: 'Electronics & Gadgets' },
+      { value: 'fabrics', label: 'Fabrics & Textiles' },
+      { value: 'foodstuff', label: 'Foodstuffs & Oils' },
+      { value: 'accessories', label: 'Accessories' },
+      { value: 'other', label: 'Other' }
+    ];
+
+    var FIELD_CONFIGS = {
+      shopName: { title: 'Edit Shop Name', fields: [{ column: 'shop_name', label: 'Shop Name', type: 'text' }] },
+      category: { title: 'Edit Category', fields: [{ column: 'category', label: 'Category', type: 'select', options: CATEGORY_OPTIONS }] },
+      phone: { title: 'Edit Phone Number', fields: [{ column: 'phone', label: 'Phone Number (Public)', type: 'tel' }] },
+      whatsapp: { title: 'Edit WhatsApp Number', fields: [{ column: 'whatsapp', label: 'WhatsApp Number (Public)', type: 'tel' }] },
+      location: { title: 'Edit Shop Address', fields: [{ column: 'location', label: 'Shop Address', type: 'text' }] },
+      tagline: { title: 'Edit Shop Tagline', fields: [{ column: 'tagline', label: 'Shop Tagline', type: 'textarea' }] },
+      profile: {
+        title: 'Edit Shop Profile',
+        fields: [
+          { column: 'shop_name', label: 'Shop Name', type: 'text' },
+          { column: 'category', label: 'Category', type: 'select', options: CATEGORY_OPTIONS },
+          { column: 'phone', label: 'Phone Number (Public)', type: 'tel' },
+          { column: 'whatsapp', label: 'WhatsApp Number (Public)', type: 'tel' },
+          { column: 'location', label: 'Shop Address', type: 'text' },
+          { column: 'tagline', label: 'Shop Tagline', type: 'textarea' }
+        ]
+      }
+    };
+
+    var editModalOverlay = document.getElementById('editModalOverlay');
+    var editModalTitle = document.getElementById('editModalTitle');
+    var editModalBody = document.getElementById('editModalBody');
+    var editModalError = document.getElementById('editModalError');
+    var editModalForm = document.getElementById('editModalForm');
+    var editModalSaveBtn = document.getElementById('editModalSave');
+    var activeFieldKey = null;
+
+    function closeEditModal() {
+      editModalOverlay.classList.remove('open');
+      activeFieldKey = null;
+    }
+
+    function openEditModal(fieldKey) {
+      var config = FIELD_CONFIGS[fieldKey];
+      if (!config) return;
+      activeFieldKey = fieldKey;
+      editModalTitle.textContent = config.title;
+      editModalError.hidden = true;
+      editModalError.textContent = '';
+      editModalBody.innerHTML = '';
+
+      config.fields.forEach(function (field) {
+        var wrap = document.createElement('div');
+        wrap.className = 'edit-modal-field';
+
+        var label = document.createElement('label');
+        label.textContent = field.label;
+        label.setAttribute('for', 'editField_' + field.column);
+        wrap.appendChild(label);
+
+        var input;
+        if (field.type === 'select') {
+          input = document.createElement('select');
+          field.options.forEach(function (opt) {
+            var optionEl = document.createElement('option');
+            optionEl.value = opt.value;
+            optionEl.textContent = opt.label;
+            input.appendChild(optionEl);
+          });
+        } else if (field.type === 'textarea') {
+          input = document.createElement('textarea');
+        } else {
+          input = document.createElement('input');
+          input.type = field.type === 'tel' ? 'tel' : 'text';
+        }
+        input.id = 'editField_' + field.column;
+        input.name = field.column;
+        input.value = currentShop[field.column] || '';
+        wrap.appendChild(input);
+
+        editModalBody.appendChild(wrap);
+      });
+
+      editModalOverlay.classList.add('open');
+      var firstInput = editModalBody.querySelector('input, select, textarea');
+      if (firstInput) firstInput.focus();
+    }
+
+    function openVisualsModal() {
+      activeFieldKey = 'visuals';
+      editModalTitle.textContent = 'Edit Shop Visuals';
+      editModalError.hidden = true;
+      editModalError.textContent = '';
+      editModalBody.innerHTML =
+        '<div class="edit-modal-field">' +
+          '<label for="editFieldLogo">Shop Logo</label>' +
+          '<input type="file" id="editFieldLogo" accept="image/*" />' +
+        '</div>' +
+        '<div class="edit-modal-field">' +
+          '<label for="editFieldBanner">Shop Banner</label>' +
+          '<input type="file" id="editFieldBanner" accept="image/*" />' +
+        '</div>';
+      editModalOverlay.classList.add('open');
+    }
+
+    document.addEventListener('click', function (e) {
+      var trigger = e.target.closest('.edit-link[data-field]');
+      if (trigger) {
+        e.preventDefault();
+        var fieldKey = trigger.getAttribute('data-field');
+        if (fieldKey === 'visuals') openVisualsModal(); else openEditModal(fieldKey);
+        return;
+      }
+      if (e.target.id === 'editModalClose' || e.target.id === 'editModalCancel' || e.target === editModalOverlay) {
+        closeEditModal();
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && editModalOverlay.classList.contains('open')) closeEditModal();
+    });
+
+    async function uploadShopAsset(file, folder) {
+      var safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      var path = currentUser.id + '/' + folder + '/' + Date.now() + '-' + safeName;
+      var uploadResult = await sxSupabaseClient.storage
+        .from('sx-shop-assets')
+        .upload(path, file, { upsert: false });
+      if (uploadResult.error) throw uploadResult.error;
+      var publicUrlResult = sxSupabaseClient.storage.from('sx-shop-assets').getPublicUrl(path);
+      return (publicUrlResult && publicUrlResult.data) ? publicUrlResult.data.publicUrl : null;
+    }
+
+    async function saveShopFields(payload) {
+      if (!currentShop.id) throw new Error('Shop profile not found. Please complete onboarding first.');
+      payload.updated_at = new Date().toISOString();
+      var result = await sxSupabaseClient
+        .from('sx_shops')
+        .update(payload)
+        .eq('owner_id', currentUser.id);
+      if (result.error) throw result.error;
+      Object.keys(payload).forEach(function (key) { currentShop[key] = payload[key]; });
+    }
+
+    editModalForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      if (!activeFieldKey) return;
+      editModalError.hidden = true;
+      editModalError.textContent = '';
+      editModalSaveBtn.disabled = true;
+      editModalSaveBtn.textContent = 'Saving...';
+
+      try {
+        if (activeFieldKey === 'visuals') {
+          var logoFile = document.getElementById('editFieldLogo').files[0];
+          var bannerFile = document.getElementById('editFieldBanner').files[0];
+          var visualsPayload = {};
+          if (logoFile) visualsPayload.logo_url = await uploadShopAsset(logoFile, 'logo');
+          if (bannerFile) visualsPayload.banner_url = await uploadShopAsset(bannerFile, 'banner');
+          if (Object.keys(visualsPayload).length === 0) {
+            closeEditModal();
+            return;
+          }
+          await saveShopFields(visualsPayload);
+        } else {
+          var config = FIELD_CONFIGS[activeFieldKey];
+          var payload = {};
+          config.fields.forEach(function (field) {
+            var el = document.getElementById('editField_' + field.column);
+            payload[field.column] = el.value.trim();
+          });
+          await saveShopFields(payload);
+        }
+        renderShopFields();
+        closeEditModal();
+      } catch (err) {
+        console.error('Failed to save shop field:', err);
+        editModalError.textContent = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
+        editModalError.hidden = false;
+      } finally {
+        editModalSaveBtn.disabled = false;
+        editModalSaveBtn.textContent = 'Save Changes';
+      }
+    });
 
     SXAuth.wireProfileMenu(
       document.getElementById('profileToggle'),
       document.getElementById('profileMenu'),
       document.getElementById('logoutBtn')
     );
+
+    SXAuth.wireSupportHelp(
+      document.getElementById('supportHelpToggle'),
+      document.getElementById('supportHelpPanel')
+    );
+
+    SXAuth.wireMobileSidebar(
+      document.getElementById('menuToggle'),
+      document.querySelector('.sidebar')
+    );
+
+    document.getElementById('topbarLogoutBtn').addEventListener('click', function () {
+      SXAuth.signOut();
+    });
   </script>
 </body>
 </html>

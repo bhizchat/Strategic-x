@@ -15,6 +15,11 @@
       --silver-dark: #8a8d91;
       --border: rgba(255, 255, 255, 0.08);
       --text-muted: #9a9ba0;
+      --main-bg: #f5f5f6;
+      --main-surface: #ffffff;
+      --main-border: #e2e3e6;
+      --main-text: #111113;
+      --main-text-muted: #6b6f76;
     }
 
     * {
@@ -207,6 +212,117 @@
       color: #ffffff;
     }
 
+    .support-help-item {
+      position: relative;
+    }
+
+    .support-help-panel {
+      position: absolute;
+      left: calc(100% + 12px);
+      bottom: 0;
+      width: 280px;
+      background: var(--main-surface);
+      border: 1px solid var(--main-border);
+      border-radius: 14px;
+      padding: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 300;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+      cursor: default;
+    }
+
+    .support-help-panel.open {
+      display: flex;
+    }
+
+    .support-help-title-main {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--main-text);
+    }
+
+    .support-help-subtitle {
+      font-size: 0.72rem;
+      color: var(--main-text-muted);
+      margin-top: 2px;
+    }
+
+    .support-help-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .support-help-row + .support-help-row {
+      padding-top: 14px;
+      border-top: 1px solid var(--main-border);
+    }
+
+    .support-help-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--silver-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .support-help-icon img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+
+    .support-help-body {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .support-help-row-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--main-text);
+    }
+
+    .support-help-row-desc {
+      font-size: 0.72rem;
+      color: var(--main-text-muted);
+      margin-top: 2px;
+    }
+
+    .support-help-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 12px;
+      border: 1px solid #f4b740;
+      border-radius: 7px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #f4b740;
+    }
+
+    .support-help-btn:hover {
+      background: rgba(244, 183, 64, 0.12);
+    }
+
+    .support-help-row-meta {
+      font-size: 0.66rem;
+      color: var(--main-text-muted);
+      margin-top: 6px;
+    }
+
+    .support-help-link {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #f4b740;
+      border-bottom: 1px solid rgba(244, 183, 64, 0.4);
+    }
+
     .promo-card {
       background: var(--charcoal-light);
       border: 1px solid var(--border);
@@ -243,6 +359,8 @@
       min-width: 0;
       display: flex;
       flex-direction: column;
+      background: var(--main-bg);
+      color: var(--main-text);
     }
 
     .topbar {
@@ -250,12 +368,12 @@
       align-items: center;
       justify-content: space-between;
       padding: 20px 32px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--main-border);
     }
 
     .menu-toggle {
       font-size: 1.1rem;
-      color: var(--silver);
+      color: var(--main-text-muted);
       cursor: pointer;
       display: none;
     }
@@ -295,7 +413,28 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 2px solid var(--black);
+      border: 2px solid var(--charcoal);
+    }
+
+    .topbar-logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--charcoal);
+      border: 1px solid var(--border);
+      color: #e88888;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .topbar-logout-btn:hover {
+      background: rgba(224, 75, 75, 0.14);
+      color: #ff8080;
+      border-color: rgba(224, 75, 75, 0.3);
     }
 
     .profile-chip {
@@ -322,7 +461,7 @@
     .profile-caret {
       font-size: 0.95rem;
       font-weight: 800;
-      color: var(--silver);
+      color: var(--main-text-muted);
       margin-left: 4px;
       line-height: 1;
       transition: transform 0.15s ease;
@@ -330,7 +469,7 @@
 
     .profile-chip.open .profile-caret {
       transform: rotate(180deg);
-      color: #ffffff;
+      color: var(--main-text);
     }
 
     .profile-menu {
@@ -400,14 +539,14 @@
 
     .profile-text {
       font-size: 0.72rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       line-height: 1.2;
     }
 
     .profile-text strong {
       display: block;
       font-size: 0.82rem;
-      color: #ffffff;
+      color: var(--main-text);
       font-weight: 700;
     }
 
@@ -423,7 +562,7 @@
 
     .content > p.subtitle {
       font-size: 0.86rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       margin-top: 4px;
       margin-bottom: 22px;
     }
@@ -447,8 +586,8 @@
     }
 
     .stat-card {
-      background: var(--charcoal);
-      border: 1px solid var(--border);
+      background: var(--main-surface);
+      border: 1px solid var(--main-border);
       border-radius: 14px;
       padding: 16px;
     }
@@ -457,7 +596,8 @@
       width: 34px;
       height: 34px;
       border-radius: 999px;
-      background: var(--charcoal-light);
+      background: var(--silver-light);
+      border: 1px solid var(--main-border);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -465,9 +605,42 @@
       margin-bottom: 10px;
     }
 
+    .stat-icon img {
+      width: 17px;
+      height: 17px;
+      object-fit: contain;
+    }
+
+    .glow-dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 999px;
+      animation: glowPulse 2.2s ease-in-out infinite;
+    }
+
+    .glow-dot.glow-green {
+      background: #34d16b;
+      box-shadow: 0 0 0 3px rgba(52, 209, 107, 0.18), 0 0 10px 2px rgba(52, 209, 107, 0.7);
+    }
+
+    .glow-dot.glow-yellow {
+      background: #f4b740;
+      box-shadow: 0 0 0 3px rgba(244, 183, 64, 0.18), 0 0 10px 2px rgba(244, 183, 64, 0.7);
+    }
+
+    .glow-dot.glow-red {
+      background: #e04b4b;
+      box-shadow: 0 0 0 3px rgba(224, 75, 75, 0.18), 0 0 10px 2px rgba(224, 75, 75, 0.7);
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
     .stat-label {
       font-size: 0.72rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
     }
 
     .stat-value {
@@ -476,9 +649,29 @@
       margin-top: 2px;
     }
 
+    .stat-value.is-loading {
+      color: transparent;
+      position: relative;
+    }
+
+    .stat-value.is-loading::after {
+      content: "";
+      position: absolute;
+      inset: 2px 40% 2px 0;
+      background: linear-gradient(90deg, var(--silver-light) 25%, #f2f2f3 50%, var(--silver-light) 75%);
+      background-size: 200% 100%;
+      border-radius: 6px;
+      animation: statSkeleton 1.2s ease-in-out infinite;
+    }
+
+    @keyframes statSkeleton {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
     .stat-sub {
       font-size: 0.68rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       margin-top: 4px;
     }
 
@@ -493,8 +686,8 @@
       align-items: center;
       gap: 8px;
       background: transparent;
-      border: 1px solid var(--border);
-      color: var(--silver);
+      border: 1px solid var(--main-border);
+      color: var(--main-text-muted);
       font-size: 0.82rem;
       font-weight: 700;
       padding: 10px 16px;
@@ -504,8 +697,8 @@
     }
 
     .btn-outline:hover {
-      background: var(--charcoal-light);
-      color: #ffffff;
+      background: var(--silver-light);
+      color: var(--main-text);
     }
 
     .btn-solid {
@@ -513,7 +706,7 @@
       align-items: center;
       gap: 8px;
       background: #ffffff;
-      border: none;
+      border: 1px solid var(--main-border);
       color: var(--black);
       font-size: 0.82rem;
       font-weight: 800;
@@ -544,10 +737,10 @@
     .search-field input {
       width: 100%;
       padding: 10px 14px 10px 36px;
-      border: 1px solid var(--border);
+      border: 1px solid var(--main-border);
       border-radius: 10px;
-      background: var(--charcoal);
-      color: #ffffff;
+      background: var(--main-surface);
+      color: var(--main-text);
       font-size: 0.82rem;
       outline: none;
     }
@@ -557,7 +750,7 @@
     }
 
     .search-field input::placeholder {
-      color: var(--text-muted);
+      color: var(--main-text-muted);
     }
 
     .search-icon {
@@ -566,23 +759,23 @@
       top: 50%;
       transform: translateY(-50%);
       font-size: 0.82rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
     }
 
     .filter-select {
       padding: 10px 14px;
-      border: 1px solid var(--border);
+      border: 1px solid var(--main-border);
       border-radius: 10px;
-      background: var(--charcoal);
-      color: var(--silver);
+      background: var(--main-surface);
+      color: var(--main-text-muted);
       font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
     }
 
     .products-panel {
-      background: var(--charcoal);
-      border: 1px solid var(--border);
+      background: var(--main-surface);
+      border: 1px solid var(--main-border);
       border-radius: 14px;
       overflow: hidden;
     }
@@ -597,15 +790,15 @@
       font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.03em;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--main-border);
       font-weight: 700;
     }
 
     .products-table td {
       padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--main-border);
       font-size: 0.84rem;
       vertical-align: middle;
     }
@@ -624,8 +817,8 @@
       width: 40px;
       height: 40px;
       border-radius: 8px;
-      background: var(--charcoal-light);
-      border: 1px solid var(--border);
+      background: var(--silver-light);
+      border: 1px solid var(--main-border);
       overflow: hidden;
       flex-shrink: 0;
       display: flex;
@@ -654,13 +847,13 @@
     }
 
     .status-badge.published {
-      background: rgba(159, 227, 180, 0.14);
-      color: #9fe3b4;
+      background: rgba(30, 139, 74, 0.14);
+      color: #1e8b4a;
     }
 
     .status-badge.draft {
-      background: rgba(199, 201, 204, 0.14);
-      color: var(--silver);
+      background: rgba(199, 201, 204, 0.3);
+      color: var(--main-text-muted);
     }
 
     .stock-value {
@@ -671,9 +864,9 @@
       width: 30px;
       height: 30px;
       border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--charcoal-light);
-      color: var(--silver);
+      border: 1px solid var(--main-border);
+      background: var(--silver-light);
+      color: var(--main-text-muted);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -683,8 +876,8 @@
 
     .row-edit-btn:hover {
       border-color: var(--silver-dark);
-      color: var(--silver-light);
-      background: var(--charcoal);
+      color: var(--main-text);
+      background: #ffffff;
     }
 
     .edit-modal-backdrop {
@@ -707,8 +900,8 @@
       max-width: 480px;
       max-height: 88vh;
       overflow-y: auto;
-      background: var(--charcoal);
-      border: 1px solid var(--border);
+      background: var(--main-surface);
+      border: 1px solid var(--main-border);
       border-radius: 16px;
       padding: 24px;
     }
@@ -726,7 +919,7 @@
     .edit-modal label {
       display: block;
       font-size: 0.78rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       margin-bottom: 6px;
       font-weight: 600;
     }
@@ -735,10 +928,10 @@
     .edit-modal select,
     .edit-modal textarea {
       width: 100%;
-      background: var(--charcoal-light);
-      border: 1px solid var(--border);
+      background: var(--main-bg);
+      border: 1px solid var(--main-border);
       border-radius: 8px;
-      color: var(--silver-light);
+      color: var(--main-text);
       font-size: 0.86rem;
       padding: 9px 12px;
       font-family: inherit;
@@ -760,6 +953,11 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
+    }
+
+    .edit-modal .optional {
+      font-weight: 400;
+      color: var(--main-text-muted);
     }
 
     .edit-modal-error {
@@ -789,8 +987,8 @@
       width: 56px;
       height: 56px;
       border-radius: 999px;
-      background: var(--charcoal-light);
-      border: 1px solid var(--border);
+      background: var(--silver-light);
+      border: 1px solid var(--main-border);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -806,7 +1004,7 @@
 
     .empty-state p {
       font-size: 0.82rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
       max-width: 320px;
       margin-bottom: 18px;
     }
@@ -817,8 +1015,8 @@
       justify-content: space-between;
       gap: 16px;
       flex-wrap: wrap;
-      background: var(--charcoal);
-      border: 1px solid var(--border);
+      background: var(--main-surface);
+      border: 1px solid var(--main-border);
       border-radius: 14px;
       padding: 16px 20px;
       margin-top: 20px;
@@ -834,7 +1032,7 @@
       width: 34px;
       height: 34px;
       border-radius: 999px;
-      background: var(--charcoal-light);
+      background: var(--silver-light);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -850,18 +1048,18 @@
 
     .tip-text span {
       font-size: 0.76rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
     }
 
     .footer {
       margin-top: auto;
       padding: 18px 32px;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--main-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 0.74rem;
-      color: var(--text-muted);
+      color: var(--main-text-muted);
     }
 
     .footer-links {
@@ -873,15 +1071,65 @@
       .stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
+    /* ---- Mobile sidebar drawer ---- */
+    .sx-sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 490;
+    }
+
+    .sx-sidebar-backdrop.open {
+      display: block;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .products-table {
+      min-width: 640px;
+    }
+
     @media (max-width: 760px) {
-      .sidebar { display: none; }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow-y: auto;
+        z-index: 500;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+      }
+      .sidebar.open { transform: translateX(0); }
       .menu-toggle { display: block; }
-      .content { padding: 22px 18px 40px; }
+      .content { padding: 20px 18px 40px; }
       .topbar { padding: 16px 18px; }
       .footer { padding: 16px 18px; flex-direction: column; gap: 10px; align-items: flex-start; }
       .products-toolbar { flex-direction: column; }
       .toolbar-actions { width: 100%; }
       .btn-outline, .btn-solid { flex: 1; justify-content: center; }
+      .support-help-panel {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        bottom: auto;
+        transform: translate(-50%, -50%);
+        width: min(280px, calc(100vw - 40px));
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-row { grid-template-columns: 1fr; }
+      .edit-modal-row { grid-template-columns: 1fr; }
+      .toolbar-actions { flex-direction: column; align-items: stretch; width: 100%; }
+      .topbar-actions { gap: 10px; }
     }
   </style>
 </head>
@@ -926,32 +1174,52 @@
       </ul>
 
       <ul class="nav-list">
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon"><img src="assets/setting.png" alt="" /></span>
-          <span class="nav-item-label">Shop Settings</span>
-        </a></li>
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon"><img src="assets/notification.png" alt="" /></span>
-          <span class="nav-item-label">Notifications</span>
-          <span class="nav-badge">3</span>
-        </a></li>
-      </ul>
-
-      <ul class="nav-list">
-        <li class="nav-item"><a class="nav-item-link" href="#">
-          <span class="nav-icon"><img src="assets/question.png" alt="" /></span>
-          <span class="nav-item-label">Support &amp; Help</span>
-        </a></li>
+        <li class="nav-item support-help-item">
+          <a class="nav-item-link" href="#" id="supportHelpToggle">
+            <span class="nav-icon"><img src="assets/question.png" alt="" /></span>
+            <span class="nav-item-label">Support &amp; Help</span>
+          </a>
+          <div class="support-help-panel" id="supportHelpPanel">
+            <div class="support-help-header">
+              <div class="support-help-title-main">Need more help?</div>
+              <div class="support-help-subtitle">Our support team is here to assist you personally.</div>
+            </div>
+            <div class="support-help-row">
+              <div class="support-help-icon"><img src="assets/whatsapp.png" alt="" /></div>
+              <div class="support-help-body">
+                <div class="support-help-row-title">Chat with us</div>
+                <div class="support-help-row-desc">Chat live with our support team in real-time.</div>
+                <a class="support-help-btn" href="https://wa.me/2349134333745" target="_blank" rel="noopener">Start Live Chat</a>
+                <div class="support-help-row-meta">Available Mon - Sat, 8AM - 6PM</div>
+              </div>
+            </div>
+            <div class="support-help-row">
+              <div class="support-help-icon"><img src="assets/email.png" alt="" /></div>
+              <div class="support-help-body">
+                <div class="support-help-row-title">Email Support</div>
+                <div class="support-help-row-desc">Send us an email and we'll get back to you.</div>
+                <a class="support-help-link" href="mailto:victoredochie10@gmail.com">victoredochie10@gmail.com</a>
+              </div>
+            </div>
+            <div class="support-help-row">
+              <div class="support-help-icon"><img src="assets/telephone.png" alt="" /></div>
+              <div class="support-help-body">
+                <div class="support-help-row-title">Call Us</div>
+                <div class="support-help-row-desc">Speak with our support team directly.</div>
+                <a class="support-help-link" href="tel:+2349134333745">+234 913 433 3745</a>
+              </div>
+            </div>
+          </div>
+        </li>
       </ul>
     </div>
   </aside>
 
   <div class="main">
     <div class="topbar">
-      <span class="menu-toggle">&#9776;</span>
+      <span class="menu-toggle" id="menuToggle">&#9776;</span>
       <div class="topbar-actions">
-        <div class="icon-btn">&#128276;<span class="dot">1</span></div>
-        <div class="icon-btn">?</div>
+        <button type="button" class="topbar-logout-btn" id="topbarLogoutBtn">&#10148; Log Out</button>
         <div class="profile-chip" id="profileChip">
           <div class="profile-toggle" id="profileToggle">
             <div class="profile-avatar" id="profileAvatar"><span id="profileInitial">U</span></div>
@@ -972,27 +1240,27 @@
       <div class="products-toolbar">
         <div class="stats-row">
           <div class="stat-card">
-            <div class="stat-icon">&#128188;</div>
+            <div class="stat-icon"><img src="assets/parcel.png" alt="" /></div>
             <div class="stat-label">Total Products</div>
-            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-value is-loading" id="statTotal">0</div>
             <div class="stat-sub">Active Listings</div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon">&#128994;</div>
+            <div class="stat-icon"><span class="glow-dot glow-green"></span></div>
             <div class="stat-label">In Stock</div>
-            <div class="stat-value" id="statInStock">0</div>
+            <div class="stat-value is-loading" id="statInStock">0</div>
             <div class="stat-sub">Products available</div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon">&#128993;</div>
+            <div class="stat-icon"><span class="glow-dot glow-yellow"></span></div>
             <div class="stat-label">Low Stock</div>
-            <div class="stat-value" id="statLowStock">0</div>
+            <div class="stat-value is-loading" id="statLowStock">0</div>
             <div class="stat-sub">Products</div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon">&#9898;</div>
+            <div class="stat-icon"><span class="glow-dot glow-red"></span></div>
             <div class="stat-label">Out of Stock</div>
-            <div class="stat-value" id="statOutOfStock">0</div>
+            <div class="stat-value is-loading" id="statOutOfStock">0</div>
             <div class="stat-sub">Products</div>
           </div>
         </div>
@@ -1026,19 +1294,21 @@
           <p>Start building your catalog by adding your first product. Your listings will appear here.</p>
           <a href="add-product.html" class="btn-solid">&#43; Add New Product</a>
         </div>
-        <table class="products-table" id="productsTable" style="display: none;">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Category</th>
-              <th>Price</th>
-              <th>Stock</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="productsTableBody"></tbody>
-        </table>
+        <div class="table-scroll">
+          <table class="products-table" id="productsTable" style="display: none;">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody"></tbody>
+          </table>
+        </div>
       </div>
 
     </div>
@@ -1073,6 +1343,19 @@
           <option value="accessories">Accessories</option>
           <option value="other">Other</option>
         </select>
+      </div>
+
+      <div class="edit-modal-row">
+        <div class="form-field">
+          <label for="editProductSubcategory">Subcategory <span class="required">*</span></label>
+          <select id="editProductSubcategory" disabled required>
+            <option value="" selected>Select category first</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="editProductBrand">Brand <span class="optional">(Optional)</span></label>
+          <input type="text" id="editProductBrand" placeholder="Enter brand name" />
+        </div>
       </div>
 
       <div class="form-field">
@@ -1118,7 +1401,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js?v=2"></script>
+  <script src="sx-auth.js?v=4"></script>
   <script>
     (async function guardProducts() {
       var sessionResult = await sxSupabaseClient.auth.getSession();
@@ -1169,6 +1452,20 @@
       document.getElementById('logoutBtn')
     );
 
+    SXAuth.wireSupportHelp(
+      document.getElementById('supportHelpToggle'),
+      document.getElementById('supportHelpPanel')
+    );
+
+    SXAuth.wireMobileSidebar(
+      document.getElementById('menuToggle'),
+      document.querySelector('.sidebar')
+    );
+
+    document.getElementById('topbarLogoutBtn').addEventListener('click', function () {
+      SXAuth.signOut();
+    });
+
     // ---- Loads the signed-in owner's products (draft + published) from
     // sx_products and renders them into the table, or shows the empty
     // state if there are none yet. Requires sx-products-schema.sql to have
@@ -1192,6 +1489,7 @@
       var table = document.getElementById('productsTable');
       var tbody = document.getElementById('productsTableBody');
 
+      try {
       var result = await sxSupabaseClient
         .from('sx_products')
         .select('id, product_name, category, description, images, selling_price, stock_quantity, condition, status')
@@ -1232,6 +1530,12 @@
         row.querySelector('.status-badge').textContent = product.status === 'published' ? 'Published' : 'Draft';
         tbody.appendChild(row);
       });
+      } finally {
+        ['statTotal', 'statInStock', 'statLowStock', 'statOutOfStock'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.remove('is-loading');
+        });
+      }
     }
 
     // ---- Edit Product modal: clicking the pencil button on a row opens a
@@ -1247,6 +1551,52 @@
     var editModalSaveBtn = document.getElementById('editModalSaveBtn');
     var editModalCancelBtn = document.getElementById('editModalCancelBtn');
     var editingProductId = null;
+
+    // Same category -> subcategory mapping used on add-product.html,
+    // matching Oshodi Market Online's own category-products-data.js names
+    // exactly.
+    var SUBCATEGORY_MAP = {
+      fabrics: ['Ankara Fabrics', 'Jonkoso', 'Big & Small Lana', '7 Star', 'Brushmouth', 'Checkers', 'White', 'Silk & Damask', 'Italian Pigal', 'Senator Materials'],
+      fashion: ["Women's Wear", "Men's Wear", 'Unisex Wear', 'Shoes & Bags', 'Traditional Wear', 'Kids Wear', 'Jewelry & Accessories', 'Sportswear'],
+      electronics: ['Mobile Phones', 'Laptop & Computers', 'Tablets', 'Accessories', 'Audio & Music', 'Cameras & Photography', 'Gaming', 'Smart Watches'],
+      foodstuff: ['Grains & Cereals', 'Oils & Spices', 'Snacks & Beverages', 'Fresh Produce', 'Frozen Foods', 'Provisions', 'Bakery Items', 'Drinks'],
+      accessories: ['Jewelry', 'Bags & Wallets', 'Belts', 'Sunglasses', 'Watches', 'Hair Accessories', 'Scarves', 'Perfumes']
+    };
+
+    var editProductCategorySelect = document.getElementById('editProductCategory');
+    var editProductSubcategorySelect = document.getElementById('editProductSubcategory');
+
+    function populateEditSubcategoryOptions(categoryValue, selectedSubcategory) {
+      var subcategories = SUBCATEGORY_MAP[categoryValue];
+      editProductSubcategorySelect.innerHTML = '';
+      if (!subcategories || subcategories.length === 0) {
+        editProductSubcategorySelect.disabled = true;
+        var noneOption = document.createElement('option');
+        noneOption.value = '';
+        noneOption.textContent = 'No subcategories for this category';
+        noneOption.selected = true;
+        editProductSubcategorySelect.appendChild(noneOption);
+        return;
+      }
+      editProductSubcategorySelect.disabled = false;
+      var placeholderOption = document.createElement('option');
+      placeholderOption.value = '';
+      placeholderOption.textContent = 'Select subcategory';
+      placeholderOption.selected = !selectedSubcategory;
+      placeholderOption.disabled = true;
+      editProductSubcategorySelect.appendChild(placeholderOption);
+      subcategories.forEach(function (name) {
+        var option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        if (name === selectedSubcategory) option.selected = true;
+        editProductSubcategorySelect.appendChild(option);
+      });
+    }
+
+    editProductCategorySelect.addEventListener('change', function () {
+      populateEditSubcategoryOptions(editProductCategorySelect.value, null);
+    });
 
     productsTableBody.addEventListener('click', function (e) {
       var editBtn = e.target.closest('.row-edit-btn');
@@ -1266,6 +1616,8 @@
 
       document.getElementById('editProductName').value = product.product_name || '';
       document.getElementById('editProductCategory').value = product.category || 'other';
+      populateEditSubcategoryOptions(product.category || 'other', product.subcategory || null);
+      document.getElementById('editProductBrand').value = product.brand || '';
       document.getElementById('editProductDescription').value = product.description || '';
       document.getElementById('editSellingPrice').value = product.selling_price || 0;
       document.getElementById('editStockQuantity').value = product.stock_quantity || 0;
@@ -1290,13 +1642,15 @@
 
       var productName = document.getElementById('editProductName').value.trim();
       var category = document.getElementById('editProductCategory').value;
+      var subcategory = document.getElementById('editProductSubcategory').value.trim();
+      var brand = document.getElementById('editProductBrand').value.trim();
       var description = document.getElementById('editProductDescription').value.trim();
       var sellingPrice = parseFloat(document.getElementById('editSellingPrice').value);
       var stockQuantity = parseInt(document.getElementById('editStockQuantity').value, 10);
       var condition = document.getElementById('editProductCondition').value;
       var status = document.getElementById('editProductStatus').value;
 
-      if (!productName || !category || !description || isNaN(sellingPrice) || sellingPrice < 0 || isNaN(stockQuantity) || stockQuantity < 0) {
+      if (!productName || !category || (!editProductSubcategorySelect.disabled && !subcategory) || !description || isNaN(sellingPrice) || sellingPrice < 0 || isNaN(stockQuantity) || stockQuantity < 0) {
         editModalError.textContent = 'Please fill in all fields with valid values.';
         editModalError.style.display = 'block';
         return;
@@ -1310,6 +1664,8 @@
         .update({
           product_name: productName,
           category: category,
+          subcategory: subcategory || null,
+          brand: brand || null,
           description: description,
           selling_price: sellingPrice,
           stock_quantity: stockQuantity,
@@ -1332,6 +1688,8 @@
       if (product) {
         product.product_name = productName;
         product.category = category;
+        product.subcategory = subcategory || null;
+        product.brand = brand || null;
         product.description = description;
         product.selling_price = sellingPrice;
         product.stock_quantity = stockQuantity;

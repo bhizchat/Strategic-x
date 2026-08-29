@@ -23,6 +23,8 @@ create table if not exists public.sx_products (
   shop_id uuid references public.sx_shops(id) on delete cascade,
   product_name text not null,
   category text not null,
+  subcategory text,
+  brand text,
   description text not null,
   tags text[] not null default '{}',
   images text[] not null default '{}',
@@ -35,6 +37,11 @@ create table if not exists public.sx_products (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- Adds subcategory/brand to tables created before these columns existed
+-- (safe to run multiple times).
+alter table public.sx_products add column if not exists subcategory text;
+alter table public.sx_products add column if not exists brand text;
 
 create index if not exists sx_products_owner_id_idx on public.sx_products (owner_id);
 create index if not exists sx_products_shop_id_idx on public.sx_products (shop_id);
@@ -81,11 +88,19 @@ using (owner_id = auth.uid());
 -- other market_platform storefront) should ever query against for
 -- product listings — never the base sx_products table, which also holds
 -- drafts and is owner-restricted.
-create or replace view public.sx_products_public as
+--
+-- Dropped and recreated (rather than CREATE OR REPLACE) because Postgres
+-- disallows inserting/reordering columns in the middle of an existing
+-- view via REPLACE — only appending at the end is allowed. Safe to drop
+-- since nothing else creates dependent objects on top of this view.
+drop view if exists public.sx_products_public;
+create view public.sx_products_public as
 select
   p.id,
   p.product_name,
   p.category,
+  p.subcategory,
+  p.brand,
   p.description,
   p.tags,
   p.images,

@@ -102,6 +102,88 @@
     });
   }
 
+  // Wires up the "Support & Help" sidebar item: clicking it toggles a
+  // small popover panel with contact options (WhatsApp / email / call),
+  // clicking outside or pressing Escape closes it. Same open/close pattern
+  // as wireProfileMenu.
+  function wireSupportHelp(toggleEl, panelEl) {
+    if (!toggleEl || !panelEl) return;
+
+    function closePanel() {
+      panelEl.classList.remove('open');
+      toggleEl.classList.remove('active');
+    }
+
+    function openPanel() {
+      panelEl.classList.add('open');
+      toggleEl.classList.add('active');
+    }
+
+    toggleEl.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (panelEl.classList.contains('open')) {
+        closePanel();
+      } else {
+        openPanel();
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!panelEl.classList.contains('open')) return;
+      if (panelEl.contains(e.target) || toggleEl.contains(e.target)) return;
+      closePanel();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closePanel();
+    });
+  }
+
+  // Wires up the mobile hamburger toggle in the dashboard-style pages'
+  // topbar: on narrow screens the sidebar is an off-canvas drawer (see
+  // each page's max-width: 760px media query), hidden by default. Clicking
+  // the hamburger slides it in over a dark backdrop; clicking the backdrop,
+  // pressing Escape, or tapping a nav link inside the drawer closes it
+  // again. The backdrop element is created here rather than in markup so
+  // every page gets identical behavior without duplicating HTML.
+  function wireMobileSidebar(toggleEl, sidebarEl) {
+    if (!toggleEl || !sidebarEl) return;
+
+    var backdrop = document.createElement('div');
+    backdrop.className = 'sx-sidebar-backdrop';
+    document.body.appendChild(backdrop);
+
+    function closeSidebar() {
+      sidebarEl.classList.remove('open');
+      backdrop.classList.remove('open');
+    }
+
+    function openSidebar() {
+      sidebarEl.classList.add('open');
+      backdrop.classList.add('open');
+    }
+
+    toggleEl.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (sidebarEl.classList.contains('open')) {
+        closeSidebar();
+      } else {
+        openSidebar();
+      }
+    });
+
+    backdrop.addEventListener('click', closeSidebar);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeSidebar();
+    });
+
+    sidebarEl.addEventListener('click', function (e) {
+      if (e.target.closest('a.nav-item-link')) closeSidebar();
+    });
+  }
+
   window.SXAuth = {
     signInWithGoogle: signInWithGoogle,
     showFormError: showFormError,
@@ -109,6 +191,8 @@
     isOnboarded: isOnboarded,
     watchAuthAndRoute: watchAuthAndRoute,
     signOut: signOut,
-    wireProfileMenu: wireProfileMenu
+    wireProfileMenu: wireProfileMenu,
+    wireSupportHelp: wireSupportHelp,
+    wireMobileSidebar: wireMobileSidebar
   };
 })();
