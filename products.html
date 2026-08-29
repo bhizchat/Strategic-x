@@ -1274,16 +1274,21 @@
       <div class="filters-bar">
         <div class="search-field">
           <span class="search-icon">&#128269;</span>
-          <input type="text" placeholder="Search products by name, SKU or category..." />
+          <input type="text" id="productSearchInput" placeholder="Search products by name, SKU or category..." />
         </div>
-        <select class="filter-select">
-          <option>All Categories</option>
+        <select class="filter-select" id="categoryFilterSelect">
+          <option value="">All Categories</option>
         </select>
-        <select class="filter-select">
-          <option>All Status</option>
+        <select class="filter-select" id="statusFilterSelect">
+          <option value="">All Status</option>
+          <option value="published">Published</option>
+          <option value="draft">Draft</option>
         </select>
-        <select class="filter-select">
-          <option>Stock Status</option>
+        <select class="filter-select" id="stockFilterSelect">
+          <option value="">Stock Status</option>
+          <option value="in-stock">In Stock</option>
+          <option value="low-stock">Low Stock</option>
+          <option value="out-of-stock">Out of Stock</option>
         </select>
       </div>
 
@@ -1484,25 +1489,75 @@
       document.getElementById('statOutOfStock').textContent = outOfStock;
     }
 
-    async function loadProducts(userId) {
+    function populateCategoryFilterOptions() {
+      var select = document.getElementById('categoryFilterSelect');
+      if (!select) return;
+      var categories = [];
+      currentProducts.forEach(function (product) {
+        if (product.category && categories.indexOf(product.category) === -1) {
+          categories.push(product.category);
+        }
+      });
+      categories.sort();
+      var currentValue = select.value;
+      select.innerHTML = '<option value="">All Categories</option>';
+      categories.forEach(function (category) {
+        var opt = document.createElement('option');
+        opt.value = category;
+        opt.textContent = category;
+        select.appendChild(opt);
+      });
+      if (categories.indexOf(currentValue) !== -1) select.value = currentValue;
+    }
+
+    function getFilteredProducts() {
+      var searchInput = document.getElementById('productSearchInput');
+      var categorySelect = document.getElementById('categoryFilterSelect');
+      var statusSelect = document.getElementById('statusFilterSelect');
+      var stockSelect = document.getElementById('stockFilterSelect');
+
+      var query = ((searchInput && searchInput.value) || '').trim().toLowerCase();
+      var category = categorySelect ? categorySelect.value : '';
+      var status = statusSelect ? statusSelect.value : '';
+      var stock = stockSelect ? stockSelect.value : '';
+
+      return currentProducts.filter(function (product) {
+        if (query) {
+          var haystack = ((product.product_name || '') + ' ' + (product.category || '')).toLowerCase();
+          if (haystack.indexOf(query) === -1) return false;
+        }
+        if (category && product.category !== category) return false;
+        if (status && product.status !== status) return false;
+        if (stock) {
+          var qty = product.stock_quantity;
+          if (stock === 'in-stock' && !(qty > 5)) return false;
+          if (stock === 'low-stock' && !(qty > 0 && qty <= 5)) return false;
+          if (stock === 'out-of-stock' && !(qty <= 0)) return false;
+        }
+        return true;
+      });
+    }
+
+    function renderProductsTable(products) {
       var emptyState = document.getElementById('productsEmptyState');
       var table = document.getElementById('productsTable');
       var tbody = document.getElementById('productsTableBody');
+      var emptyTitle = emptyState.querySelector('h3');
+      var emptyText = emptyState.querySelector('p');
+      var emptyAction = emptyState.querySelector('a.btn-solid');
 
-      try {
-      var result = await sxSupabaseClient
-        .from('sx_products')
-        .select('id, product_name, category, description, images, selling_price, stock_quantity, condition, status')
-        .eq('owner_id', userId)
-        .order('created_at', { ascending: false });
-
-      currentProducts = (result && result.data) || [];
-
-      recomputeStockStats();
-
-      if (currentProducts.length === 0) {
+      if (products.length === 0) {
         emptyState.style.display = 'flex';
         table.style.display = 'none';
+        if (currentProducts.length === 0) {
+          if (emptyTitle) emptyTitle.textContent = 'No products yet';
+          if (emptyText) emptyText.textContent = 'Start building your catalog by adding your first product. Your listings will appear here.';
+          if (emptyAction) emptyAction.style.display = '';
+        } else {
+          if (emptyTitle) emptyTitle.textContent = 'No matching products';
+          if (emptyText) emptyText.textContent = 'Try adjusting your search or filters.';
+          if (emptyAction) emptyAction.style.display = 'none';
+        }
         return;
       }
 
@@ -1510,7 +1565,7 @@
       table.style.display = 'table';
       tbody.innerHTML = '';
 
-      currentProducts.forEach(function (product) {
+      products.forEach(function (product) {
         var thumbUrl = (product.images && product.images[0]) || '';
         var row = document.createElement('tr');
         row.setAttribute('data-product-id', product.id);
@@ -1530,6 +1585,30 @@
         row.querySelector('.status-badge').textContent = product.status === 'published' ? 'Published' : 'Draft';
         tbody.appendChild(row);
       });
+    }
+
+    function applyProductFilters() {
+      renderProductsTable(getFilteredProducts());
+    }
+
+    document.getElementById('productSearchInput').addEventListener('input', applyProductFilters);
+    document.getElementById('categoryFilterSelect').addEventListener('change', applyProductFilters);
+    document.getElementById('statusFilterSelect').addEventListener('change', applyProductFilters);
+    document.getElementById('stockFilterSelect').addEventListener('change', applyProductFilters);
+
+    async function loadProducts(userId) {
+      try {
+        var result = await sxSupabaseClient
+          .from('sx_products')
+          .select('id, product_name, category, description, images, selling_price, stock_quantity, condition, status')
+          .eq('owner_id', userId)
+          .order('created_at', { ascending: false });
+
+        currentProducts = (result && result.data) || [];
+
+        recomputeStockStats();
+        populateCategoryFilterOptions();
+        renderProductsTable(getFilteredProducts());
       } finally {
         ['statTotal', 'statInStock', 'statLowStock', 'statOutOfStock'].forEach(function (id) {
           var el = document.getElementById(id);

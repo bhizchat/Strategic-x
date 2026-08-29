@@ -1476,6 +1476,7 @@
     var shopProducts = [];
     var allReviews = [];
     var activeTab = 'all';
+    var reviewsLoadError = false;
 
     function starString(rating) {
       var rounded = Math.round(rating);
@@ -1525,6 +1526,8 @@
         // policy for "authenticated" (the signed-in vendor dashboard). See
         // sx-reviews-read-policy.sql for the fix.
         console.error('Failed to load reviews:', reviewsResult.error.message);
+        reviewsLoadError = true;
+        document.getElementById('reviewsEmptyState').querySelector('h3').textContent = 'Could not load reviews';
         document.getElementById('reviewsEmptyState').querySelector('p').textContent =
           'Could not load reviews (' + reviewsResult.error.message + '). If this persists, the "reviews" table may need an additional RLS read policy for signed-in vendors — see sx-reviews-read-policy.sql.';
       }
@@ -1633,6 +1636,17 @@
       if (filtered.length === 0) {
         emptyState.style.display = 'flex';
         table.style.display = 'none';
+        if (!reviewsLoadError) {
+          var emptyTitle = emptyState.querySelector('h3');
+          var emptyText = emptyState.querySelector('p');
+          if (allReviews.length === 0) {
+            if (emptyTitle) emptyTitle.textContent = 'No reviews yet';
+            if (emptyText) emptyText.textContent = 'Once customers review your products, their feedback will show up here.';
+          } else {
+            if (emptyTitle) emptyTitle.textContent = 'No matching reviews';
+            if (emptyText) emptyText.textContent = 'Try adjusting your search or filters.';
+          }
+        }
         return;
       }
 
