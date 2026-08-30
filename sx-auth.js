@@ -89,16 +89,38 @@
   // redirect, or email-confirmation redirect all land here) and routes
   // first-time users to the onboarding flow, and returning users to their
   // dashboard.
+  //
+  // IMPORTANT: Google OAuth redirects back to this page with an auth code
+  // in the URL, which the Supabase client exchanges for a session as soon
+  // as it's created in sx-supabase-config.js — this can complete (and fire
+  // its SIGNED_IN event) BEFORE this function runs and attaches the
+  // onAuthStateChange listener below, since script tags execute in order
+  // and the exchange is async. If that race is lost, the SIGNED_IN event
+  // is missed entirely and the user is left stranded on the sign-in page
+  // with no visible reaction, forcing them to click "Continue with
+  // Google" a second time. To close that race, we first check for an
+  // already-established session via getSession() and route immediately if
+  // one exists, in addition to listening for future SIGNED_IN events.
+  function routeSignedInUser(user) {
+    if (!isOnboarded(user)) {
+      window.location.href = 'onboarding.html';
+    } else {
+      window.location.href = 'dashboard.html';
+    }
+  }
+
   function watchAuthAndRoute(formEl) {
     var client = window.sxSupabaseClient;
     if (!client) return;
+
+    client.auth.getSession().then(function (result) {
+      var session = result && result.data ? result.data.session : null;
+      if (session && session.user) routeSignedInUser(session.user);
+    });
+
     client.auth.onAuthStateChange(function (event, session) {
       if (event !== 'SIGNED_IN' || !session || !session.user) return;
-      if (!isOnboarded(session.user)) {
-        window.location.href = 'onboarding.html';
-      } else {
-        window.location.href = 'dashboard.html';
-      }
+      routeSignedInUser(session.user);
     });
   }
 

@@ -536,7 +536,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js?v=4"></script>
+  <script src="sx-auth.js?v=5"></script>
   <script>
     var MAX_LOGO_SIZE_BYTES = 2 * 1024 * 1024;
     var MAX_BANNER_SIZE_BYTES = 5 * 1024 * 1024;
@@ -707,7 +707,7 @@
           .upsert(shopRow, { onConflict: 'owner_id' });
         if (shopInsertResult.error) throw shopInsertResult.error;
 
-        window.location.href = 'dashboard.html';
+        window.location.href = 'payments-billing.html';
       } catch (err) {
         console.error('Shop profile setup failed:', err);
         var errMessage = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
