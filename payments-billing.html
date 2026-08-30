@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <title>Strategic X - Dashboard</title>
+  <title>Strategic X - Payments & Billing</title>
   <style>
     :root {
       --black: #0a0a0a;
@@ -323,36 +323,6 @@
       border-bottom: 1px solid rgba(244, 183, 64, 0.4);
     }
 
-    .promo-card {
-      background: var(--charcoal-light);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      margin-top: 12px;
-    }
-
-    .promo-card h4 {
-      font-size: 0.82rem;
-      margin-bottom: 4px;
-    }
-
-    .promo-card p {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .promo-btn {
-      display: block;
-      text-align: center;
-      background: #ffffff;
-      color: var(--black);
-      font-size: 0.76rem;
-      font-weight: 700;
-      padding: 8px 10px;
-      border-radius: 8px;
-    }
-
     /* ---- Main content ---- */
     .main {
       flex: 1;
@@ -383,37 +353,6 @@
       align-items: center;
       gap: 18px;
       margin-left: auto;
-    }
-
-    .icon-btn {
-      position: relative;
-      width: 34px;
-      height: 34px;
-      border-radius: 999px;
-      background: var(--charcoal);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    .icon-btn .dot {
-      position: absolute;
-      top: -2px;
-      right: -2px;
-      width: 15px;
-      height: 15px;
-      border-radius: 999px;
-      background: #e04b4b;
-      color: #ffffff;
-      font-size: 0.58rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid var(--charcoal);
     }
 
     .topbar-logout-btn {
@@ -555,6 +494,21 @@
       flex: 1;
     }
 
+    .breadcrumb {
+      font-size: 0.78rem;
+      color: var(--main-text-muted);
+      margin-bottom: 14px;
+    }
+
+    .breadcrumb .sep {
+      margin: 0 6px;
+    }
+
+    .breadcrumb .current {
+      color: var(--main-text);
+      font-weight: 700;
+    }
+
     .content h1 {
       font-size: 1.5rem;
       font-weight: 800;
@@ -567,121 +521,370 @@
       margin-bottom: 22px;
     }
 
-    .platform-card {
-      background: var(--main-surface);
-      border: 1px solid var(--main-border);
-      border-radius: 14px;
-      padding: 18px 22px;
-      margin-bottom: 20px;
+    /* ---- Stepper ---- */
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 26px;
     }
 
-    .platform-card .label {
-      font-size: 0.74rem;
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
       color: var(--main-text-muted);
     }
 
-    .platform-card .value {
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-top: 2px;
-    }
-
-    .platform-card a {
-      display: inline-block;
-      margin-top: 10px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--silver-dark);
-      border-bottom: 1px solid var(--silver-dark);
-    }
-
-    .view-shop-btn {
-      float: right;
-      margin-top: 0 !important;
-      padding: 8px 16px;
-      border: 1px solid var(--border) !important;
-      border-radius: 8px;
-      color: var(--black) !important;
-      background: #f4b740;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .stat-card {
-      background: var(--main-surface);
-      border: 1px solid var(--main-border);
-      border-radius: 14px;
-      padding: 16px;
-    }
-
-    .stat-icon {
-      width: 34px;
-      height: 34px;
+    .step-circle {
+      width: 24px;
+      height: 24px;
       border-radius: 999px;
-      background: linear-gradient(135deg, var(--silver-light), var(--silver));
+      background: var(--silver-light);
+      color: var(--main-text-muted);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.9rem;
-      color: var(--black);
-      margin-bottom: 10px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .step.done .step-circle {
+      background: #1e8b4a;
+      color: #ffffff;
+    }
+
+    .step.done { color: var(--main-text); }
+
+    .step.active .step-circle {
+      background: #1e8b4a;
+      color: #ffffff;
+    }
+
+    .step.active { color: var(--main-text); }
+
+    .step-line {
+      width: 60px;
+      height: 2px;
+      background: var(--main-border);
+    }
+
+    .step-line.done {
+      background: #1e8b4a;
+    }
+
+    /* ---- Billing layout ---- */
+    .billing-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 2.4fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .billing-card {
+      background: var(--main-surface);
       border: 1px solid var(--main-border);
+      border-radius: 14px;
+      padding: 22px 24px;
     }
 
-    .stat-icon img {
-      width: 17px;
-      height: 17px;
-      object-fit: contain;
+    /* Plan card */
+    .plan-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: var(--silver-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 14px;
     }
 
-    .stat-label {
-      font-size: 0.72rem;
+    .plan-card .plan-label {
+      font-size: 0.76rem;
       color: var(--main-text-muted);
     }
 
-    .stat-value {
-      font-size: 1.3rem;
+    .plan-card .plan-name {
+      font-size: 1.15rem;
       font-weight: 800;
       margin-top: 2px;
     }
 
-    .stat-value.is-loading {
-      color: transparent;
-      position: relative;
-    }
-
-    .stat-value.is-loading::after {
-      content: "";
-      position: absolute;
-      inset: 2px 40% 2px 0;
-      background: linear-gradient(90deg, var(--silver-light) 25%, #f2f2f3 50%, var(--silver-light) 75%);
-      background-size: 200% 100%;
-      border-radius: 6px;
-      animation: statSkeleton 1.2s ease-in-out infinite;
-    }
-
-    @keyframes statSkeleton {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    .stat-delta {
-      font-size: 0.68rem;
+    .plan-card .plan-duration {
+      font-size: 0.8rem;
       color: var(--main-text-muted);
-      margin-top: 4px;
+      margin-top: 1px;
+      margin-bottom: 16px;
     }
 
-    .stat-delta.up {
+    .plan-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 18px;
+    }
+
+    .plan-features li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+    }
+
+    .plan-features li::before {
+      content: "\2713";
+      color: #1e8b4a;
+      font-weight: 800;
+    }
+
+    .plan-meta-table {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--main-bg);
+      border: 1px solid var(--main-border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+    }
+
+    .plan-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+    }
+
+    .plan-meta-row .label {
+      color: var(--main-text-muted);
+    }
+
+    .plan-meta-row .value {
+      font-weight: 700;
+    }
+
+    .plan-notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: rgba(30, 139, 74, 0.08);
+      border: 1px solid rgba(30, 139, 74, 0.25);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.76rem;
+      color: var(--main-text);
+    }
+
+    .plan-notice .icon {
+      flex-shrink: 0;
       color: #1e8b4a;
     }
 
-    .stars {
-      color: #f4b740;
+    /* Payment details card */
+    .billing-card h2 {
+      font-size: 0.98rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .secure-note {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.74rem;
+      color: var(--main-text-muted);
+      margin-top: 6px;
+      margin-bottom: 20px;
+    }
+
+    .form-field {
+      margin-bottom: 16px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-field label {
+      display: block;
       font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--main-text-muted);
+      margin-bottom: 6px;
+    }
+
+    .card-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--main-border);
+      border-radius: 9px;
+      padding: 0 12px;
+      background: var(--main-bg);
+    }
+
+    .card-input-wrap:focus-within {
+      border-color: var(--silver-dark);
+    }
+
+    .card-input-wrap .card-icon {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .card-input-wrap input {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      background: transparent;
+      padding: 11px 0;
+      font-size: 0.85rem;
+      font-family: inherit;
+      color: var(--main-text);
+      outline: none;
+    }
+
+    .card-brand-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .card-brand-icons img {
+      height: 18px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .form-field input,
+    .form-field select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--main-border);
+      border-radius: 9px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      color: var(--main-text);
+      background: var(--main-bg);
+      outline: none;
+    }
+
+    .form-field input:focus,
+    .form-field select:focus {
+      border-color: var(--silver-dark);
+    }
+
+    .form-field .field-hint {
+      font-size: 0.72rem;
+      color: var(--main-text-muted);
+      margin-top: 6px;
+    }
+
+    .no-charge-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: var(--main-bg);
+      border: 1px solid var(--main-border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 20px 0 22px;
+    }
+
+    .no-charge-banner .icon {
+      flex-shrink: 0;
+      color: var(--main-text);
+      font-size: 1rem;
+    }
+
+    .no-charge-banner .title {
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .no-charge-banner .desc {
+      font-size: 0.78rem;
+      color: var(--main-text-muted);
+      margin-top: 3px;
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px;
+      border-radius: 9px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border: 1px solid var(--main-border);
+      background: var(--main-surface);
+      color: var(--main-text);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--silver-dark);
+    }
+
+    .btn-solid {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 9px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border: none;
+      background: #1e8b4a;
+      color: #ffffff;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-solid:hover {
+      background: #197a40;
+    }
+
+    .btn-solid img {
+      width: 14px;
+      height: 14px;
+      object-fit: contain;
+      filter: invert(1);
+    }
+
+    .form-terms {
+      text-align: right;
+      font-size: 0.72rem;
+      color: var(--main-text-muted);
+      margin-top: 10px;
+    }
+
+    .form-terms a {
+      color: var(--main-text);
+      font-weight: 700;
+      border-bottom: 1px solid var(--main-border);
     }
 
     .footer {
@@ -700,8 +903,9 @@
       gap: 18px;
     }
 
-    @media (max-width: 980px) {
-      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 780px) {
+      .billing-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
     }
 
     /* ---- Mobile sidebar drawer ---- */
@@ -733,7 +937,7 @@
       .menu-toggle { display: block; }
       .content { padding: 22px 18px 40px; }
       .topbar { padding: 16px 18px; }
-      .footer { flex-direction: column; gap: 8px; align-items: flex-start; padding: 18px; }
+      .footer { padding: 16px 18px; flex-direction: column; gap: 10px; align-items: flex-start; }
       .support-help-panel {
         position: fixed;
         left: 50%;
@@ -747,14 +951,14 @@
     }
 
     @media (max-width: 480px) {
-      .stats-grid { grid-template-columns: 1fr; }
       .topbar-actions { gap: 10px; }
-      .topbar-logout-btn span { display: none; }
+      .stepper { flex-wrap: wrap; }
+      .step-line { width: 30px; }
     }
   </style>
 </head>
 <body>
-  <aside class="sidebar">
+  <aside class="sidebar" id="sxSidebar">
     <div class="sidebar-logo">
       <img src="assets/sxlogo.png" alt="Strategic X logo" />
     </div>
@@ -770,7 +974,7 @@
 
     <div class="nav-groups">
       <ul class="nav-list">
-        <li class="nav-item active"><a class="nav-item-link" href="dashboard.html">
+        <li class="nav-item"><a class="nav-item-link" href="dashboard.html">
           <span class="nav-icon"><img src="assets/dashboard.png" alt="" /></span>
           <span class="nav-item-label">Dashboard</span>
         </a></li>
@@ -787,7 +991,7 @@
           <span class="nav-item-label">Reviews</span>
           <span class="nav-badge">0</span>
         </a></li>
-        <li class="nav-item"><a class="nav-item-link" href="payments-billing.html">
+        <li class="nav-item active"><a class="nav-item-link" href="payments-billing.html">
           <span class="nav-icon"><img src="assets/wallet.png" alt="" /></span>
           <span class="nav-item-label">Payments &amp; Billing</span>
         </a></li>
@@ -854,46 +1058,109 @@
     </div>
 
     <div class="content">
-      <h1 id="welcomeHeading">Welcome back! &#128075;</h1>
-      <p class="subtitle">Here's what's happening with your shop today.</p>
-
-      <div class="platform-card">
-        <div class="label">You are selling on</div>
-        <div class="value" id="platformValue">Your Market Platform</div>
-        <a href="onboarding-step2.html">Change Platform</a>
-        <a href="#" id="viewShopLink" class="view-shop-btn" style="display: none;" target="_blank" rel="noopener">View Shop</a>
+      <div class="breadcrumb">
+        <a href="payments-billing.html">Payments &amp; Billing</a>
+        <span class="sep">&rsaquo;</span>
+        <span>Choose Plan</span>
+        <span class="sep">&rsaquo;</span>
+        <span class="current">Start Free Trial</span>
       </div>
 
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon"><img src="assets/visible.png" alt="" /></div>
-          <div class="stat-label">Shop Views</div>
-          <div class="stat-value is-loading" id="statShopViews">0</div>
-          <div class="stat-delta" id="statShopViewsDelta">No data yet</div>
+      <h1>Start Your Free Trial</h1>
+      <p class="subtitle">Get full access to all features for 1 month. Cancel anytime before your trial ends and you won't be charged.</p>
+
+      <div class="stepper">
+        <div class="step done"><span class="step-circle">&#10003;</span> Choose Plan</div>
+        <div class="step-line done"></div>
+        <div class="step active"><span class="step-circle">2</span> Payment Details</div>
+        <div class="step-line"></div>
+        <div class="step"><span class="step-circle">3</span> Confirmation</div>
+      </div>
+
+      <div class="billing-grid">
+        <div class="billing-card plan-card">
+          <div class="plan-icon">&#127970;</div>
+          <div class="plan-label">Seller Plan</div>
+          <div class="plan-name">Free Trial</div>
+          <div class="plan-duration">for 1 month</div>
+
+          <ul class="plan-features">
+            <li>Unlimited products</li>
+            <li>Showcase your products</li>
+            <li>Receive customer enquiries</li>
+            <li>Customer reviews</li>
+            <li>Email &amp; chat support</li>
+            <li>And much more!</li>
+          </ul>
+
+          <div class="plan-meta-table">
+            <div class="plan-meta-row"><span class="label">Trial Period</span><span class="value" id="planTrialPeriod">&mdash;</span></div>
+            <div class="plan-meta-row"><span class="label">Starts</span><span class="value" id="planStarts">&mdash;</span></div>
+            <div class="plan-meta-row"><span class="label">First Billing Date</span><span class="value" id="planFirstBilling">&mdash;</span></div>
+            <div class="plan-meta-row"><span class="label">Amount</span><span class="value" id="planAmount">&#8358;4,000 / month</span></div>
+          </div>
+
+          <div class="plan-notice">
+            <span class="icon">&#128737;</span>
+            <span>You can cancel anytime before <strong id="planCancelBy">&mdash;</strong> to avoid being charged.</span>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon"><img src="assets/telephone.png" alt="" /></div>
-          <div class="stat-label">Phone Calls</div>
-          <div class="stat-value is-loading" id="statContactClicks">0</div>
-          <div class="stat-delta" id="statContactClicksDelta">No data yet</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon"><img src="assets/whatsapp.png" alt="" /></div>
-          <div class="stat-label">WhatsApp Messages</div>
-          <div class="stat-value is-loading" id="statWhatsappClicks">0</div>
-          <div class="stat-delta" id="statWhatsappClicksDelta">No data yet</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon"><img src="assets/parcel.png" alt="" /></div>
-          <div class="stat-label">Products</div>
-          <div class="stat-value is-loading" id="statProducts">0</div>
-          <div class="stat-delta">Active Listings</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon"><img src="assets/star.png" alt="" /></div>
-          <div class="stat-label">Shop Rating</div>
-          <div class="stat-value is-loading" id="statShopRating">0.0 <span class="stars" id="statShopRatingStars">&#9734;&#9734;&#9734;&#9734;&#9734;</span></div>
-          <div class="stat-delta" id="statShopRatingDelta">(0 reviews)</div>
+
+        <div class="billing-card">
+          <h2><img src="assets/lock.png" alt="" style="width:16px;height:16px;object-fit:contain;" /> Payment Details</h2>
+          <div class="secure-note"><img src="assets/lock.png" alt="" style="width:13px;height:13px;object-fit:contain;" /> Your payment information is secure and encrypted.</div>
+
+          <form id="billingForm">
+            <div class="form-field">
+              <label for="cardNumber">Card Information</label>
+              <div class="card-input-wrap">
+                <img class="card-icon" src="assets/credit-card.png" alt="" />
+                <input type="text" id="cardNumber" inputmode="numeric" maxlength="19" placeholder="1234 5678 9012 3456" required />
+                <span class="card-brand-icons">
+                  <img src="assets/visa.png" alt="Visa" />
+                  <img src="assets/mastercard.png" alt="Mastercard" />
+                </span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="cardExpiry">Expiry Date</label>
+                <input type="text" id="cardExpiry" placeholder="MM / YY" maxlength="7" required />
+              </div>
+              <div class="form-field">
+                <label for="cardCvv">CVV</label>
+                <input type="text" id="cardCvv" inputmode="numeric" maxlength="4" placeholder="123" required />
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="cardholderName">Cardholder Name</label>
+              <input type="text" id="cardholderName" placeholder="Enter cardholder name" required />
+            </div>
+
+            <div class="form-field">
+              <label for="billingAddress">Billing Address</label>
+              <input type="text" id="billingAddress" placeholder="Enter billing address" required />
+              <div class="field-hint">We'll send your receipt and payment updates to your account email.</div>
+            </div>
+
+            <div class="no-charge-banner">
+              <span class="icon">&#8505;</span>
+              <div>
+                <div class="title">No Charge Due Now</div>
+                <div class="desc" id="noChargeDesc">After your free trial ends, you'll be automatically charged &#8358;4,000 every month.</div>
+              </div>
+            </div>
+
+            <p class="edit-modal-error" id="billingFormError" style="color:#ff6b6b; font-size:0.78rem; margin-bottom:14px; display:none;"></p>
+
+            <div class="form-actions">
+              <a href="dashboard.html" class="btn-outline">&#8592; Back</a>
+              <button type="submit" class="btn-solid" id="startTrialBtn"><img src="assets/lock.png" alt="" /> Start Free Trial</button>
+            </div>
+            <div class="form-terms">By continuing, you agree to our <a href="terms.html">Terms &amp; Conditions</a></div>
+          </form>
         </div>
       </div>
     </div>
@@ -903,7 +1170,7 @@
       <div class="footer-links">
         <a href="terms.html">Terms &amp; Conditions</a>
         <a href="privacy.html">Privacy Policy</a>
-        <a href="#">Contact Support</a>
+        <a href="#" id="footerContactSupport">Contact Support</a>
       </div>
     </div>
   </div>
@@ -912,7 +1179,28 @@
   <script src="sx-supabase-config.js"></script>
   <script src="sx-auth.js?v=4"></script>
   <script>
-    (async function guardDashboard() {
+    function formatDate(date) {
+      return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+
+    function setUpTrialDates() {
+      var start = new Date();
+      var billingDate = new Date(start);
+      billingDate.setMonth(billingDate.getMonth() + 1);
+
+      var periodText = formatDate(start) + ' \u2013 ' + formatDate(billingDate);
+      var startsText = formatDate(start);
+      var billingText = formatDate(billingDate);
+
+      document.getElementById('planTrialPeriod').textContent = periodText;
+      document.getElementById('planStarts').textContent = startsText;
+      document.getElementById('planFirstBilling').textContent = billingText;
+      document.getElementById('planCancelBy').textContent = billingText;
+    }
+
+    setUpTrialDates();
+
+    (async function guardBilling() {
       var sessionResult = await sxSupabaseClient.auth.getSession();
       var session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
       if (!session) {
@@ -928,186 +1216,69 @@
       var meta = user.user_metadata || {};
       var fullName = (meta.sx_full_name || '').trim();
       var firstName = fullName ? fullName.split(' ')[0] : 'there';
-      var shopName = meta.sx_shop_name || 'Your Shop';
-      var category = meta.sx_category || '';
-      var marketPlatform = meta.sx_market_platform || 'Not set yet';
 
       document.getElementById('profileName').textContent = firstName;
       document.getElementById('profileInitial').textContent = firstName.charAt(0).toUpperCase() || 'U';
-      document.getElementById('welcomeHeading').textContent = 'Welcome back, ' + firstName + '! \uD83D\uDC4B';
-      document.getElementById('shopNameText').textContent = shopName;
-      document.getElementById('shopMetaText').textContent = category ? (category + (marketPlatform !== 'Not set yet' ? ' · ' + marketPlatform : '')) : marketPlatform;
-      document.getElementById('shopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
-      document.getElementById('platformValue').textContent = marketPlatform;
 
-      if (meta.sx_shop_logo_url) {
-        document.getElementById('shopAvatar').innerHTML = '<img src="' + meta.sx_shop_logo_url + '" alt="" />';
-      }
-
-      // "View Shop" link: the storefront's own click_events data confirms
-      // its shop-page route is "shops.html?sxshop=<sx_shops.id>", so all
-      // we need from the storefront is its current base URL, kept in the
-      // shared "platform_links" table (one row per market_platform). See
-      // sx-platform-links-schema.sql. Requires that schema to have been
-      // run in Supabase; the button stays hidden otherwise.
-      (async function loadViewShopLink() {
-        var shopIdForLinkResult = await sxSupabaseClient
-          .from('sx_shops')
-          .select('id')
-          .eq('owner_id', user.id)
-          .maybeSingle();
-        var shopIdForLink = shopIdForLinkResult && shopIdForLinkResult.data ? shopIdForLinkResult.data.id : null;
-        if (!shopIdForLink || marketPlatform === 'Not set yet') return;
-
-        var platformLinkResult = await sxSupabaseClient
-          .from('platform_links')
-          .select('base_url')
-          .eq('market_platform', marketPlatform)
-          .maybeSingle();
-        var baseUrl = platformLinkResult && platformLinkResult.data ? platformLinkResult.data.base_url : null;
-        if (!baseUrl) {
-          console.warn('No platform_links row found for market_platform:', marketPlatform);
-          return;
-        }
-
-        var viewShopLink = document.getElementById('viewShopLink');
-        viewShopLink.href = baseUrl.replace(/\/$/, '') + '/shops/shops.html?sxshop=' + shopIdForLink;
-        viewShopLink.style.display = 'inline-block';
-      })();
-
-      // Reflect the real product count (draft + published) on the
-      // "Products" stat card. Requires sx-products-schema.sql to have
-      // been run in Supabase; fails silently (stays "0") otherwise.
-      //
-      // All of the stat cards below start in a "skeleton" loading state
-      // (see .stat-value.is-loading in <style>) instead of showing "0"
-      // while these requests are in flight, so users never see a flash
-      // of "0" before the real number appears. The try/finally below
-      // guarantees every card is revealed exactly once with whatever
-      // value it ended up with, even if a request errors out.
-      try {
-      var productsCountResult = await sxSupabaseClient
-        .from('sx_products')
-        .select('id', { count: 'exact', head: true })
-        .eq('owner_id', user.id);
-      if (productsCountResult && !productsCountResult.error && typeof productsCountResult.count === 'number') {
-        document.getElementById('statProducts').textContent = productsCountResult.count;
-      }
-
-      // Reflect the real average rating on the "Shop Rating" stat card.
-      // Reviews are stored in a shared "reviews" table (shop_key = the
-      // REVIEWED PRODUCT's own sx_products.id as text, NOT the shop's id)
-      // that the separate Oshodi Market Online storefront also writes to
-      // when a customer submits a review — see reviews.html for the full
-      // breakdown. To get every review for this shop, first fetch all of
-      // this shop's product ids, then match reviews against that list.
-      var shopIdResult = await sxSupabaseClient
+      var shopRowResult = await sxSupabaseClient
         .from('sx_shops')
-        .select('id')
+        .select('shop_name, logo_url')
         .eq('owner_id', user.id)
         .maybeSingle();
-      var shopId = shopIdResult && shopIdResult.data ? shopIdResult.data.id : null;
+      var shop = (shopRowResult && shopRowResult.data) || {};
+      var shopName = shop.shop_name || meta.sx_shop_name || 'Your Shop';
 
-      if (shopId) {
-        var productIdsResult = await sxSupabaseClient
-          .from('sx_products')
-          .select('id, product_name')
-          .eq('shop_id', shopId);
-        var shopProductsList = (productIdsResult && productIdsResult.data) || [];
-        var productIds = shopProductsList.map(function (p) { return p.id; });
-        var productNames = shopProductsList.map(function (p) { return p.product_name; }).filter(Boolean);
-
-        if (productIds.length > 0) {
-          var reviewsResult = await sxSupabaseClient
-            .from('reviews')
-            .select('rating')
-            .in('shop_key', productIds);
-          var reviews = (reviewsResult && reviewsResult.data) || [];
-          if (reviews.length > 0) {
-            var avgRating = reviews.reduce(function (sum, r) { return sum + (r.rating || 0); }, 0) / reviews.length;
-            var fullStars = Math.round(avgRating);
-            document.getElementById('statShopRating').firstChild.textContent = avgRating.toFixed(1) + ' ';
-            document.getElementById('statShopRatingStars').innerHTML = '\u2605'.repeat(fullStars) + '\u2606'.repeat(5 - fullStars);
-            document.getElementById('statShopRatingDelta').textContent = '(' + reviews.length + ' review' + (reviews.length === 1 ? '' : 's') + ')';
-          }
-        }
-
-        // Reflect real analytics on "Shop Views" / "Contact Clicks" /
-        // "WhatsApp Clicks" stat cards. Events are stored in a shared
-        // "click_events" table written to by the Oshodi Market Online
-        // storefront. Confirmed: this table's shop_key/product_index
-        // columns are NOT populated (always null). Two different
-        // matching strategies are needed:
-        //   Shop Views (Product clicks/View Details, Shop clicks/Visit
-        //   Shop) -> target_url contains "id=<sx_products.id>" or
-        //   "sxshop=<sx_shops.id>".
-        //   Contact Clicks (Calls) / WhatsApp Clicks (Messages) ->
-        //   target_url is a "tel:" link or null instead, so these are
-        //   matched by product_name against this shop's product names.
-        // Requires sx-click-events-read-policy.sql to have been run in
-        // Supabase.
-        var urlFilters = productIds.map(function (id) { return 'target_url.ilike.%id=' + id + '%'; });
-        if (shopId) urlFilters.push('target_url.ilike.%sxshop=' + shopId + '%');
-
-        var shopViews = 0;
-        var whatsappClicks = 0;
-        var contactClicks = 0;
-
-        if (urlFilters.length > 0) {
-          var eventsResult = await sxSupabaseClient
-            .from('click_events')
-            .select('event_type, event_label, target_url')
-            .or(urlFilters.join(','));
-          var events = (eventsResult && eventsResult.data) || [];
-
-          if (eventsResult && eventsResult.error) {
-            console.error('Failed to load click_events:', eventsResult.error.message);
-          } else if (events.length === 0) {
-            console.warn('No click_events matched target_url filters:', urlFilters);
-          }
-
-          shopViews = events.filter(function (e) {
-            return (e.event_type === 'Product clicks' && e.event_label === 'View Details') ||
-              (e.event_type === 'Shop clicks' && e.event_label === 'Visit Shop');
-          }).length;
-        }
-
-        if (productNames.length > 0) {
-          var contactEventsResult = await sxSupabaseClient
-            .from('click_events')
-            .select('event_type, event_label, product_name')
-            .in('event_type', ['Calls', 'Messages'])
-            .in('product_name', productNames);
-          var contactEvents = (contactEventsResult && contactEventsResult.data) || [];
-
-          if (contactEventsResult && contactEventsResult.error) {
-            console.error('Failed to load click_events (calls/messages):', contactEventsResult.error.message);
-          } else if (contactEvents.length === 0) {
-            console.warn('No click_events matched product_name in', productNames);
-          }
-
-          whatsappClicks = contactEvents.filter(function (e) {
-            return e.event_type === 'Messages' && e.event_label === 'WhatsApp Message';
-          }).length;
-          contactClicks = contactEvents.filter(function (e) {
-            return e.event_type === 'Calls' && e.event_label === 'Call for this Item';
-          }).length;
-        }
-
-        document.getElementById('statShopViews').textContent = shopViews;
-        document.getElementById('statShopViewsDelta').textContent = shopViews > 0 ? 'All time' : 'No data yet';
-        document.getElementById('statContactClicks').textContent = contactClicks;
-        document.getElementById('statContactClicksDelta').textContent = contactClicks > 0 ? 'All time' : 'No data yet';
-        document.getElementById('statWhatsappClicks').textContent = whatsappClicks;
-        document.getElementById('statWhatsappClicksDelta').textContent = whatsappClicks > 0 ? 'All time' : 'No data yet';
-      }
-      } finally {
-        ['statProducts', 'statShopRating', 'statShopViews', 'statContactClicks', 'statWhatsappClicks'].forEach(function (id) {
-          var el = document.getElementById(id);
-          if (el) el.classList.remove('is-loading');
-        });
+      document.getElementById('shopNameText').textContent = shopName;
+      document.getElementById('shopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
+      if (shop.logo_url) {
+        document.getElementById('shopAvatar').innerHTML = '<img src="' + shop.logo_url + '" alt="" />';
       }
     })();
+
+    document.getElementById('cardExpiry').addEventListener('input', function (e) {
+      var value = e.target.value.replace(/[^0-9]/g, '').slice(0, 4);
+      if (value.length > 2) value = value.slice(0, 2) + ' / ' + value.slice(2);
+      e.target.value = value;
+    });
+
+    document.getElementById('cardNumber').addEventListener('input', function (e) {
+      var value = e.target.value.replace(/[^0-9]/g, '').slice(0, 16);
+      e.target.value = value.replace(/(.{4})/g, '$1 ').trim();
+    });
+
+    document.getElementById('billingForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var errorEl = document.getElementById('billingFormError');
+      errorEl.style.display = 'none';
+
+      var cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+      var cardExpiry = document.getElementById('cardExpiry').value.trim();
+      var cardCvv = document.getElementById('cardCvv').value.trim();
+      var cardholderName = document.getElementById('cardholderName').value.trim();
+      var billingAddress = document.getElementById('billingAddress').value.trim();
+
+      if (cardNumber.length < 15 || cardExpiry.length < 6 || cardCvv.length < 3 || !cardholderName || !billingAddress) {
+        errorEl.textContent = 'Please fill in all payment details correctly before continuing.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      var btn = document.getElementById('startTrialBtn');
+      btn.disabled = true;
+      btn.textContent = 'Starting Trial...';
+
+      setTimeout(function () {
+        btn.textContent = '\u2713 Trial Started';
+      }, 900);
+    });
+
+    function openSupportHelp(e) {
+      e.preventDefault();
+      var toggle = document.getElementById('supportHelpToggle');
+      if (toggle) toggle.click();
+    }
+
+    document.getElementById('footerContactSupport').addEventListener('click', openSupportHelp);
 
     SXAuth.wireProfileMenu(
       document.getElementById('profileToggle'),
