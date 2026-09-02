@@ -939,6 +939,7 @@
       letter-spacing: 0.06em;
       flex: 1;
       min-width: 0;
+      white-space: nowrap;
     }
 
     .invite-code-copy-btn {
@@ -1365,6 +1366,11 @@
       }
       .overview-stat { flex: 1; min-width: 0; align-items: flex-start; }
       .stat-sm-label, .stat-sm-value { white-space: normal; }
+      .invite-code-box { text-align: center; }
+      .invite-code-row { flex-direction: column; align-items: center; gap: 14px; }
+      .invite-code-text { font-size: 1.3rem; justify-content: center; width: 100%; }
+      .invite-code-copy-btn { width: 100%; max-width: 260px; }
+      .invite-code-generate-link { margin-left: 0; }
     }
 
     @media (max-width: 480px) {

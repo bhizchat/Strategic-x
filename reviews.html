@@ -1289,6 +1289,51 @@
         align-items: center;
         justify-content: center;
       }
+      .reviews-table thead { display: none; }
+      .reviews-table, .reviews-table tbody, .reviews-table tr, .reviews-table td {
+        display: block;
+        width: 100%;
+      }
+      .reviews-table tr {
+        padding: 16px 18px;
+        border-bottom: 1px solid var(--main-border);
+      }
+      .reviews-table tr:last-child {
+        border-bottom: none;
+      }
+      .reviews-table td {
+        padding: 0;
+        border-bottom: none;
+      }
+      .review-cell {
+        max-width: none;
+      }
+      .review-product-cell {
+        margin-top: 12px;
+      }
+      .review-stars {
+        display: inline-block;
+        margin-top: 10px;
+      }
+      .review-date {
+        display: inline-block;
+        margin-top: 10px;
+        margin-left: 10px;
+      }
+      .review-actions-cell {
+        margin-top: 14px;
+      }
+      .reply-btn {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 0.86rem;
+      }
+      .reply-modal {
+        padding: 20px;
+      }
+      .reply-modal textarea {
+        min-height: 160px;
+      }
     }
   </style>
 </head>
@@ -1831,7 +1876,7 @@
           '</div></td>' +
           '<td><span class="review-stars"></span></td>' +
           '<td class="review-date"></td>' +
-          '<td><button type="button" class="reply-btn' + (hasReply ? ' has-reply' : '') + '">' + (hasReply ? 'Edit Reply' : 'Reply') + '</button></td>';
+          '<td class="review-actions-cell"><button type="button" class="reply-btn' + (hasReply ? ' has-reply' : '') + '">' + (hasReply ? 'Edit Reply' : 'Reply') + '</button></td>';
 
         row.querySelector('.review-avatar').textContent = reviewerInitials(review.reviewer_name);
         row.querySelector('.review-cell-name').textContent = review.reviewer_name || 'Anonymous';

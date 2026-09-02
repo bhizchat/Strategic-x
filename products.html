@@ -768,6 +768,14 @@
       align-items: center;
       gap: 12px;
       flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .filters-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
       margin-bottom: 18px;
     }
 
@@ -806,6 +814,8 @@
     }
 
     .filter-select {
+      flex: 1;
+      min-width: 140px;
       padding: 10px 14px;
       border: 1px solid var(--main-border);
       border-radius: 10px;
@@ -1241,6 +1251,10 @@
       .products-toolbar { flex-direction: column; }
       .toolbar-actions { width: 100%; }
       .btn-outline, .btn-solid { flex: 1; justify-content: center; }
+      .filters-row { flex-wrap: nowrap; gap: 8px; }
+      .filter-select { min-width: 0; font-size: 0.72rem; padding: 10px 8px; }
+      .stats-row { gap: 14px; }
+      .stat-card { padding: 18px 16px; }
       .support-help-panel {
         position: fixed;
         left: 50%;
@@ -1485,7 +1499,6 @@
         </div>
 
         <div class="toolbar-actions">
-          <button type="button" class="btn-outline">&#8593; Import Products (CSV)</button>
           <a href="add-product.html" class="btn-solid">&#43; Add New Product</a>
         </div>
       </div>
@@ -1495,6 +1508,9 @@
           <span class="search-icon">&#128269;</span>
           <input type="text" id="productSearchInput" placeholder="Search products by name, SKU or category..." />
         </div>
+      </div>
+
+      <div class="filters-row">
         <select class="filter-select" id="categoryFilterSelect">
           <option value="">All Categories</option>
         </select>
