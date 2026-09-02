@@ -224,20 +224,20 @@
 
     .sidebar-logout-btn {
       width: 100%;
-      padding: 10px 12px;
+      padding: 12px 14px;
       border-radius: 9px;
-      border: 1px solid rgba(248, 113, 113, 0.35);
-      background: transparent;
+      border: 1px solid rgba(248, 113, 113, 0.5);
+      background: rgba(248, 113, 113, 0.15);
       color: #f87171;
-      font-size: 0.82rem;
-      font-weight: 700;
+      font-size: 0.85rem;
+      font-weight: 800;
       text-align: left;
       cursor: pointer;
       font-family: inherit;
     }
 
     .sidebar-logout-btn:hover {
-      background: rgba(248, 113, 113, 0.12);
+      background: rgba(248, 113, 113, 0.25);
     }
 
     .support-help-item {
@@ -783,7 +783,7 @@
         box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
       }
       .sidebar.open { transform: translateX(0); }
-      .sidebar-mobile-logout { display: block; margin-top: 14px; }
+      .sidebar-mobile-logout { display: block; margin-top: auto; padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
       .menu-toggle { display: block; }
       .content { padding: 22px 18px 40px; }
       .topbar { padding: 16px 18px; flex-wrap: wrap; row-gap: 14px; }
