@@ -416,6 +416,27 @@
       border: 2px solid var(--charcoal);
     }
 
+    .icon-btn img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+
+    .topbar-logo {
+      display: none;
+      align-items: center;
+    }
+
+    .topbar-logo img {
+      width: 104px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .topbar-notif-btn {
+      display: none;
+    }
+
     .topbar-logout-btn {
       display: flex;
       align-items: center;
@@ -1067,6 +1088,10 @@
       gap: 18px;
     }
 
+    .bottom-nav {
+      display: none;
+    }
+
     @media (max-width: 980px) {
       .stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
@@ -1108,7 +1133,7 @@
       .sidebar.open { transform: translateX(0); }
       .menu-toggle { display: block; }
       .content { padding: 20px 18px 40px; }
-      .topbar { padding: 16px 18px; }
+      .topbar { padding: 16px 18px; flex-wrap: wrap; row-gap: 14px; }
       .footer { padding: 16px 18px; flex-direction: column; gap: 10px; align-items: flex-start; }
       .products-toolbar { flex-direction: column; }
       .toolbar-actions { width: 100%; }
@@ -1122,6 +1147,75 @@
         width: min(280px, calc(100vw - 40px));
         max-height: calc(100vh - 40px);
         overflow-y: auto;
+      }
+      .menu-toggle { order: 1; }
+      .topbar-logo { display: flex; order: 2; }
+      .topbar-notif-btn { display: flex; order: 3; }
+      .topbar-logout-btn { display: none; }
+      .topbar-actions { order: 4; flex: 0 0 100%; margin-left: 0; }
+      .content { padding-bottom: 96px; }
+      .footer { margin-bottom: 64px; }
+      .bottom-nav {
+        display: flex;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--main-surface);
+        border-top: 1px solid var(--main-border);
+        padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px));
+        z-index: 480;
+      }
+      .bottom-nav-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 4px 2px;
+        color: var(--main-text-muted);
+        font-size: 0.62rem;
+        font-weight: 700;
+        position: relative;
+      }
+      .bottom-nav-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+      }
+      .bottom-nav-icon img {
+        width: 16px;
+        height: 16px;
+        object-fit: contain;
+      }
+      .bottom-nav-item.active {
+        color: var(--main-text);
+      }
+      .bottom-nav-item.active .bottom-nav-icon {
+        background: var(--black);
+      }
+      .bottom-nav-item.active .bottom-nav-icon img {
+        filter: invert(1) brightness(10);
+      }
+      .bottom-nav-badge {
+        position: absolute;
+        top: 0;
+        right: 16px;
+        min-width: 14px;
+        height: 14px;
+        padding: 0 3px;
+        border-radius: 999px;
+        background: var(--silver-dark);
+        color: #ffffff;
+        font-size: 0.55rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
 
@@ -1218,6 +1312,13 @@
   <div class="main">
     <div class="topbar">
       <span class="menu-toggle" id="menuToggle">&#9776;</span>
+      <div class="topbar-logo">
+        <img src="assets/sxlogo.png" alt="Strategic X logo" />
+      </div>
+      <button type="button" class="icon-btn topbar-notif-btn" id="topbarNotifBtn">
+        <img src="assets/notification.png" alt="" />
+        <span class="dot"></span>
+      </button>
       <div class="topbar-actions">
         <button type="button" class="topbar-logout-btn" id="topbarLogoutBtn">&#10148; Log Out</button>
         <div class="profile-chip" id="profileChip">
@@ -1228,6 +1329,7 @@
           </div>
           <div class="profile-menu" id="profileMenu">
             <button type="button" class="profile-menu-item danger" id="logoutBtn">&#10148; Log Out</button>
+            <button type="button" class="profile-menu-item danger" id="deleteAccountBtn">&#10148; Delete Account</button>
           </div>
         </div>
       </div>
@@ -1404,15 +1506,38 @@
     </div>
   </div>
 
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="bottom-nav-item">
+      <span class="bottom-nav-icon"><img src="assets/dashboard.png" alt="" /></span>
+      <span class="bottom-nav-label">Dashboard</span>
+    </a>
+    <a href="my-shop.html" class="bottom-nav-item">
+      <span class="bottom-nav-icon"><img src="assets/shop.png" alt="" /></span>
+      <span class="bottom-nav-label">My Shop</span>
+    </a>
+    <a href="products.html" class="bottom-nav-item active">
+      <span class="bottom-nav-icon"><img src="assets/parcel.png" alt="" /></span>
+      <span class="bottom-nav-label">Products</span>
+    </a>
+    <a href="reviews.html" class="bottom-nav-item">
+      <span class="bottom-nav-icon"><img src="assets/star.png" alt="" /><span class="bottom-nav-badge">0</span></span>
+      <span class="bottom-nav-label">Reviews</span>
+    </a>
+    <a href="#" class="bottom-nav-item" id="bottomNavMore">
+      <span class="bottom-nav-icon">&#9776;</span>
+      <span class="bottom-nav-label">More</span>
+    </a>
+  </nav>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js?v=5"></script>
+  <script src="sx-auth.js?v=12"></script>
   <script>
     (async function guardProducts() {
       var sessionResult = await sxSupabaseClient.auth.getSession();
       var session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
       if (!session) {
-        window.location.href = 'index.html';
+        window.location.href = 'sign-in.html';
         return;
       }
       var user = session.user;
@@ -1428,17 +1553,16 @@
       document.getElementById('profileName').textContent = firstName;
       document.getElementById('profileInitial').textContent = firstName.charAt(0).toUpperCase() || 'U';
 
-      var shopRowResult = await sxSupabaseClient
-        .from('sx_shops')
-        .select('id, shop_name, category, market_platform, logo_url')
-        .eq('owner_id', user.id)
-        .maybeSingle();
-      var shop = (shopRowResult && shopRowResult.data) || {};
+      var ctx = await SXAuth.resolveShopContext(user);
+      if (meta.sx_shop_role === 'staff' && !ctx) {
+        window.location.href = 'staff-join.html';
+        return;
+      }
 
-      var shopName = shop.shop_name || meta.sx_shop_name || 'Your Shop';
-      var category = shop.category || meta.sx_category || '';
-      var marketPlatform = shop.market_platform || meta.sx_market_platform || 'Not set yet';
-      var logoUrl = shop.logo_url || meta.sx_shop_logo_url || '';
+      var shopName = ctx.shopName;
+      var category = ctx.category;
+      var marketPlatform = ctx.marketPlatform;
+      var logoUrl = ctx.logoUrl;
 
       document.getElementById('shopNameText').textContent = shopName;
       document.getElementById('shopMetaText').textContent = category ? (category + (marketPlatform !== 'Not set yet' ? ' \u00b7 ' + marketPlatform : '')) : marketPlatform;
@@ -1448,13 +1572,14 @@
         document.getElementById('shopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
       }
 
-      await loadProducts(user.id);
+      await loadProducts(ctx.shopId);
     })();
 
     SXAuth.wireProfileMenu(
       document.getElementById('profileToggle'),
       document.getElementById('profileMenu'),
-      document.getElementById('logoutBtn')
+      document.getElementById('logoutBtn'),
+      document.getElementById('deleteAccountBtn')
     );
 
     SXAuth.wireSupportHelp(
@@ -1464,7 +1589,8 @@
 
     SXAuth.wireMobileSidebar(
       document.getElementById('menuToggle'),
-      document.querySelector('.sidebar')
+      document.querySelector('.sidebar'),
+      document.getElementById('bottomNavMore')
     );
 
     document.getElementById('topbarLogoutBtn').addEventListener('click', function () {
@@ -1596,12 +1722,13 @@
     document.getElementById('statusFilterSelect').addEventListener('change', applyProductFilters);
     document.getElementById('stockFilterSelect').addEventListener('change', applyProductFilters);
 
-    async function loadProducts(userId) {
+    async function loadProducts(shopId) {
       try {
+        if (!shopId) return;
         var result = await sxSupabaseClient
           .from('sx_products')
           .select('id, product_name, category, description, images, selling_price, stock_quantity, condition, status')
-          .eq('owner_id', userId)
+          .eq('shop_id', shopId)
           .order('created_at', { ascending: false });
 
         currentProducts = (result && result.data) || [];

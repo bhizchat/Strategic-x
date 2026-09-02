@@ -3,7 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Strategic X - Sign Up</title>
+  <title>Strategic X - Sign In</title>
+  <script>
+    // Runs before the page paints. If the URL looks like a Google OAuth
+    // callback (Supabase's PKCE flow appends ?code=... to the redirect
+    // URL), flag <html> so the CSS below shows a blank white loading
+    // overlay instead of letting the sign-in form flash on screen for a
+    // moment before JS redirects the user on to onboarding.html.
+    if (/[?&]code=/.test(window.location.search)) {
+      document.documentElement.classList.add('sx-oauth-loading');
+    }
+  </script>
   <style>
     :root {
       --black: #0a0a0a;
@@ -60,10 +70,16 @@
       z-index: 1;
     }
 
-    .brand-logo-row {
+    .brand-logo-block {
       display: flex;
-      align-items: center;
-      gap: 10px;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-logo-img {
+      width: 150px;
+      height: auto;
+      object-fit: contain;
     }
 
     .logo-placeholder {
@@ -86,17 +102,6 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-    }
-
-    .brand-name {
-      font-size: 1.35rem;
-      font-weight: 800;
-      letter-spacing: -0.01em;
-      color: var(--black);
-    }
-
-    .brand-name span {
-      color: var(--silver-dark);
     }
 
     .brand-tag {
@@ -157,6 +162,12 @@
       justify-content: center;
       font-size: 1.05rem;
       flex-shrink: 0;
+    }
+
+    .feature-icon img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
     }
 
     .feature-text .title {
@@ -234,7 +245,7 @@
       color: #cfcfd1;
     }
 
-    /* ---- Right panel: sign-up form ---- */
+    /* ---- Right panel: sign-in form ---- */
     .form-panel {
       flex: 1;
       display: flex;
@@ -344,21 +355,26 @@
       opacity: 0.6;
     }
 
-    .terms-row {
+    .row-between {
       display: flex;
-      align-items: flex-start;
-      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
       font-size: 0.78rem;
-      color: var(--text-muted);
       margin: 4px 0 18px;
     }
 
-    .terms-row input {
-      accent-color: var(--black);
-      margin-top: 2px;
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
     }
 
-    .terms-row a {
+    .remember-me input {
+      accent-color: var(--black);
+    }
+
+    .forgot-link {
       color: var(--text);
       font-weight: 700;
     }
@@ -468,8 +484,10 @@
       font-weight: 800;
     }
 
-    .sx-form-error,
-    .sx-form-success {
+    .sx-form-error {
+      background: #fdecec;
+      border: 1px solid #f3b9b9;
+      color: #9c2b2b;
       font-size: 0.78rem;
       font-weight: 600;
       padding: 10px 12px;
@@ -477,16 +495,15 @@
       margin-bottom: 14px;
     }
 
-    .sx-form-error {
-      background: #fdecec;
-      border: 1px solid #f3b9b9;
-      color: #9c2b2b;
-    }
-
     .sx-form-success {
       background: #eaf6ee;
       border: 1px solid #b7dfc4;
       color: #1e6b38;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 14px;
+      border-radius: 10px;
+      text-align: center;
     }
 
     @media (max-width: 900px) {
@@ -495,20 +512,43 @@
       .brand-copy h1 { font-size: 1.7rem; }
       .stats-bar { flex-wrap: wrap; }
     }
+
+    .sx-oauth-overlay {
+      display: none;
+    }
+
+    html.sx-oauth-loading .sx-oauth-overlay {
+      display: flex;
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sx-oauth-spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--text);
+      border-radius: 50%;
+      animation: sxOauthSpin 0.7s linear infinite;
+    }
+
+    @keyframes sxOauthSpin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
+  <div class="sx-oauth-overlay"><div class="sx-oauth-spinner"></div></div>
   <div class="split">
     <!-- Left: brand / marketing panel -->
     <section class="brand-panel">
-      <div class="brand-logo-row">
-        <div class="logo-placeholder" aria-label="Strategic X logo">
-          <img src="assets/sxlogo.png" alt="Strategic X logo" />
-        </div>
-        <div>
-          <div class="brand-name">Strategic<span>X</span></div>
-          <div class="brand-tag">Local Markets. Limitless Possibilities.</div>
-        </div>
+      <div class="brand-logo-block">
+        <img class="brand-logo-img" src="assets/sxlogo.png" alt="Strategic X logo" />
+        <div class="brand-tag">Local Markets. Limitless Possibilities.</div>
       </div>
 
       <div class="brand-copy">
@@ -517,21 +557,21 @@
 
         <div class="feature-list">
           <div class="feature-item">
-            <div class="feature-icon">&#127978;</div>
+            <div class="feature-icon"><img src="assets/shop.png" alt="" /></div>
             <div class="feature-text">
               <div class="title">For Local Vendors</div>
               <div class="desc">Expand your reach and grow your business online.</div>
             </div>
           </div>
           <div class="feature-item">
-            <div class="feature-icon">&#128717;</div>
+            <div class="feature-icon"><img src="assets/parcel.png" alt="" /></div>
             <div class="feature-text">
               <div class="title">For Shoppers</div>
               <div class="desc">Discover trusted local products and shop with ease.</div>
             </div>
           </div>
           <div class="feature-item">
-            <div class="feature-icon">&#128200;</div>
+            <div class="feature-icon"><img src="assets/graph.png" alt="" /></div>
             <div class="feature-text">
               <div class="title">For Communities</div>
               <div class="desc">Stronger local economies, built together.</div>
@@ -551,7 +591,7 @@
       </div>
     </section>
 
-    <!-- Right: sign-up form -->
+    <!-- Right: sign-in form -->
     <section class="form-panel">
       <div class="form-inner">
         <div class="form-logo">
@@ -561,16 +601,11 @@
         </div>
 
         <div class="form-title">
-          <h2>Create your Strategic<span> X</span> account</h2>
-          <p>Sign up to start selling or shopping local</p>
+          <h2>Welcome to Strategic<span> X</span></h2>
+          <p>Sign in to continue to your account</p>
         </div>
 
-        <form id="signupForm">
-          <div class="field">
-            <span class="field-icon"><img src="assets/user.png" alt="" /></span>
-            <input type="text" id="fullName" name="fullName" placeholder="Full name" autocomplete="name" required />
-          </div>
-
+        <form id="loginForm">
           <div class="field">
             <span class="field-icon"><img src="assets/email.png" alt="" /></span>
             <input type="email" id="email" name="email" placeholder="Email address" autocomplete="email" required />
@@ -578,30 +613,28 @@
 
           <div class="field">
             <span class="field-icon"><img src="assets/lock.png" alt="" /></span>
-            <input type="password" id="password" name="password" placeholder="Password" autocomplete="new-password" minlength="6" required />
+            <input type="password" id="password" name="password" placeholder="Password" autocomplete="current-password" required />
             <button type="button" class="toggle-visibility" id="togglePassword" aria-label="Show password"><img src="assets/visible.png" alt="" /></button>
           </div>
 
-          <div class="field">
-            <span class="field-icon"><img src="assets/lock.png" alt="" /></span>
-            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" autocomplete="new-password" minlength="6" required />
+          <div class="row-between">
+            <label class="remember-me">
+              <input type="checkbox" name="remember" />
+              Remember me
+            </label>
+            <a href="#" class="forgot-link">Forgot password?</a>
           </div>
 
-          <label class="terms-row">
-            <input type="checkbox" id="agreeTerms" required />
-            <span>I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a></span>
-          </label>
-
-          <button type="submit" class="btn-signin">Sign Up</button>
+          <button type="submit" class="btn-signin">Sign In</button>
         </form>
 
         <div class="divider">or continue with</div>
 
-        <button type="button" class="btn-oauth" id="googleSignUpBtn">
+        <button type="button" class="btn-oauth" id="googleSignInBtn">
           <span class="oauth-icon"><img src="assets/google.png" alt="" /></span> Continue with Google
         </button>
 
-        <p class="signup-line">Already have an account? <a href="sign-in.html">Sign in</a></p>
+        <p class="signup-line">Don't have an account? <a href="signup.html">Sign up</a></p>
       </div>
     </section>
   </div>
@@ -618,51 +651,50 @@
       toggleBtn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
     });
 
-    var signupForm = document.getElementById('signupForm');
-    var signUpBtn = signupForm.querySelector('.btn-signin');
+    var loginForm = document.getElementById('loginForm');
+    var signInBtn = loginForm.querySelector('.btn-signin');
 
-    signupForm.addEventListener('submit', async function (e) {
+    SXAuth.watchAuthAndRoute(loginForm);
+
+    // Supabase redirects back here with ?error=...&error_description=...
+    // when an OAuth attempt fails (e.g. bad_oauth_state from re-using a
+    // stale Google sign-in link via browser back/forward, or a cancelled
+    // consent screen). Surface it instead of failing silently.
+    (function showOAuthErrorIfAny() {
+      var params = new URLSearchParams(window.location.search);
+      var errorDescription = params.get('error_description');
+      if (!errorDescription) return;
+      document.documentElement.classList.remove('sx-oauth-loading');
+      SXAuth.showFormError(loginForm, errorDescription.replace(/\+/g, ' '));
+      window.history.replaceState({}, document.title, window.location.pathname);
+    })();
+
+    loginForm.addEventListener('submit', async function (e) {
       e.preventDefault();
-      SXAuth.showFormError(signupForm, '');
-
-      var fullName = document.getElementById('fullName').value.trim();
+      SXAuth.showFormError(loginForm, '');
       var email = document.getElementById('email').value.trim();
       var password = document.getElementById('password').value;
-      var confirmPassword = document.getElementById('confirmPassword').value;
 
-      if (password !== confirmPassword) {
-        SXAuth.showFormError(signupForm, 'Passwords do not match.');
-        return;
-      }
-
-      SXAuth.setSubmitting(signUpBtn, true, 'Sign Up');
+      SXAuth.setSubmitting(signInBtn, true, 'Sign In');
       try {
-        var result = await sxSupabaseClient.auth.signUp({
-          email: email,
-          password: password,
-          options: {
-            data: { full_name: fullName },
-            emailRedirectTo: window.SX_AUTH_REDIRECT_URL
-          }
-        });
-
+        var result = await sxSupabaseClient.auth.signInWithPassword({ email: email, password: password });
         if (result.error) {
-          SXAuth.showFormError(signupForm, result.error.message || 'Unable to create account.');
-        } else {
-          signupForm.innerHTML = '<div class="sx-form-success">Account created! Check your email to confirm your address, then sign in.</div>';
+          SXAuth.showFormError(loginForm, result.error.message || 'Unable to sign in. Please check your details.');
         }
+        // On success, SXAuth.watchAuthAndRoute's SIGNED_IN listener handles
+        // routing to onboarding.html (first time) or a signed-in message.
       } catch (err) {
-        SXAuth.showFormError(signupForm, 'Something went wrong. Please try again.');
+        SXAuth.showFormError(loginForm, 'Something went wrong. Please try again.');
       } finally {
-        SXAuth.setSubmitting(signUpBtn, false, 'Sign Up');
+        SXAuth.setSubmitting(signInBtn, false, 'Sign In');
       }
     });
 
-    document.getElementById('googleSignUpBtn').addEventListener('click', function () {
+    document.getElementById('googleSignInBtn').addEventListener('click', function () {
       SXAuth.signInWithGoogle();
     });
 
-    SXAuth.personalizeGoogleButton(document.getElementById('googleSignUpBtn'));
+    SXAuth.personalizeGoogleButton(document.getElementById('googleSignInBtn'));
   </script>
 </body>
 </html>

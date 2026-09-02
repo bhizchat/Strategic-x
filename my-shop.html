@@ -416,6 +416,27 @@
       border: 2px solid var(--charcoal);
     }
 
+    .icon-btn img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+
+    .topbar-logo {
+      display: none;
+      align-items: center;
+    }
+
+    .topbar-logo img {
+      width: 104px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .topbar-notif-btn {
+      display: none;
+    }
+
     .topbar-logout-btn {
       display: flex;
       align-items: center;
@@ -729,6 +750,12 @@
       flex-shrink: 0;
     }
 
+    .stat-icon-sm img {
+      width: 15px;
+      height: 15px;
+      object-fit: contain;
+    }
+
     .stat-sm-label {
       font-size: 0.68rem;
       color: var(--main-text-muted);
@@ -844,6 +871,192 @@
     .visual-thumb.empty {
       font-size: 0.72rem;
       color: var(--main-text-muted);
+    }
+
+    /* ---- Team Members (My Shop side column) ---- */
+    .team-subtitle {
+      font-size: 0.78rem;
+      color: var(--main-text-muted);
+      margin-top: -10px;
+      margin-bottom: 16px;
+    }
+
+    .invite-code-box {
+      border: 1px solid var(--main-border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+    }
+
+    .invite-code-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .invite-code-hint {
+      font-size: 0.74rem;
+      color: var(--main-text-muted);
+      margin-bottom: 12px;
+    }
+
+    .invite-code-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .invite-code-text {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .invite-code-copy-btn {
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 7px 12px;
+      border: 1px solid var(--main-border);
+      border-radius: 8px;
+      background: var(--main-surface);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .invite-code-copy-btn:hover {
+      background: var(--silver-light);
+    }
+
+    .invite-code-generate-link {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--silver-dark);
+      border-bottom: 1px solid var(--silver-dark);
+      white-space: nowrap;
+      margin-left: auto;
+      cursor: pointer;
+    }
+
+    .invite-code-generate-link:hover {
+      color: var(--main-text);
+    }
+
+    .staff-list-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .staff-list-hint {
+      font-size: 0.74rem;
+      color: var(--main-text-muted);
+      margin-bottom: 12px;
+    }
+
+    .staff-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--main-border);
+    }
+
+    .staff-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .staff-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--silver-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.78rem;
+      color: var(--black);
+      flex-shrink: 0;
+    }
+
+    .staff-name-col {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .staff-name {
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .staff-joined {
+      font-size: 0.7rem;
+      color: var(--main-text-muted);
+      margin-top: 1px;
+    }
+
+    .staff-role-select {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 5px 8px;
+      border: 1px solid var(--main-border);
+      border-radius: 8px;
+      background: var(--main-surface);
+      flex-shrink: 0;
+    }
+
+    .staff-pending-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #8a6400;
+      background: #fdf1cf;
+      border-radius: 999px;
+      padding: 3px 10px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .staff-remove-link {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--main-text-muted);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .staff-remove-link:hover {
+      color: #c0392b;
+    }
+
+    .staff-list-empty {
+      font-size: 0.78rem;
+      color: var(--main-text-muted);
+      padding: 8px 0;
+    }
+
+    .team-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.74rem;
+      color: var(--main-text-muted);
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--main-border);
+    }
+
+    .team-note img {
+      width: 14px;
+      height: 14px;
+      object-fit: contain;
+      flex-shrink: 0;
     }
 
     /* ---- Edit modal ---- */
@@ -1002,6 +1215,10 @@
       gap: 18px;
     }
 
+    .bottom-nav {
+      display: none;
+    }
+
     @media (max-width: 980px) {
       .shop-grid { grid-template-columns: 1fr; }
     }
@@ -1034,7 +1251,7 @@
       .sidebar.open { transform: translateX(0); }
       .menu-toggle { display: block; }
       .content { padding: 22px 18px 40px; }
-      .topbar { padding: 16px 18px; }
+      .topbar { padding: 16px 18px; flex-wrap: wrap; row-gap: 14px; }
       .footer { padding: 16px 18px; flex-direction: column; gap: 10px; align-items: flex-start; }
       .support-help-panel {
         position: fixed;
@@ -1045,6 +1262,75 @@
         width: min(280px, calc(100vw - 40px));
         max-height: calc(100vh - 40px);
         overflow-y: auto;
+      }
+      .menu-toggle { order: 1; }
+      .topbar-logo { display: flex; order: 2; }
+      .topbar-notif-btn { display: flex; order: 3; }
+      .topbar-logout-btn { display: none; }
+      .topbar-actions { order: 4; flex: 0 0 100%; margin-left: 0; }
+      .content { padding-bottom: 96px; }
+      .footer { margin-bottom: 64px; }
+      .bottom-nav {
+        display: flex;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--main-surface);
+        border-top: 1px solid var(--main-border);
+        padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px));
+        z-index: 480;
+      }
+      .bottom-nav-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 4px 2px;
+        color: var(--main-text-muted);
+        font-size: 0.62rem;
+        font-weight: 700;
+        position: relative;
+      }
+      .bottom-nav-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+      }
+      .bottom-nav-icon img {
+        width: 16px;
+        height: 16px;
+        object-fit: contain;
+      }
+      .bottom-nav-item.active {
+        color: var(--main-text);
+      }
+      .bottom-nav-item.active .bottom-nav-icon {
+        background: var(--black);
+      }
+      .bottom-nav-item.active .bottom-nav-icon img {
+        filter: invert(1) brightness(10);
+      }
+      .bottom-nav-badge {
+        position: absolute;
+        top: 0;
+        right: 16px;
+        min-width: 14px;
+        height: 14px;
+        padding: 0 3px;
+        border-radius: 999px;
+        background: var(--silver-dark);
+        color: #ffffff;
+        font-size: 0.55rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
 
@@ -1140,6 +1426,13 @@
   <div class="main">
     <div class="topbar">
       <span class="menu-toggle" id="menuToggle">&#9776;</span>
+      <div class="topbar-logo">
+        <img src="assets/sxlogo.png" alt="Strategic X logo" />
+      </div>
+      <button type="button" class="icon-btn topbar-notif-btn" id="topbarNotifBtn">
+        <img src="assets/notification.png" alt="" />
+        <span class="dot"></span>
+      </button>
       <div class="topbar-actions">
         <button type="button" class="topbar-logout-btn" id="topbarLogoutBtn">&#10148; Log Out</button>
         <div class="profile-chip" id="profileChip">
@@ -1150,6 +1443,7 @@
           </div>
           <div class="profile-menu" id="profileMenu">
             <button type="button" class="profile-menu-item danger" id="logoutBtn">&#10148; Log Out</button>
+            <button type="button" class="profile-menu-item danger" id="deleteAccountBtn">&#10148; Delete Account</button>
           </div>
         </div>
       </div>
@@ -1189,7 +1483,7 @@
                   <div><div class="stat-sm-label">Member Since</div><div class="stat-sm-value" id="overviewMemberSince">&mdash;</div></div>
                 </div>
                 <div class="overview-stat">
-                  <div class="stat-icon-sm">&#128188;</div>
+                  <div class="stat-icon-sm"><img src="assets/parcel.png" alt="" /></div>
                   <div><div class="stat-sm-label">Total Products</div><div class="stat-sm-value is-loading" id="overviewProducts">&mdash;</div></div>
                 </div>
                 <div class="overview-stat">
@@ -1261,6 +1555,31 @@
               </div>
             </div>
           </div>
+
+          <div class="shop-card-panel">
+            <div class="panel-header">
+              <h2>Team Members</h2>
+            </div>
+            <p class="team-subtitle">Invite people to help manage your shop.</p>
+
+            <div class="invite-code-box">
+              <div class="invite-code-label">Invitation Code</div>
+              <div class="invite-code-hint">Share this code with trusted people so they can request access to your shop.</div>
+              <div class="invite-code-row">
+                <span class="invite-code-text" id="inviteCodeText">&mdash;</span>
+                <button type="button" class="invite-code-copy-btn" id="copyInviteCodeBtn">Copy Code</button>
+                <a href="#" class="invite-code-generate-link" id="generateInviteCodeLink">&#8635; Generate New Code</a>
+              </div>
+            </div>
+
+            <div class="staff-list-title">Staff List</div>
+            <p class="staff-list-hint">Manage your team members and their access.</p>
+            <div id="staffListBody">
+              <p class="staff-list-empty">No team members yet.</p>
+            </div>
+
+            <div class="team-note"><img src="assets/lock.png" alt="" /> Only people with an assigned role can access and manage your shop.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1292,12 +1611,36 @@
     </div>
   </div>
 
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="bottom-nav-item">
+      <span class="bottom-nav-icon"><img src="assets/dashboard.png" alt="" /></span>
+      <span class="bottom-nav-label">Dashboard</span>
+    </a>
+    <a href="my-shop.html" class="bottom-nav-item active">
+      <span class="bottom-nav-icon"><img src="assets/shop.png" alt="" /></span>
+      <span class="bottom-nav-label">My Shop</span>
+    </a>
+    <a href="products.html" class="bottom-nav-item">
+      <span class="bottom-nav-icon"><img src="assets/parcel.png" alt="" /></span>
+      <span class="bottom-nav-label">Products</span>
+    </a>
+    <a href="reviews.html" class="bottom-nav-item">
+      <span class="bottom-nav-icon"><img src="assets/star.png" alt="" /><span class="bottom-nav-badge">0</span></span>
+      <span class="bottom-nav-label">Reviews</span>
+    </a>
+    <a href="#" class="bottom-nav-item" id="bottomNavMore">
+      <span class="bottom-nav-icon">&#9776;</span>
+      <span class="bottom-nav-label">More</span>
+    </a>
+  </nav>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js?v=5"></script>
+  <script src="sx-auth.js?v=12"></script>
   <script>
     var currentUser = null;
     var currentShop = {};
+    var currentUserRole = null; // 'owner' | 'manager' | 'staff' | null (pending)
 
     function formatMemberSince(dateString) {
       if (!dateString) return '\u2014';
@@ -1362,7 +1705,7 @@
       var sessionResult = await sxSupabaseClient.auth.getSession();
       var session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
       if (!session) {
-        window.location.href = 'index.html';
+        window.location.href = 'sign-in.html';
         return;
       }
       var user = session.user;
@@ -1385,14 +1728,45 @@
       // This is the SAME table the Oshodi Market Online storefront reads
       // from (via sx_shops_public) when rendering the "View Shop" page, so
       // any edit saved here shows up there the next time that page loads.
-      var shopRowResult = await sxSupabaseClient
-        .from('sx_shops')
-        .select('*')
-        .eq('owner_id', user.id)
-        .maybeSingle();
-      currentShop = (shopRowResult && shopRowResult.data) || {};
+      // Staff/managers share this same page and see the shop they've
+      // joined (via sx_shop_members) instead of one they own.
+      var isStaff = meta.sx_shop_role === 'staff';
+      if (isStaff) {
+        var membershipResult = await sxSupabaseClient
+          .from('sx_shop_members')
+          .select('role, sx_shops(*)')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        var membership = membershipResult && membershipResult.data;
+        if (!membership) {
+          window.location.href = 'staff-join.html';
+          return;
+        }
+        currentShop = membership.sx_shops || {};
+        currentUserRole = membership.role || null;
+      } else {
+        var shopRowResult = await sxSupabaseClient
+          .from('sx_shops')
+          .select('*')
+          .eq('owner_id', user.id)
+          .maybeSingle();
+        if (shopRowResult && shopRowResult.error) {
+          console.error('Failed to load sx_shops row:', shopRowResult.error.message);
+        }
+        currentShop = (shopRowResult && shopRowResult.data) || {};
+        currentUserRole = 'owner';
+      }
 
       renderShopFields();
+
+      // Initialize Team Members (invite code + staff list) here, before
+      // the stats block below — that block has a try/finally with no
+      // catch, so any error thrown inside it would otherwise abort this
+      // whole async function and permanently skip everything after it.
+      if (currentShop.id) {
+        renderInviteCode();
+        loadStaffMembers();
+      }
 
       // Reflect the real product count on the "Total Products" stat,
       // same source query as dashboard.html's "Products" stat card.
@@ -1406,7 +1780,7 @@
       var productsCountResult = await sxSupabaseClient
         .from('sx_products')
         .select('id', { count: 'exact', head: true })
-        .eq('owner_id', user.id);
+        .eq('shop_id', currentShop.id || '');
       if (productsCountResult && !productsCountResult.error && typeof productsCountResult.count === 'number') {
         document.getElementById('overviewProducts').textContent = productsCountResult.count;
       }
@@ -1444,6 +1818,158 @@
         });
       }
     })();
+
+    // ---- Team Members: invite code (open to any team member) + staff
+    // list (role changes/removal restricted to Owner + Manager below).
+    var ROLE_OPTIONS = [
+      { value: 'manager', label: 'Manager' },
+      { value: 'staff', label: 'Staff' }
+    ];
+
+    function formatJoinedDate(dateString) {
+      if (!dateString) return '\u2014';
+      var date = new Date(dateString);
+      if (isNaN(date.getTime())) return '\u2014';
+      return 'Joined ' + date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function renderInviteCode() {
+      document.getElementById('inviteCodeText').textContent = currentShop.invite_code || 'Not generated yet';
+    }
+
+    async function loadStaffMembers() {
+      var listBody = document.getElementById('staffListBody');
+      var membersResult = await sxSupabaseClient
+        .from('sx_shop_members')
+        .select('*')
+        .eq('shop_id', currentShop.id)
+        .order('joined_at', { ascending: true });
+      var members = (membersResult && membersResult.data) || [];
+
+      if (members.length === 0) {
+        listBody.innerHTML = '<p class="staff-list-empty">No team members yet.</p>';
+        return;
+      }
+
+      // Changing a member's role (or removing them) is an Owner/Manager
+      // privilege — Staff and Pending members can still see the roster
+      // (via the "Owners and managers can view their shop members" RLS
+      // policy they won't actually match, so this will simply come back
+      // empty for them anyway), but never get interactive controls.
+      var canManageTeam = currentUserRole === 'owner' || currentUserRole === 'manager';
+
+      listBody.innerHTML = '';
+      members.forEach(function (member) {
+        var row = document.createElement('div');
+        row.className = 'staff-row';
+        row.dataset.memberId = member.id;
+
+        var initial = (member.full_name || '?').trim().charAt(0).toUpperCase() || '?';
+
+        var roleControlHtml;
+        if (!canManageTeam) {
+          roleControlHtml = member.role
+            ? '<span class="staff-pending-badge">' + (ROLE_OPTIONS.filter(function (o) { return o.value === member.role; })[0] || { label: member.role }).label + '</span>'
+            : '<span class="staff-pending-badge">Pending</span>';
+        } else if (member.role) {
+          roleControlHtml = '<select class="staff-role-select" data-member-id="' + member.id + '">' +
+            ROLE_OPTIONS.map(function (opt) {
+              return '<option value="' + opt.value + '"' + (opt.value === member.role ? ' selected' : '') + '>' + opt.label + '</option>';
+            }).join('') +
+            '</select>';
+        } else {
+          roleControlHtml = '<span class="staff-pending-badge">Pending</span>' +
+            '<select class="staff-role-select" data-member-id="' + member.id + '">' +
+              '<option value="" selected disabled>Assign Role</option>' +
+              ROLE_OPTIONS.map(function (opt) {
+                return '<option value="' + opt.value + '">' + opt.label + '</option>';
+              }).join('') +
+            '</select>';
+        }
+
+        row.innerHTML =
+          '<div class="staff-avatar">' + initial + '</div>' +
+          '<div class="staff-name-col">' +
+            '<div class="staff-name">' + (member.full_name || 'Unnamed') + '</div>' +
+            '<div class="staff-joined">' + formatJoinedDate(member.joined_at) + '</div>' +
+          '</div>' +
+          roleControlHtml +
+          (canManageTeam ? '<span class="staff-remove-link" data-member-id="' + member.id + '">Remove</span>' : '');
+
+        listBody.appendChild(row);
+      });
+    }
+
+    document.getElementById('copyInviteCodeBtn').addEventListener('click', function () {
+      var code = currentShop.invite_code;
+      if (!code) return;
+      navigator.clipboard.writeText(code).then(function () {
+        var btn = document.getElementById('copyInviteCodeBtn');
+        var original = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(function () { btn.textContent = original; }, 1500);
+      });
+    });
+
+    document.getElementById('generateInviteCodeLink').addEventListener('click', async function (e) {
+      e.preventDefault();
+      if (!currentShop.id) {
+        window.alert('Your shop profile hasn\'t finished loading yet. Please refresh the page and try again.');
+        return;
+      }
+      var link = document.getElementById('generateInviteCodeLink');
+      link.textContent = 'Generating...';
+      try {
+        // Generating an invite code is open to any team member (it grants
+        // no permissions by itself), so this goes through a SECURITY
+        // DEFINER RPC rather than a direct sx_shops UPDATE, since that
+        // table's UPDATE policy is still owner-only.
+        var rpcResult = await sxSupabaseClient.rpc('sx_generate_shop_invite_code', { p_shop_id: currentShop.id });
+        if (rpcResult.error) throw rpcResult.error;
+        currentShop.invite_code = rpcResult.data;
+        renderInviteCode();
+      } catch (err) {
+        // Extremely unlikely random-code collision, or a network error —
+        // surface it so the owner (and we, when debugging) can see why
+        // generation failed instead of it silently doing nothing.
+        console.error('Failed to generate invite code:', err);
+        window.alert((err && err.message) || 'Could not generate a code. Please try again.');
+      } finally {
+        link.innerHTML = '&#8635; Generate New Code';
+      }
+    });
+
+    document.getElementById('staffListBody').addEventListener('change', async function (e) {
+      var select = e.target.closest('.staff-role-select');
+      if (!select) return;
+      var memberId = select.getAttribute('data-member-id');
+      var newRole = select.value;
+      if (!newRole) return;
+      select.disabled = true;
+      try {
+        await sxSupabaseClient
+          .from('sx_shop_members')
+          .update({ role: newRole })
+          .eq('id', memberId);
+        loadStaffMembers();
+      } finally {
+        select.disabled = false;
+      }
+    });
+
+    document.getElementById('staffListBody').addEventListener('click', async function (e) {
+      var removeLink = e.target.closest('.staff-remove-link');
+      if (!removeLink) return;
+      var memberId = removeLink.getAttribute('data-member-id');
+      var row = removeLink.closest('.staff-row');
+      var name = row ? row.querySelector('.staff-name').textContent : 'this member';
+      if (!window.confirm('Remove ' + name + ' from your team?')) return;
+      await sxSupabaseClient
+        .from('sx_shop_members')
+        .delete()
+        .eq('id', memberId);
+      loadStaffMembers();
+    });
 
     // ---- Edit modal: lets the owner edit every editable sx_shops field
     // (everything except the computed Total Products / Shop Rating stats).
@@ -1636,7 +2162,8 @@
     SXAuth.wireProfileMenu(
       document.getElementById('profileToggle'),
       document.getElementById('profileMenu'),
-      document.getElementById('logoutBtn')
+      document.getElementById('logoutBtn'),
+      document.getElementById('deleteAccountBtn')
     );
 
     SXAuth.wireSupportHelp(
@@ -1646,7 +2173,8 @@
 
     SXAuth.wireMobileSidebar(
       document.getElementById('menuToggle'),
-      document.querySelector('.sidebar')
+      document.querySelector('.sidebar'),
+      document.getElementById('bottomNavMore')
     );
 
     document.getElementById('topbarLogoutBtn').addEventListener('click', function () {

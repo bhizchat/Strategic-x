@@ -133,6 +133,12 @@
       margin-top: 4px;
     }
 
+    .shop-status.pending {
+      color: #f4b740;
+      background: rgba(244, 183, 64, 0.12);
+      border-color: rgba(244, 183, 64, 0.3);
+    }
+
     .nav-groups {
       display: flex;
       flex-direction: column;
@@ -414,6 +420,27 @@
       align-items: center;
       justify-content: center;
       border: 2px solid var(--charcoal);
+    }
+
+    .icon-btn img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+
+    .topbar-logo {
+      display: none;
+      align-items: center;
+    }
+
+    .topbar-logo img {
+      width: 104px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .topbar-notif-btn {
+      display: none;
     }
 
     .topbar-logout-btn {
@@ -700,6 +727,10 @@
       gap: 18px;
     }
 
+    .bottom-nav {
+      display: none;
+    }
+
     @media (max-width: 980px) {
       .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
@@ -732,7 +763,7 @@
       .sidebar.open { transform: translateX(0); }
       .menu-toggle { display: block; }
       .content { padding: 22px 18px 40px; }
-      .topbar { padding: 16px 18px; }
+      .topbar { padding: 16px 18px; flex-wrap: wrap; row-gap: 14px; }
       .footer { flex-direction: column; gap: 8px; align-items: flex-start; padding: 18px; }
       .support-help-panel {
         position: fixed;
@@ -743,6 +774,75 @@
         width: min(280px, calc(100vw - 40px));
         max-height: calc(100vh - 40px);
         overflow-y: auto;
+      }
+      .menu-toggle { order: 1; }
+      .topbar-logo { display: flex; order: 2; }
+      .topbar-notif-btn { display: flex; order: 3; }
+      .topbar-logout-btn { display: none; }
+      .topbar-actions { order: 4; flex: 0 0 100%; margin-left: 0; }
+      .content { padding-bottom: 96px; }
+      .footer { margin-bottom: 64px; }
+      .bottom-nav {
+        display: flex;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--main-surface);
+        border-top: 1px solid var(--main-border);
+        padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px));
+        z-index: 480;
+      }
+      .bottom-nav-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 4px 2px;
+        color: var(--main-text-muted);
+        font-size: 0.62rem;
+        font-weight: 700;
+        position: relative;
+      }
+      .bottom-nav-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+      }
+      .bottom-nav-icon img {
+        width: 16px;
+        height: 16px;
+        object-fit: contain;
+      }
+      .bottom-nav-item.active {
+        color: var(--main-text);
+      }
+      .bottom-nav-item.active .bottom-nav-icon {
+        background: var(--black);
+      }
+      .bottom-nav-item.active .bottom-nav-icon img {
+        filter: invert(1) brightness(10);
+      }
+      .bottom-nav-badge {
+        position: absolute;
+        top: 0;
+        right: 16px;
+        min-width: 14px;
+        height: 14px;
+        padding: 0 3px;
+        border-radius: 999px;
+        background: var(--silver-dark);
+        color: #ffffff;
+        font-size: 0.55rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
 
@@ -764,7 +864,7 @@
       <div class="shop-card-info">
         <div class="shop-card-name" id="shopNameText">Your Shop</div>
         <div class="shop-card-meta" id="shopMetaText">&nbsp;</div>
-        <div class="shop-status">&#9679; Shop Open</div>
+        <div class="shop-status" id="shopStatus">&#9679; Shop Open</div>
       </div>
     </div>
 
@@ -774,20 +874,20 @@
           <span class="nav-icon"><img src="assets/dashboard.png" alt="" /></span>
           <span class="nav-item-label">Dashboard</span>
         </a></li>
-        <li class="nav-item"><a class="nav-item-link" href="my-shop.html">
+        <li class="nav-item" id="navMyShop"><a class="nav-item-link" href="my-shop.html">
           <span class="nav-icon"><img src="assets/shop.png" alt="" /></span>
           <span class="nav-item-label">My Shop</span>
         </a></li>
-        <li class="nav-item"><a class="nav-item-link" href="products.html">
+        <li class="nav-item" id="navProducts"><a class="nav-item-link" href="products.html">
           <span class="nav-icon"><img src="assets/parcel.png" alt="" /></span>
           <span class="nav-item-label">Products</span>
         </a></li>
-        <li class="nav-item"><a class="nav-item-link" href="reviews.html">
+        <li class="nav-item" id="navReviews"><a class="nav-item-link" href="reviews.html">
           <span class="nav-icon"><img src="assets/star.png" alt="" /></span>
           <span class="nav-item-label">Reviews</span>
           <span class="nav-badge">0</span>
         </a></li>
-        <li class="nav-item"><a class="nav-item-link" href="payments-billing.html">
+        <li class="nav-item" id="navPaymentsBilling"><a class="nav-item-link" href="payments-billing.html">
           <span class="nav-icon"><img src="assets/wallet.png" alt="" /></span>
           <span class="nav-item-label">Payments &amp; Billing</span>
         </a></li>
@@ -838,6 +938,13 @@
   <div class="main">
     <div class="topbar">
       <span class="menu-toggle" id="menuToggle">&#9776;</span>
+      <div class="topbar-logo">
+        <img src="assets/sxlogo.png" alt="Strategic X logo" />
+      </div>
+      <button type="button" class="icon-btn topbar-notif-btn" id="topbarNotifBtn">
+        <img src="assets/notification.png" alt="" />
+        <span class="dot"></span>
+      </button>
       <div class="topbar-actions">
         <button type="button" class="topbar-logout-btn" id="topbarLogoutBtn">&#10148; Log Out</button>
         <div class="profile-chip" id="profileChip">
@@ -848,6 +955,7 @@
           </div>
           <div class="profile-menu" id="profileMenu">
             <button type="button" class="profile-menu-item danger" id="logoutBtn">&#10148; Log Out</button>
+            <button type="button" class="profile-menu-item danger" id="deleteAccountBtn">&#10148; Delete Account</button>
           </div>
         </div>
       </div>
@@ -908,15 +1016,38 @@
     </div>
   </div>
 
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="bottom-nav-item active">
+      <span class="bottom-nav-icon"><img src="assets/dashboard.png" alt="" /></span>
+      <span class="bottom-nav-label">Dashboard</span>
+    </a>
+    <a href="my-shop.html" class="bottom-nav-item">
+      <span class="bottom-nav-icon"><img src="assets/shop.png" alt="" /></span>
+      <span class="bottom-nav-label">My Shop</span>
+    </a>
+    <a href="products.html" class="bottom-nav-item">
+      <span class="bottom-nav-icon"><img src="assets/parcel.png" alt="" /></span>
+      <span class="bottom-nav-label">Products</span>
+    </a>
+    <a href="reviews.html" class="bottom-nav-item">
+      <span class="bottom-nav-icon"><img src="assets/star.png" alt="" /><span class="bottom-nav-badge">0</span></span>
+      <span class="bottom-nav-label">Reviews</span>
+    </a>
+    <a href="#" class="bottom-nav-item" id="bottomNavMore">
+      <span class="bottom-nav-icon">&#9776;</span>
+      <span class="bottom-nav-label">More</span>
+    </a>
+  </nav>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js?v=5"></script>
+  <script src="sx-auth.js?v=12"></script>
   <script>
     (async function guardDashboard() {
       var sessionResult = await sxSupabaseClient.auth.getSession();
       var session = sessionResult && sessionResult.data ? sessionResult.data.session : null;
       if (!session) {
-        window.location.href = 'index.html';
+        window.location.href = 'sign-in.html';
         return;
       }
       var user = session.user;
@@ -926,11 +1057,30 @@
       }
 
       var meta = user.user_metadata || {};
+      var isStaff = meta.sx_shop_role === 'staff';
+
       var fullName = (meta.sx_full_name || '').trim();
       var firstName = fullName ? fullName.split(' ')[0] : 'there';
-      var shopName = meta.sx_shop_name || 'Your Shop';
-      var category = meta.sx_category || '';
-      var marketPlatform = meta.sx_market_platform || 'Not set yet';
+
+      // This is the SAME dashboard shell for owners and staff/managers —
+      // it is never duplicated into a separate file, and for now shows
+      // the exact same nav items and stats to everyone. The only things
+      // that differ by role are: which shop's data gets loaded (owned
+      // shop vs joined shop membership) and the role/status pill in the
+      // sidebar.
+      var ctx = await SXAuth.resolveShopContext(user);
+      if (isStaff && !ctx) {
+        // Picked "Join as Staff" but hasn't entered an invitation code
+        // yet — nothing to show on a dashboard until they do.
+        window.location.href = 'staff-join.html';
+        return;
+      }
+      var shopId = ctx.shopId;
+      var shopName = ctx.shopName;
+      var category = ctx.category;
+      var marketPlatform = ctx.marketPlatform;
+      var logoUrl = ctx.logoUrl;
+      var memberRole = ctx.role;
 
       document.getElementById('profileName').textContent = firstName;
       document.getElementById('profileInitial').textContent = firstName.charAt(0).toUpperCase() || 'U';
@@ -940,8 +1090,20 @@
       document.getElementById('shopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
       document.getElementById('platformValue').textContent = marketPlatform;
 
-      if (meta.sx_shop_logo_url) {
-        document.getElementById('shopAvatar').innerHTML = '<img src="' + meta.sx_shop_logo_url + '" alt="" />';
+      if (logoUrl) {
+        document.getElementById('shopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
+      }
+
+      var shopStatusEl = document.getElementById('shopStatus');
+      if (isStaff) {
+        if (memberRole) {
+          var roleLabel = memberRole.charAt(0).toUpperCase() + memberRole.slice(1);
+          shopStatusEl.textContent = '\u25CF ' + roleLabel;
+          shopStatusEl.classList.remove('pending');
+        } else {
+          shopStatusEl.textContent = '\u25CF Pending Role';
+          shopStatusEl.classList.add('pending');
+        }
       }
 
       // "View Shop" link: the storefront's own click_events data confirms
@@ -951,12 +1113,15 @@
       // sx-platform-links-schema.sql. Requires that schema to have been
       // run in Supabase; the button stays hidden otherwise.
       (async function loadViewShopLink() {
-        var shopIdForLinkResult = await sxSupabaseClient
-          .from('sx_shops')
-          .select('id')
-          .eq('owner_id', user.id)
-          .maybeSingle();
-        var shopIdForLink = shopIdForLinkResult && shopIdForLinkResult.data ? shopIdForLinkResult.data.id : null;
+        var shopIdForLink = shopId;
+        if (!shopIdForLink && !isStaff) {
+          var shopIdForLinkResult = await sxSupabaseClient
+            .from('sx_shops')
+            .select('id')
+            .eq('owner_id', user.id)
+            .maybeSingle();
+          shopIdForLink = shopIdForLinkResult && shopIdForLinkResult.data ? shopIdForLinkResult.data.id : null;
+        }
         if (!shopIdForLink || marketPlatform === 'Not set yet') return;
 
         var platformLinkResult = await sxSupabaseClient
@@ -986,29 +1151,32 @@
       // guarantees every card is revealed exactly once with whatever
       // value it ended up with, even if a request errors out.
       try {
-      var productsCountResult = await sxSupabaseClient
-        .from('sx_products')
-        .select('id', { count: 'exact', head: true })
-        .eq('owner_id', user.id);
-      if (productsCountResult && !productsCountResult.error && typeof productsCountResult.count === 'number') {
-        document.getElementById('statProducts').textContent = productsCountResult.count;
+      if (!shopId && !isStaff) {
+        var shopIdResult = await sxSupabaseClient
+          .from('sx_shops')
+          .select('id')
+          .eq('owner_id', user.id)
+          .maybeSingle();
+        shopId = shopIdResult && shopIdResult.data ? shopIdResult.data.id : null;
       }
 
-      // Reflect the real average rating on the "Shop Rating" stat card.
-      // Reviews are stored in a shared "reviews" table (shop_key = the
-      // REVIEWED PRODUCT's own sx_products.id as text, NOT the shop's id)
-      // that the separate Oshodi Market Online storefront also writes to
-      // when a customer submits a review — see reviews.html for the full
-      // breakdown. To get every review for this shop, first fetch all of
-      // this shop's product ids, then match reviews against that list.
-      var shopIdResult = await sxSupabaseClient
-        .from('sx_shops')
-        .select('id')
-        .eq('owner_id', user.id)
-        .maybeSingle();
-      var shopId = shopIdResult && shopIdResult.data ? shopIdResult.data.id : null;
-
       if (shopId) {
+        var productsCountResult = await sxSupabaseClient
+          .from('sx_products')
+          .select('id', { count: 'exact', head: true })
+          .eq('shop_id', shopId);
+        if (productsCountResult && !productsCountResult.error && typeof productsCountResult.count === 'number') {
+          document.getElementById('statProducts').textContent = productsCountResult.count;
+        }
+
+        // Reflect the real average rating on the "Shop Rating" stat card.
+        // Reviews are stored in a shared "reviews" table (shop_key = the
+        // REVIEWED PRODUCT's own sx_products.id as text, NOT the shop's
+        // id) that the separate Oshodi Market Online storefront also
+        // writes to when a customer submits a review — see reviews.html
+        // for the full breakdown. To get every review for this shop,
+        // first fetch all of this shop's product ids, then match reviews
+        // against that list.
         var productIdsResult = await sxSupabaseClient
           .from('sx_products')
           .select('id, product_name')
@@ -1112,7 +1280,8 @@
     SXAuth.wireProfileMenu(
       document.getElementById('profileToggle'),
       document.getElementById('profileMenu'),
-      document.getElementById('logoutBtn')
+      document.getElementById('logoutBtn'),
+      document.getElementById('deleteAccountBtn')
     );
 
     SXAuth.wireSupportHelp(
@@ -1122,7 +1291,8 @@
 
     SXAuth.wireMobileSidebar(
       document.getElementById('menuToggle'),
-      document.querySelector('.sidebar')
+      document.querySelector('.sidebar'),
+      document.getElementById('bottomNavMore')
     );
 
     document.getElementById('topbarLogoutBtn').addEventListener('click', function () {
