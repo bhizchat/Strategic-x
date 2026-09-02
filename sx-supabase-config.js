@@ -17,13 +17,12 @@ const sxSupabaseClient = window.supabase.createClient(SX_SUPABASE_URL, SX_SUPABA
 window.sxSupabaseClient = sxSupabaseClient;
 
 // Where Supabase should send users back to after email confirmation /
-// OAuth sign-in. Hardcoded to the strategic-x/sign-in.html path (rather
-// than derived from window.location.pathname) because deriving it from
-// the current URL breaks if the page is opened without a trailing slash
-// or explicit sign-in.html (e.g. ".../strategic-x" instead of
-// ".../strategic-x/sign-in.html") — the old regex would then treat
-// "strategic-x" itself as the file to replace, redirecting users back to
-// the SITE ROOT instead of the Strategic X portal. Update this if/when the
-// strategic-x folder is ever extracted into its own separate project (it
-// would then just be '/sign-in.html').
-const SX_AUTH_REDIRECT_URL = window.location.origin + '/strategic-x/sign-in.html';
+// OAuth sign-in. The site (both locally on port 5501 and in production at
+// strategicxltd.com) is served from the domain root — there is no
+// /strategic-x/ path segment in the live URL — so this is just
+// window.location.origin + '/sign-in.html'. This MUST also be added to the
+// Supabase project's Authentication > URL Configuration > Redirect URLs
+// allow-list (e.g. https://www.strategicxltd.com/**), otherwise Supabase
+// silently falls back to the configured Site URL instead of honoring this
+// value.
+const SX_AUTH_REDIRECT_URL = window.location.origin + '/sign-in.html';
