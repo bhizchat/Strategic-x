@@ -1355,12 +1355,23 @@
         align-items: center;
         justify-content: center;
       }
+      .shop-overview-body { flex-direction: column; }
+      .shop-overview-stats {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 4px;
+      }
+      .overview-stat { flex: 1; min-width: 0; align-items: flex-start; }
+      .stat-sm-label, .stat-sm-value { white-space: normal; }
     }
 
     @media (max-width: 480px) {
       .visuals-grid { flex-direction: column; }
       .visuals-grid > div:first-child { flex: none; }
       .topbar-actions { gap: 10px; }
+      .overview-stat { flex-direction: column; align-items: flex-start; gap: 6px; }
     }
   </style>
 </head>

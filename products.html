@@ -1114,6 +1114,86 @@
       display: none;
     }
 
+    .mobile-shop-bar {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      background: var(--main-surface);
+      border: 1px solid var(--main-border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .mobile-shop-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--silver-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .mobile-shop-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .mobile-shop-avatar span {
+      font-weight: 800;
+      color: var(--black);
+      font-size: 1rem;
+    }
+
+    .mobile-shop-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .mobile-shop-name {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--main-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mobile-shop-meta {
+      font-size: 0.72rem;
+      color: var(--main-text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    .mobile-shop-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.64rem;
+      font-weight: 700;
+      color: #1e8b4a;
+      background: #e3f8ea;
+      border: 1px solid #bdeccb;
+      border-radius: 999px;
+      padding: 2px 8px;
+      margin-top: 6px;
+    }
+
+    .mobile-shop-chevron {
+      color: var(--main-text-muted);
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
     @media (max-width: 980px) {
       .stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
@@ -1240,10 +1320,10 @@
         align-items: center;
         justify-content: center;
       }
+      .mobile-shop-bar { display: flex; }
     }
 
     @media (max-width: 480px) {
-      .stats-row { grid-template-columns: 1fr; }
       .edit-modal-row { grid-template-columns: 1fr; }
       .toolbar-actions { flex-direction: column; align-items: stretch; width: 100%; }
       .topbar-actions { gap: 10px; }
@@ -1363,6 +1443,16 @@
     </div>
 
     <div class="content">
+      <a href="my-shop.html" class="mobile-shop-bar" id="mobileShopBar">
+        <div class="mobile-shop-avatar" id="mobileShopAvatar"><span id="mobileShopInitial">S</span></div>
+        <div class="mobile-shop-info">
+          <div class="mobile-shop-name" id="mobileShopName">Your Shop</div>
+          <div class="mobile-shop-meta" id="mobileShopMeta">&nbsp;</div>
+          <span class="mobile-shop-status">&#9679; Shop Open</span>
+        </div>
+        <span class="mobile-shop-chevron">&#8250;</span>
+      </a>
+
       <h1>My Products</h1>
       <p class="subtitle">Manage your products, stock and inventory.</p>
 
@@ -1597,6 +1687,14 @@
 
       if (logoUrl) {
         document.getElementById('shopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
+      }
+
+      document.getElementById('mobileShopName').textContent = shopName;
+      document.getElementById('mobileShopMeta').textContent = category ? (category + (marketPlatform !== 'Not set yet' ? ' \u00b7 ' + marketPlatform : '')) : marketPlatform;
+      document.getElementById('mobileShopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
+
+      if (logoUrl) {
+        document.getElementById('mobileShopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
       }
 
       await loadProducts(ctx.shopId);
