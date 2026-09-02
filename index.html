@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Strategic X - Bringing Local Markets Online</title>
   <meta name="description" content="Strategic X connects local vendors and shoppers, helping local markets grow, sell, and thrive online." />
+  <script>
+    // Supabase's OAuth flow can land back here (site root) instead of
+    // sign-in.html if the redirectTo URL doesn't match the project's
+    // configured Redirect URLs allow-list — in that case it falls back to
+    // the bare Site URL. When that happens the session tokens arrive as a
+    // URL hash (#access_token=...) or a PKCE code (?code=...). Flag <html>
+    // so the CSS below hides the marketing page behind a blank loading
+    // overlay instead of flashing it before the script at the bottom of
+    // the page detects the session and routes the user onward.
+    if (/access_token=|[?&]code=/.test(window.location.hash + window.location.search)) {
+      document.documentElement.classList.add('sx-oauth-loading');
+    }
+  </script>
   <style>
     :root {
       --black: #0a0a0a;
@@ -566,6 +579,8 @@
       .navbar-inner { padding: 14px 20px; }
       .wrap { padding: 0 20px; }
     }
+
+    html.sx-oauth-loading body { visibility: hidden; }
   </style>
 </head>
 <body>
@@ -800,6 +815,18 @@
       </div>
     </div>
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="sx-supabase-config.js"></script>
+  <script src="sx-auth.js?v=12"></script>
+  <script>
+    // Safety net: if a user lands on the marketing homepage with an
+    // already-active session (e.g. Google OAuth redirected here instead of
+    // sign-in.html), route them straight to onboarding/dashboard instead of
+    // showing the landing page. Reuses the exact same routing logic as
+    // sign-in.html so behavior stays consistent in one place.
+    SXAuth.watchAuthAndRoute();
+  </script>
 
   <script>
     // Rotates the hero visual through a few product screenshots so the
