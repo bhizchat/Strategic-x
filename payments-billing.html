@@ -212,6 +212,28 @@
       color: #ffffff;
     }
 
+    .sidebar-mobile-logout {
+      display: none;
+    }
+
+    .sidebar-logout-btn {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 9px;
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      background: transparent;
+      color: #f87171;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .sidebar-logout-btn:hover {
+      background: rgba(248, 113, 113, 0.12);
+    }
+
     .support-help-item {
       position: relative;
     }
@@ -990,6 +1012,7 @@
         box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
       }
       .sidebar.open { transform: translateX(0); }
+      .sidebar-mobile-logout { display: block; margin-top: 14px; }
       .menu-toggle { display: block; }
       .content { padding: 22px 18px 40px; }
       .topbar { padding: 16px 18px; flex-wrap: wrap; row-gap: 14px; }
@@ -1161,6 +1184,10 @@
           </div>
         </li>
       </ul>
+    </div>
+
+    <div class="sidebar-mobile-logout">
+      <button type="button" class="sidebar-logout-btn" id="sidebarLogoutBtn">&#10148; Log Out</button>
     </div>
   </aside>
 
@@ -1454,6 +1481,10 @@
     );
 
     document.getElementById('topbarLogoutBtn').addEventListener('click', function () {
+      SXAuth.signOut();
+    });
+
+    document.getElementById('sidebarLogoutBtn').addEventListener('click', function () {
       SXAuth.signOut();
     });
   </script>
