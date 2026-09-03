@@ -1949,7 +1949,11 @@
       replyingReviewId = reviewId;
       replyModalError.style.display = 'none';
       replyModalError.textContent = '';
-      replyModalOriginal.innerHTML = '<strong>' + (review.reviewer_name || 'Anonymous') + ':</strong> ' + (review.comment || '');
+      replyModalOriginal.textContent = '';
+      var replyModalOriginalStrong = document.createElement('strong');
+      replyModalOriginalStrong.textContent = (review.reviewer_name || 'Anonymous') + ':';
+      replyModalOriginal.appendChild(replyModalOriginalStrong);
+      replyModalOriginal.appendChild(document.createTextNode(' ' + (review.comment || '')));
       replyModalText.value = review.shop_reply || '';
       replyModalScrollY = window.scrollY;
       document.body.style.top = -replyModalScrollY + 'px';

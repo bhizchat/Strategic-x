@@ -1933,13 +1933,16 @@
         }
 
         row.innerHTML =
-          '<div class="staff-avatar">' + initial + '</div>' +
+          '<div class="staff-avatar"></div>' +
           '<div class="staff-name-col">' +
-            '<div class="staff-name">' + (member.full_name || 'Unnamed') + '</div>' +
+            '<div class="staff-name"></div>' +
             '<div class="staff-joined">' + formatJoinedDate(member.joined_at) + '</div>' +
           '</div>' +
           roleControlHtml +
           (canManageTeam ? '<span class="staff-remove-link" data-member-id="' + member.id + '">Remove</span>' : '');
+
+        row.querySelector('.staff-avatar').textContent = initial;
+        row.querySelector('.staff-name').textContent = member.full_name || 'Unnamed';
 
         listBody.appendChild(row);
       });
