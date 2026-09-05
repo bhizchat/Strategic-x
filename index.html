@@ -396,8 +396,8 @@
 
     .articles-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 28px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 24px;
     }
 
     .article-card {
@@ -563,6 +563,10 @@
       color: var(--text-muted);
     }
 
+    @media (max-width: 1100px) {
+      .articles-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
     @media (max-width: 900px) {
       .hero-inner { flex-direction: column; }
       .hero-copy p.lead { max-width: none; }
@@ -667,6 +671,20 @@
         <a href="#articles" class="view-all">View all articles &rarr;</a>
       </div>
       <div class="articles-grid">
+        <a href="article-dashboard-data.html" class="article-card">
+          <div class="article-thumb">
+            <img src="assets/dashboard-landing.png" alt="Strategic X vendor dashboard showing shop views, calls, WhatsApp messages and rating" />
+          </div>
+          <div class="article-body">
+            <h3>Reading Your Dashboard: Turn Data Into Sales Decisions</h3>
+            <p>A simple guide to using your dashboard stats to make smarter decisions for your shop.</p>
+            <div class="article-meta">
+              <span>Jun 2, 2026</span>
+              <span>&middot;</span>
+              <span>5 min read</span>
+            </div>
+          </div>
+        </a>
         <a href="article-grow-your-market-business.html" class="article-card">
           <div class="article-thumb">
             <img src="assets/article-grow-market-business.png" alt="Vendor arranging colorful market goods" />
