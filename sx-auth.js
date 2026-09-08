@@ -302,17 +302,48 @@
 
   // Wires up the "Support & Help" sidebar item: clicking it toggles a
   // small popover panel with contact options (WhatsApp / email / call),
-  // clicking outside or pressing Escape closes it. Same open/close pattern
-  // as wireProfileMenu.
+  // clicking outside, clicking the X button, or pressing Escape closes it.
+  // Same open/close pattern as wireProfileMenu.
+  //
+  // Mobile quirk: on narrow screens the sidebar becomes an off-canvas
+  // drawer via `transform: translateX(...)` (see wireMobileSidebar) — a
+  // transformed ancestor becomes the containing block for any
+  // position:fixed descendant, so this panel (nested inside the sidebar)
+  // would render centered/clipped against the narrow ~230px sidebar box
+  // instead of the real viewport. Fixed by reparenting the panel to
+  // <body> right before it opens (and moving it back to its original
+  // spot when it closes) whenever the mobile breakpoint is active, so its
+  // `position:fixed` centering resolves against the whole screen. Desktop
+  // is unaffected (panel stays put, uses `position:absolute` next to the
+  // nav item, since `.sidebar` has no transform there). A dedicated dim
+  // backdrop (`.sx-support-backdrop`, same pattern as the sidebar's own
+  // backdrop) is also added so the panel stands out clearly on mobile.
   function wireSupportHelp(toggleEl, panelEl) {
     if (!toggleEl || !panelEl) return;
+
+    var closeBtn = panelEl.querySelector('.support-help-close');
+    var originalParent = panelEl.parentNode;
+    var originalNextSibling = panelEl.nextSibling;
+    var mobileQuery = window.matchMedia('(max-width: 760px)');
+
+    var backdrop = document.createElement('div');
+    backdrop.className = 'sx-support-backdrop';
+    document.body.appendChild(backdrop);
 
     function closePanel() {
       panelEl.classList.remove('open');
       toggleEl.classList.remove('active');
+      backdrop.classList.remove('open');
+      if (panelEl.parentNode === document.body && panelEl.parentNode !== originalParent) {
+        originalParent.insertBefore(panelEl, originalNextSibling);
+      }
     }
 
     function openPanel() {
+      if (mobileQuery.matches) {
+        document.body.appendChild(panelEl);
+        backdrop.classList.add('open');
+      }
       panelEl.classList.add('open');
       toggleEl.classList.add('active');
     }
@@ -326,6 +357,16 @@
         openPanel();
       }
     });
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closePanel();
+      });
+    }
+
+    backdrop.addEventListener('click', closePanel);
 
     document.addEventListener('click', function (e) {
       if (!panelEl.classList.contains('open')) return;
