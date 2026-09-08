@@ -33,6 +33,40 @@
     return !!(user && user.user_metadata && user.user_metadata.sx_onboarded);
   }
 
+  // ---- Shared stale-while-revalidate localStorage helpers. Every guarded
+  // page (dashboard/my-shop/products/reviews) does at least one network
+  // round trip before it can render real content (shop name/category,
+  // product list, reviews, stats), which otherwise means a visible blank/
+  // placeholder/skeleton state on every page load. These helpers let each
+  // page cache the last-known data locally and repaint it INSTANTLY on
+  // the next visit while the real fetch still runs in the background and
+  // refreshes both the DOM and the cache when it resolves. First-ever
+  // visit (no cache yet) still shows the normal loading/empty state.
+  function getCachedJSON(key) {
+    try {
+      var raw = window.localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function setCachedJSON(key, value) {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch (err) {
+      // localStorage unavailable (private browsing/quota) — not critical.
+    }
+  }
+
+  function getCachedShopContext(userId) {
+    return userId ? getCachedJSON('sx_shop_ctx_' + userId) : null;
+  }
+
+  function cacheShopContext(userId, ctx) {
+    if (userId && ctx) setCachedJSON('sx_shop_ctx_' + userId, ctx);
+  }
+
   // Owners and staff/managers share the exact same set of pages
   // (dashboard.html, my-shop.html, products.html, reviews.html,
   // add-product.html, payments-billing.html) — nothing is hidden or
@@ -402,6 +436,10 @@
     wireProfileMenu: wireProfileMenu,
     wireSupportHelp: wireSupportHelp,
     wireMobileSidebar: wireMobileSidebar,
-    personalizeGoogleButton: personalizeGoogleButton
+    personalizeGoogleButton: personalizeGoogleButton,
+    getCachedJSON: getCachedJSON,
+    setCachedJSON: setCachedJSON,
+    getCachedShopContext: getCachedShopContext,
+    cacheShopContext: cacheShopContext
   };
 })();

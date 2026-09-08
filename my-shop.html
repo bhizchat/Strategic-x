@@ -1681,7 +1681,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js?v=12"></script>
+  <script src="sx-auth.js?v=13"></script>
   <script>
     var currentUser = null;
     var currentShop = {};
@@ -1767,6 +1767,24 @@
       document.getElementById('profileName').textContent = firstName;
       document.getElementById('profileInitial').textContent = firstName.charAt(0).toUpperCase() || 'U';
 
+      // Stale-while-revalidate: paint the last-known Shop Overview /
+      // Shop Information fields immediately from localStorage (instead of
+      // the "—" placeholders) while the real sx_shops query below runs in
+      // the background — it still re-renders + re-caches as soon as it
+      // resolves, so this is only ever briefly stale, never wrong for long.
+      var myShopCacheKey = 'sx_myshop_shop_' + user.id;
+      var cachedShop = null;
+      try {
+        var cachedShopRaw = window.localStorage.getItem(myShopCacheKey);
+        var cachedEntry = cachedShopRaw ? JSON.parse(cachedShopRaw) : null;
+        cachedShop = cachedEntry ? cachedEntry.currentShop : null;
+        if (cachedEntry) currentUserRole = cachedEntry.currentUserRole || null;
+      } catch (err) { cachedShop = null; }
+      if (cachedShop) {
+        currentShop = cachedShop;
+        renderShopFields();
+      }
+
       // sx_shops holds the richer shop record created at the end of
       // onboarding (location, tagline, whatsapp, logo/banner) — fall back
       // to user_metadata for anything missing (e.g. row not created yet).
@@ -1803,6 +1821,9 @@
       }
 
       renderShopFields();
+      try {
+        window.localStorage.setItem(myShopCacheKey, JSON.stringify({ currentShop: currentShop, currentUserRole: currentUserRole }));
+      } catch (err) { /* localStorage unavailable — not critical */ }
 
       // Initialize Team Members (invite code + staff list) here, before
       // the stats block below — that block has a try/finally with no
@@ -1822,10 +1843,38 @@
       // try/finally guarantees each is revealed exactly once with its
       // real value, even if a request errors out.
       try {
-      var productsCountResult = await sxSupabaseClient
-        .from('sx_products')
-        .select('id', { count: 'exact', head: true })
-        .eq('shop_id', currentShop.id || '');
+      // Stale-while-revalidate: paint the last-known values immediately
+      // (no skeleton) from localStorage on repeat visits while the fresh
+      // queries below run in the background — first-ever visit for a
+      // shop still falls back to the skeleton.
+      var myShopStatsCacheKey = 'sx_myshop_stats_' + (currentShop.id || '');
+      var cachedMyShopStats = null;
+      try {
+        var cachedMyShopStatsRaw = window.localStorage.getItem(myShopStatsCacheKey);
+        cachedMyShopStats = cachedMyShopStatsRaw ? JSON.parse(cachedMyShopStatsRaw) : null;
+      } catch (err) { cachedMyShopStats = null; }
+      if (cachedMyShopStats) {
+        document.getElementById('overviewProducts').textContent = cachedMyShopStats.overviewProducts;
+        if (cachedMyShopStats.overviewRatingHtml) {
+          document.getElementById('overviewRating').innerHTML = cachedMyShopStats.overviewRatingHtml;
+        }
+        ['overviewProducts', 'overviewRating'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.remove('is-loading');
+        });
+      }
+
+      var statsResults = await Promise.all([
+        sxSupabaseClient
+          .from('sx_products')
+          .select('id', { count: 'exact', head: true })
+          .eq('shop_id', currentShop.id || ''),
+        currentShop.id
+          ? sxSupabaseClient.from('sx_products').select('id').eq('shop_id', currentShop.id)
+          : Promise.resolve({ data: [], error: null })
+      ]);
+      var productsCountResult = statsResults[0];
+      var productIdsResult = statsResults[1];
       if (productsCountResult && !productsCountResult.error && typeof productsCountResult.count === 'number') {
         document.getElementById('overviewProducts').textContent = productsCountResult.count;
       }
@@ -1835,27 +1884,28 @@
       // sx_products.id as text, NOT the shop's id) used by dashboard.html
       // and reviews.html. Fetch this shop's product ids first, then match
       // reviews against that list.
-      if (currentShop.id) {
-        var productIdsResult = await sxSupabaseClient
-          .from('sx_products')
-          .select('id')
-          .eq('shop_id', currentShop.id);
-        var productIds = ((productIdsResult && productIdsResult.data) || []).map(function (p) { return p.id; });
+      var productIds = ((productIdsResult && productIdsResult.data) || []).map(function (p) { return p.id; });
 
-        if (productIds.length > 0) {
-          var reviewsResult = await sxSupabaseClient
-            .from('reviews')
-            .select('rating')
-            .in('shop_key', productIds);
-          var reviews = (reviewsResult && reviewsResult.data) || [];
-          if (reviews.length > 0) {
-            var avgRating = reviews.reduce(function (sum, r) { return sum + (r.rating || 0); }, 0) / reviews.length;
-            var fullStars = Math.round(avgRating);
-            document.getElementById('overviewRating').innerHTML =
-              avgRating.toFixed(1) + ' <span class="stars">' + '\u2605'.repeat(fullStars) + '\u2606'.repeat(5 - fullStars) + '</span>';
-          }
+      if (productIds.length > 0) {
+        var reviewsResult = await sxSupabaseClient
+          .from('reviews')
+          .select('rating')
+          .in('shop_key', productIds);
+        var reviews = (reviewsResult && reviewsResult.data) || [];
+        if (reviews.length > 0) {
+          var avgRating = reviews.reduce(function (sum, r) { return sum + (r.rating || 0); }, 0) / reviews.length;
+          var fullStars = Math.round(avgRating);
+          document.getElementById('overviewRating').innerHTML =
+            avgRating.toFixed(1) + ' <span class="stars">' + '\u2605'.repeat(fullStars) + '\u2606'.repeat(5 - fullStars) + '</span>';
         }
       }
+
+      try {
+        window.localStorage.setItem(myShopStatsCacheKey, JSON.stringify({
+          overviewProducts: document.getElementById('overviewProducts').textContent,
+          overviewRatingHtml: document.getElementById('overviewRating').innerHTML
+        }));
+      } catch (err) { /* localStorage unavailable — not critical */ }
       } finally {
         ['overviewProducts', 'overviewRating'].forEach(function (id) {
           var el = document.getElementById(id);

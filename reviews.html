@@ -1621,7 +1621,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js?v=12"></script>
+  <script src="sx-auth.js?v=13"></script>
   <script>
     (async function guardReviews() {
       var sessionResult = await sxSupabaseClient.auth.getSession();
@@ -1643,24 +1643,34 @@
       document.getElementById('profileName').textContent = firstName;
       document.getElementById('profileInitial').textContent = firstName.charAt(0).toUpperCase() || 'U';
 
+      // Stale-while-revalidate: paint the last-known shop name/category/
+      // logo immediately from localStorage (no blank/placeholder header)
+      // while the real shop-context query below runs in the background.
+      function paintShopHeader(shopCtx) {
+        var shopName = shopCtx.shopName;
+        var category = shopCtx.category;
+        var marketPlatform = shopCtx.marketPlatform;
+        var logoUrl = shopCtx.logoUrl;
+
+        document.getElementById('shopNameText').textContent = shopName;
+        document.getElementById('shopMetaText').textContent = category ? (category + (marketPlatform !== 'Not set yet' ? ' \u00b7 ' + marketPlatform : '')) : marketPlatform;
+        document.getElementById('shopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
+        if (logoUrl) {
+          document.getElementById('shopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
+        }
+      }
+
+      var cachedCtx = SXAuth.getCachedShopContext(user.id);
+      if (cachedCtx) paintShopHeader(cachedCtx);
+
       var ctx = await SXAuth.resolveShopContext(user);
       if (meta.sx_shop_role === 'staff' && !ctx) {
         window.location.href = 'staff-join.html';
         return;
       }
 
-      var shopName = ctx.shopName;
-      var category = ctx.category;
-      var marketPlatform = ctx.marketPlatform;
-      var logoUrl = ctx.logoUrl;
-
-      document.getElementById('shopNameText').textContent = shopName;
-      document.getElementById('shopMetaText').textContent = category ? (category + (marketPlatform !== 'Not set yet' ? ' \u00b7 ' + marketPlatform : '')) : marketPlatform;
-      document.getElementById('shopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
-
-      if (logoUrl) {
-        document.getElementById('shopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
-      }
+      paintShopHeader(ctx);
+      SXAuth.cacheShopContext(user.id, ctx);
 
       if (ctx.shopId) {
         try {
@@ -1735,7 +1745,47 @@
       return shopProducts.filter(function (p) { return p.id === review.shop_key; })[0] || null;
     }
 
+    function populateProductFilterOptions() {
+      var productFilterEl = document.getElementById('reviewsProductFilter');
+      var currentValue = productFilterEl.value;
+      productFilterEl.innerHTML = '<option value="">All Products</option>';
+      shopProducts.forEach(function (product) {
+        var opt = document.createElement('option');
+        opt.value = product.id;
+        opt.textContent = product.product_name;
+        productFilterEl.appendChild(opt);
+      });
+      if (shopProducts.some(function (p) { return p.id === currentValue; })) {
+        productFilterEl.value = currentValue;
+      }
+    }
+
     async function loadReviews(shopId) {
+      // Stale-while-revalidate: paint the last-known reviews list (and
+      // stats/top-rated) immediately from localStorage so the page never
+      // shows "No reviews yet" while the real fetch is still in flight —
+      // the fetch below still runs right away and replaces/re-caches this
+      // with fresh data as soon as it resolves.
+      var reviewsCacheKey = 'sx_reviews_data_' + (shopId || '');
+      var cachedReviewsData = null;
+      try {
+        var cachedReviewsDataRaw = window.localStorage.getItem(reviewsCacheKey);
+        cachedReviewsData = cachedReviewsDataRaw ? JSON.parse(cachedReviewsDataRaw) : null;
+      } catch (err) { cachedReviewsData = null; }
+      if (cachedReviewsData) {
+        shopProducts = cachedReviewsData.shopProducts || [];
+        allReviews = cachedReviewsData.allReviews || [];
+        populateProductFilterOptions();
+        document.getElementById('navReviewsBadge').textContent = allReviews.length;
+        renderStats();
+        renderTopRated();
+        renderReviewsTable();
+        ['statOverallRatingValue', 'statTotalReviews', 'statFiveStar'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.remove('is-loading');
+        });
+      }
+
       var productsResult = await sxSupabaseClient
         .from('sx_products')
         .select('id, product_name, images')
@@ -1743,13 +1793,7 @@
         .order('created_at', { ascending: true });
       shopProducts = (productsResult && productsResult.data) || [];
 
-      var productFilterEl = document.getElementById('reviewsProductFilter');
-      shopProducts.forEach(function (product) {
-        var opt = document.createElement('option');
-        opt.value = product.id;
-        opt.textContent = product.product_name;
-        productFilterEl.appendChild(opt);
-      });
+      populateProductFilterOptions();
 
       var productIds = shopProducts.map(function (p) { return p.id; });
       var reviewsResult = productIds.length
@@ -1771,7 +1815,12 @@
         document.getElementById('reviewsEmptyState').querySelector('h3').textContent = 'Could not load reviews';
         document.getElementById('reviewsEmptyState').querySelector('p').textContent =
           'Could not load reviews (' + reviewsResult.error.message + '). If this persists, the "reviews" table may need an additional RLS read policy for signed-in vendors — see sx-reviews-read-policy.sql.';
+      } else {
+        try {
+          window.localStorage.setItem(reviewsCacheKey, JSON.stringify({ shopProducts: shopProducts, allReviews: allReviews }));
+        } catch (err) { /* localStorage unavailable — not critical */ }
       }
+
 
       document.getElementById('navReviewsBadge').textContent = allReviews.length;
 
