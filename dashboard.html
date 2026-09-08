@@ -1065,7 +1065,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js?v=13"></script>
+  <script src="sx-auth.js?v=12"></script>
   <script>
     (async function guardDashboard() {
       var sessionResult = await sxSupabaseClient.auth.getSession();
@@ -1092,44 +1092,6 @@
       // that differ by role are: which shop's data gets loaded (owned
       // shop vs joined shop membership) and the role/status pill in the
       // sidebar.
-      //
-      // Stale-while-revalidate: paint the last-known shop name/category/
-      // logo/platform immediately from localStorage (instead of the
-      // static "Your Shop" placeholder) while the real shop-context query
-      // below runs in the background — it still re-renders + re-caches as
-      // soon as it resolves, so this is only ever briefly stale.
-      function paintShopHeader(shopCtx) {
-        var shopName = shopCtx.shopName;
-        var category = shopCtx.category;
-        var marketPlatform = shopCtx.marketPlatform;
-        var logoUrl = shopCtx.logoUrl;
-        var memberRole = shopCtx.role;
-
-        document.getElementById('shopNameText').textContent = shopName;
-        document.getElementById('shopMetaText').textContent = category ? (category + (marketPlatform !== 'Not set yet' ? ' · ' + marketPlatform : '')) : marketPlatform;
-        document.getElementById('shopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
-        document.getElementById('platformValue').textContent = marketPlatform;
-
-        if (logoUrl) {
-          document.getElementById('shopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
-        }
-
-        var shopStatusEl = document.getElementById('shopStatus');
-        if (isStaff) {
-          if (memberRole) {
-            var roleLabel = memberRole.charAt(0).toUpperCase() + memberRole.slice(1);
-            shopStatusEl.textContent = '\u25CF ' + roleLabel;
-            shopStatusEl.classList.remove('pending');
-          } else {
-            shopStatusEl.textContent = '\u25CF Pending Role';
-            shopStatusEl.classList.add('pending');
-          }
-        }
-      }
-
-      var cachedCtx = SXAuth.getCachedShopContext(user.id);
-      if (cachedCtx) paintShopHeader(cachedCtx);
-
       var ctx = await SXAuth.resolveShopContext(user);
       if (isStaff && !ctx) {
         // Picked "Join as Staff" but hasn't entered an invitation code
@@ -1138,12 +1100,35 @@
         return;
       }
       var shopId = ctx.shopId;
+      var shopName = ctx.shopName;
+      var category = ctx.category;
+      var marketPlatform = ctx.marketPlatform;
+      var logoUrl = ctx.logoUrl;
+      var memberRole = ctx.role;
 
       document.getElementById('profileName').textContent = firstName;
       document.getElementById('profileInitial').textContent = firstName.charAt(0).toUpperCase() || 'U';
       document.getElementById('welcomeHeading').textContent = 'Welcome back, ' + firstName + '! \uD83D\uDC4B';
-      paintShopHeader(ctx);
-      SXAuth.cacheShopContext(user.id, ctx);
+      document.getElementById('shopNameText').textContent = shopName;
+      document.getElementById('shopMetaText').textContent = category ? (category + (marketPlatform !== 'Not set yet' ? ' · ' + marketPlatform : '')) : marketPlatform;
+      document.getElementById('shopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
+      document.getElementById('platformValue').textContent = marketPlatform;
+
+      if (logoUrl) {
+        document.getElementById('shopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
+      }
+
+      var shopStatusEl = document.getElementById('shopStatus');
+      if (isStaff) {
+        if (memberRole) {
+          var roleLabel = memberRole.charAt(0).toUpperCase() + memberRole.slice(1);
+          shopStatusEl.textContent = '\u25CF ' + roleLabel;
+          shopStatusEl.classList.remove('pending');
+        } else {
+          shopStatusEl.textContent = '\u25CF Pending Role';
+          shopStatusEl.classList.add('pending');
+        }
+      }
 
       // "View Shop" link: the storefront's own click_events data confirms
       // its shop-page route is "shops.html?sxshop=<sx_shops.id>", so all
@@ -1200,52 +1185,10 @@
       }
 
       if (shopId) {
-        // Stale-while-revalidate: on repeat visits, paint the last-known
-        // stat values immediately (no skeleton) from localStorage while
-        // the fresh queries below run in the background, so the page
-        // feels instant instead of always showing the loading shimmer.
-        // First-ever visit for a shop still falls back to the skeleton.
-        var statsCacheKey = 'sx_dashboard_stats_' + shopId;
-        var cachedStats = null;
-        try {
-          var cachedStatsRaw = window.localStorage.getItem(statsCacheKey);
-          cachedStats = cachedStatsRaw ? JSON.parse(cachedStatsRaw) : null;
-        } catch (err) { cachedStats = null; }
-        if (cachedStats) {
-          document.getElementById('statProducts').textContent = cachedStats.statProducts;
-          if (cachedStats.shopRatingText) {
-            document.getElementById('statShopRating').firstChild.textContent = cachedStats.shopRatingText;
-            document.getElementById('statShopRatingStars').innerHTML = cachedStats.shopRatingStars;
-            document.getElementById('statShopRatingDelta').textContent = cachedStats.shopRatingDelta;
-          }
-          document.getElementById('statShopViews').textContent = cachedStats.shopViews;
-          document.getElementById('statShopViewsDelta').textContent = cachedStats.shopViewsDelta;
-          document.getElementById('statContactClicks').textContent = cachedStats.contactClicks;
-          document.getElementById('statContactClicksDelta').textContent = cachedStats.contactClicksDelta;
-          document.getElementById('statWhatsappClicks').textContent = cachedStats.whatsappClicks;
-          document.getElementById('statWhatsappClicksDelta').textContent = cachedStats.whatsappClicksDelta;
-          ['statProducts', 'statShopRating', 'statShopViews', 'statContactClicks', 'statWhatsappClicks'].forEach(function (id) {
-            var el = document.getElementById(id);
-            if (el) el.classList.remove('is-loading');
-          });
-        }
-
-        // Fetch product count + product ids/names in parallel (both only
-        // depend on shopId, not on each other) instead of one after the
-        // other — halves the round trips needed before the stat cards can
-        // start rendering.
-        var countAndIdsResults = await Promise.all([
-          sxSupabaseClient
-            .from('sx_products')
-            .select('id', { count: 'exact', head: true })
-            .eq('shop_id', shopId),
-          sxSupabaseClient
-            .from('sx_products')
-            .select('id, product_name')
-            .eq('shop_id', shopId)
-        ]);
-        var productsCountResult = countAndIdsResults[0];
-        var productIdsResult = countAndIdsResults[1];
+        var productsCountResult = await sxSupabaseClient
+          .from('sx_products')
+          .select('id', { count: 'exact', head: true })
+          .eq('shop_id', shopId);
         if (productsCountResult && !productsCountResult.error && typeof productsCountResult.count === 'number') {
           document.getElementById('statProducts').textContent = productsCountResult.count;
         }
@@ -1258,9 +1201,28 @@
         // for the full breakdown. To get every review for this shop,
         // first fetch all of this shop's product ids, then match reviews
         // against that list.
+        var productIdsResult = await sxSupabaseClient
+          .from('sx_products')
+          .select('id, product_name')
+          .eq('shop_id', shopId);
         var shopProductsList = (productIdsResult && productIdsResult.data) || [];
         var productIds = shopProductsList.map(function (p) { return p.id; });
         var productNames = shopProductsList.map(function (p) { return p.product_name; }).filter(Boolean);
+
+        if (productIds.length > 0) {
+          var reviewsResult = await sxSupabaseClient
+            .from('reviews')
+            .select('rating')
+            .in('shop_key', productIds);
+          var reviews = (reviewsResult && reviewsResult.data) || [];
+          if (reviews.length > 0) {
+            var avgRating = reviews.reduce(function (sum, r) { return sum + (r.rating || 0); }, 0) / reviews.length;
+            var fullStars = Math.round(avgRating);
+            document.getElementById('statShopRating').firstChild.textContent = avgRating.toFixed(1) + ' ';
+            document.getElementById('statShopRatingStars').innerHTML = '\u2605'.repeat(fullStars) + '\u2606'.repeat(5 - fullStars);
+            document.getElementById('statShopRatingDelta').textContent = '(' + reviews.length + ' review' + (reviews.length === 1 ? '' : 's') + ')';
+          }
+        }
 
         // Reflect real analytics on "Shop Views" / "Contact Clicks" /
         // "WhatsApp Clicks" stat cards. Events are stored in a shared
@@ -1283,36 +1245,11 @@
         var whatsappClicks = 0;
         var contactClicks = 0;
 
-        // The reviews query and the two click_events queries below are
-        // all independent of each other (none needs another's result),
-        // so run them concurrently via Promise.all instead of awaiting
-        // each in sequence — this is the biggest win for perceived load
-        // time since these are typically the slowest queries.
-        var parallelResults = await Promise.all([
-          productIds.length > 0
-            ? sxSupabaseClient.from('reviews').select('rating').in('shop_key', productIds)
-            : Promise.resolve({ data: [], error: null }),
-          urlFilters.length > 0
-            ? sxSupabaseClient.from('click_events').select('event_type, event_label, target_url').or(urlFilters.join(','))
-            : Promise.resolve({ data: [], error: null }),
-          productNames.length > 0
-            ? sxSupabaseClient.from('click_events').select('event_type, event_label, product_name').in('event_type', ['Calls', 'Messages']).in('product_name', productNames)
-            : Promise.resolve({ data: [], error: null })
-        ]);
-        var reviewsResult = parallelResults[0];
-        var eventsResult = parallelResults[1];
-        var contactEventsResult = parallelResults[2];
-
-        var reviews = (reviewsResult && reviewsResult.data) || [];
-        if (reviews.length > 0) {
-          var avgRating = reviews.reduce(function (sum, r) { return sum + (r.rating || 0); }, 0) / reviews.length;
-          var fullStars = Math.round(avgRating);
-          document.getElementById('statShopRating').firstChild.textContent = avgRating.toFixed(1) + ' ';
-          document.getElementById('statShopRatingStars').innerHTML = '\u2605'.repeat(fullStars) + '\u2606'.repeat(5 - fullStars);
-          document.getElementById('statShopRatingDelta').textContent = '(' + reviews.length + ' review' + (reviews.length === 1 ? '' : 's') + ')';
-        }
-
         if (urlFilters.length > 0) {
+          var eventsResult = await sxSupabaseClient
+            .from('click_events')
+            .select('event_type, event_label, target_url')
+            .or(urlFilters.join(','));
           var events = (eventsResult && eventsResult.data) || [];
 
           if (eventsResult && eventsResult.error) {
@@ -1328,6 +1265,11 @@
         }
 
         if (productNames.length > 0) {
+          var contactEventsResult = await sxSupabaseClient
+            .from('click_events')
+            .select('event_type, event_label, product_name')
+            .in('event_type', ['Calls', 'Messages'])
+            .in('product_name', productNames);
           var contactEvents = (contactEventsResult && contactEventsResult.data) || [];
 
           if (contactEventsResult && contactEventsResult.error) {
@@ -1350,21 +1292,6 @@
         document.getElementById('statContactClicksDelta').textContent = contactClicks > 0 ? 'All time' : 'No data yet';
         document.getElementById('statWhatsappClicks').textContent = whatsappClicks;
         document.getElementById('statWhatsappClicksDelta').textContent = whatsappClicks > 0 ? 'All time' : 'No data yet';
-
-        try {
-          window.localStorage.setItem(statsCacheKey, JSON.stringify({
-            statProducts: document.getElementById('statProducts').textContent,
-            shopRatingText: reviews.length > 0 ? document.getElementById('statShopRating').firstChild.textContent : (cachedStats ? cachedStats.shopRatingText : ''),
-            shopRatingStars: reviews.length > 0 ? document.getElementById('statShopRatingStars').innerHTML : (cachedStats ? cachedStats.shopRatingStars : ''),
-            shopRatingDelta: reviews.length > 0 ? document.getElementById('statShopRatingDelta').textContent : (cachedStats ? cachedStats.shopRatingDelta : ''),
-            shopViews: shopViews,
-            shopViewsDelta: document.getElementById('statShopViewsDelta').textContent,
-            contactClicks: contactClicks,
-            contactClicksDelta: document.getElementById('statContactClicksDelta').textContent,
-            whatsappClicks: whatsappClicks,
-            whatsappClicksDelta: document.getElementById('statWhatsappClicksDelta').textContent
-          }));
-        } catch (err) { /* localStorage unavailable — not critical */ }
       }
       } finally {
         ['statProducts', 'statShopRating', 'statShopViews', 'statContactClicks', 'statWhatsappClicks'].forEach(function (id) {

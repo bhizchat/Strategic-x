@@ -1659,7 +1659,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="sx-supabase-config.js"></script>
-  <script src="sx-auth.js?v=13"></script>
+  <script src="sx-auth.js?v=12"></script>
   <script>
     (async function guardProducts() {
       var sessionResult = await sxSupabaseClient.auth.getSession();
@@ -1681,42 +1681,32 @@
       document.getElementById('profileName').textContent = firstName;
       document.getElementById('profileInitial').textContent = firstName.charAt(0).toUpperCase() || 'U';
 
-      // Stale-while-revalidate: paint the last-known shop name/category/
-      // logo immediately from localStorage (no blank/placeholder header)
-      // while the real shop-context query below runs in the background.
-      function paintShopHeader(shopCtx) {
-        var shopName = shopCtx.shopName;
-        var category = shopCtx.category;
-        var marketPlatform = shopCtx.marketPlatform;
-        var logoUrl = shopCtx.logoUrl;
-        var metaText = category ? (category + (marketPlatform !== 'Not set yet' ? ' \u00b7 ' + marketPlatform : '')) : marketPlatform;
-
-        document.getElementById('shopNameText').textContent = shopName;
-        document.getElementById('shopMetaText').textContent = metaText;
-        document.getElementById('shopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
-        if (logoUrl) {
-          document.getElementById('shopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
-        }
-
-        document.getElementById('mobileShopName').textContent = shopName;
-        document.getElementById('mobileShopMeta').textContent = metaText;
-        document.getElementById('mobileShopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
-        if (logoUrl) {
-          document.getElementById('mobileShopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
-        }
-      }
-
-      var cachedCtx = SXAuth.getCachedShopContext(user.id);
-      if (cachedCtx) paintShopHeader(cachedCtx);
-
       var ctx = await SXAuth.resolveShopContext(user);
       if (meta.sx_shop_role === 'staff' && !ctx) {
         window.location.href = 'staff-join.html';
         return;
       }
 
-      paintShopHeader(ctx);
-      SXAuth.cacheShopContext(user.id, ctx);
+      var shopName = ctx.shopName;
+      var category = ctx.category;
+      var marketPlatform = ctx.marketPlatform;
+      var logoUrl = ctx.logoUrl;
+
+      document.getElementById('shopNameText').textContent = shopName;
+      document.getElementById('shopMetaText').textContent = category ? (category + (marketPlatform !== 'Not set yet' ? ' \u00b7 ' + marketPlatform : '')) : marketPlatform;
+      document.getElementById('shopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
+
+      if (logoUrl) {
+        document.getElementById('shopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
+      }
+
+      document.getElementById('mobileShopName').textContent = shopName;
+      document.getElementById('mobileShopMeta').textContent = category ? (category + (marketPlatform !== 'Not set yet' ? ' \u00b7 ' + marketPlatform : '')) : marketPlatform;
+      document.getElementById('mobileShopInitial').textContent = shopName.charAt(0).toUpperCase() || 'S';
+
+      if (logoUrl) {
+        document.getElementById('mobileShopAvatar').innerHTML = '<img src="' + logoUrl + '" alt="" />';
+      }
 
       await loadProducts(ctx.shopId);
     })();
@@ -1873,45 +1863,6 @@
     document.getElementById('stockFilterSelect').addEventListener('change', applyProductFilters);
 
     async function loadProducts(shopId) {
-      // Stale-while-revalidate: paint last-known stat counts immediately
-      // (no skeleton) from localStorage on repeat visits while the fresh
-      // product list loads in the background. The product table itself
-      // still waits for the real fetch (stock/price must stay accurate),
-      // only these 4 summary counts are shown instantly.
-      var productsStatsCacheKey = 'sx_products_stats_' + (shopId || '');
-      var cachedProductsStats = null;
-      try {
-        var cachedProductsStatsRaw = window.localStorage.getItem(productsStatsCacheKey);
-        cachedProductsStats = cachedProductsStatsRaw ? JSON.parse(cachedProductsStatsRaw) : null;
-      } catch (err) { cachedProductsStats = null; }
-      if (cachedProductsStats) {
-        document.getElementById('statTotal').textContent = cachedProductsStats.total;
-        document.getElementById('statInStock').textContent = cachedProductsStats.inStock;
-        document.getElementById('statLowStock').textContent = cachedProductsStats.lowStock;
-        document.getElementById('statOutOfStock').textContent = cachedProductsStats.outOfStock;
-        ['statTotal', 'statInStock', 'statLowStock', 'statOutOfStock'].forEach(function (id) {
-          var el = document.getElementById(id);
-          if (el) el.classList.remove('is-loading');
-        });
-      }
-
-      // Stale-while-revalidate: also paint the last-known product LIST
-      // immediately (table rows + category filter options) so the page
-      // doesn't show "No products yet" while the real fetch is still in
-      // flight. The real fetch below still runs right away and replaces
-      // this with fresh data (and re-caches it) as soon as it resolves.
-      var productsListCacheKey = 'sx_products_list_' + (shopId || '');
-      var cachedProductsList = null;
-      try {
-        var cachedProductsListRaw = window.localStorage.getItem(productsListCacheKey);
-        cachedProductsList = cachedProductsListRaw ? JSON.parse(cachedProductsListRaw) : null;
-      } catch (err) { cachedProductsList = null; }
-      if (cachedProductsList && cachedProductsList.length > 0) {
-        currentProducts = cachedProductsList;
-        populateCategoryFilterOptions();
-        renderProductsTable(getFilteredProducts());
-      }
-
       try {
         if (!shopId) return;
         var result = await sxSupabaseClient
@@ -1925,16 +1876,6 @@
         recomputeStockStats();
         populateCategoryFilterOptions();
         renderProductsTable(getFilteredProducts());
-
-        try {
-          window.localStorage.setItem(productsStatsCacheKey, JSON.stringify({
-            total: document.getElementById('statTotal').textContent,
-            inStock: document.getElementById('statInStock').textContent,
-            lowStock: document.getElementById('statLowStock').textContent,
-            outOfStock: document.getElementById('statOutOfStock').textContent
-          }));
-          window.localStorage.setItem(productsListCacheKey, JSON.stringify(currentProducts));
-        } catch (err) { /* localStorage unavailable — not critical */ }
       } finally {
         ['statTotal', 'statInStock', 'statLowStock', 'statOutOfStock'].forEach(function (id) {
           var el = document.getElementById(id);
