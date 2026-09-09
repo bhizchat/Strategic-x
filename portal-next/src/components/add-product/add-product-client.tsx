@@ -179,7 +179,16 @@ export default function AddProductClient({ shopId }: { shopId: string | null }) 
       router.push('/products');
       router.refresh();
     } catch (err) {
-      setError((err instanceof Error && err.message) || 'Something went wrong saving your product. Please try again.');
+      // Supabase's PostgrestError/StorageError objects aren't always
+      // `instanceof Error`, so check for a `.message` string directly
+      // instead of relying on instanceof (which silently swallowed the
+      // real error and only ever showed the generic fallback below).
+      console.error('saveProduct failed:', err);
+      const message =
+        (err && typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string'
+          ? (err as { message: string }).message
+          : null) || 'Something went wrong saving your product. Please try again.';
+      setError(message);
     } finally {
       setSubmitting(null);
     }
