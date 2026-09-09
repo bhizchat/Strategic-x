@@ -26,8 +26,13 @@ const CATEGORY_OPTIONS = [
   { value: 'other', label: 'Other' },
 ];
 
+// iOS Safari auto-zooms the page when focusing any input/select/textarea
+// with font-size below 16px, and doesn't reliably zoom back out on blur —
+// max-md:text-[16px] prevents the zoom from triggering at all on mobile,
+// while keeping the smaller desktop size. Same fix used across the rest
+// of this codebase's mobile forms (see repo memory notes).
 const inputClass =
-  'w-full rounded-[10px] border border-[#e2e3e6] bg-[#f5f5f6] px-3 py-2.5 text-[0.84rem] text-[#111113] outline-none focus:border-[#8a8d91] disabled:cursor-not-allowed disabled:opacity-60';
+  'w-full rounded-[10px] border border-[#e2e3e6] bg-[#f5f5f6] px-3 py-2.5 text-[0.84rem] max-md:text-[16px] text-[#111113] outline-none focus:border-[#8a8d91] disabled:cursor-not-allowed disabled:opacity-60';
 
 // Client Component: ported 1:1 from add-product.html's <form
 // id="addProductForm"> — Product Information, Product Images,
@@ -301,7 +306,7 @@ export default function AddProductClient({ shopId }: { shopId: string | null }) 
                   placeholder="Describe your product features, benefits and specifications..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="min-h-32.5 w-full resize-y border-none bg-transparent p-3.5 text-[0.84rem] text-[#111113] outline-none"
+                  className="min-h-32.5 w-full resize-y border-none bg-transparent p-3.5 text-[0.84rem] max-md:text-[16px] text-[#111113] outline-none"
                 />
                 <div className="px-3 py-1.5 text-right text-[0.7rem] text-[#6b6f76]">{description.length} / 1000</div>
               </div>
@@ -515,7 +520,7 @@ export default function AddProductClient({ shopId }: { shopId: string | null }) 
                   value={tagEntry}
                   onChange={(e) => setTagEntry(e.target.value)}
                   onKeyDown={handleTagKeyDown}
-                  className="min-w-25 flex-1 border-none bg-transparent py-1 text-[0.84rem] text-[#111113] outline-none"
+                  className="min-w-25 flex-1 border-none bg-transparent py-1 text-[0.84rem] max-md:text-[16px] text-[#111113] outline-none"
                 />
               </div>
               <div className="mt-1.25 text-[0.7rem] text-[#6b6f76]">Add relevant tags to help customers find your product.</div>
