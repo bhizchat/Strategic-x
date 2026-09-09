@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 // label after a short delay). That exact behavior is preserved here.
 
 function formatDate(date: Date) {
-  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 type TrialDates = {
