@@ -1,0 +1,87 @@
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
+import { resolveShopContext } from '@/lib/shop';
+import Sidebar from '@/components/dashboard/sidebar';
+import Topbar from '@/components/dashboard/topbar';
+import PaymentsBillingClient from '@/components/payments-billing/payments-billing-client';
+
+// Server Component: ported 1:1 (layout/copy) from payments-billing.html —
+// breadcrumb, 3-step stepper (Choose Plan done / Payment Details active /
+// Confirmation pending), plan-summary card + payment-details form. The
+// static page has no real billing backend — trial dates are computed
+// client-side and "Start Free Trial" is a simulated (non-persisted) submit,
+// so that behavior is preserved as-is in PaymentsBillingClient.
+export default async function PaymentsBillingPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  const meta = (user.user_metadata as Record<string, unknown>) || {};
+  const isOnboarded = !!meta.sx_onboarded;
+  if (!isOnboarded) {
+    redirect('/onboarding');
+  }
+
+  const ctx = await resolveShopContext(supabase, user);
+  const isStaff = meta.sx_shop_role === 'staff';
+  if (isStaff && !ctx) {
+    redirect('/staff-join');
+  }
+
+  const shop = ctx!;
+  const shopMeta = shop.category
+    ? shop.category + (shop.marketPlatform !== 'Not set yet' ? ' · ' + shop.marketPlatform : '')
+    : shop.marketPlatform;
+  const shopInitial = shop.shopName.charAt(0).toUpperCase() || 'S';
+
+  return (
+    <div className="flex min-h-screen bg-[#0a0a0a]">
+      <Sidebar
+        shopName={shop.shopName}
+        shopMeta={shopMeta}
+        shopInitial={shopInitial}
+        logoUrl={shop.logoUrl}
+        isStaff={shop.isStaff}
+        role={shop.role}
+      />
+
+      <div className="flex flex-1 flex-col bg-[#f5f5f6] text-[#111113]">
+        <Topbar firstName={((meta.sx_full_name as string) || '').trim().split(' ')[0] || 'there'} profileInitial={shopInitial} />
+
+        <div className="flex-1 px-8 pb-12 pt-7 max-md:px-4.5 max-md:pb-24 max-md:pt-5.5">
+          <div className="mb-2.5 flex items-center gap-1.5 text-[0.8rem] text-[#6b6f76]">
+            <a href="/payments-billing" className="hover:underline">
+              Payments &amp; Billing
+            </a>
+            <span className="mx-0.5">&rsaquo;</span>
+            <span>Choose Plan</span>
+            <span className="mx-0.5">&rsaquo;</span>
+            <span className="font-bold text-[#111113]">Start Free Trial</span>
+          </div>
+
+          <h1 className="text-[1.5rem] font-extrabold">Start Your Free Trial</h1>
+          <p className="mb-5.5 mt-1 text-[0.86rem] text-[#6b6f76]">
+            Get full access to all features for 1 month. Cancel anytime before your trial ends and you won&apos;t be charged.
+          </p>
+
+          <PaymentsBillingClient />
+        </div>
+
+        <div className="flex items-center justify-between border-t border-[#e2e3e6] px-8 py-4.5 text-[0.74rem] text-[#6b6f76] max-md:mb-16 max-md:flex-col max-md:items-start max-md:gap-2 max-md:px-4.5">
+          <div>© 2026 Strategic X. All rights reserved.</div>
+          <div className="flex gap-4.5">
+            <a href="/terms">Terms &amp; Conditions</a>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="#">Contact Support</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

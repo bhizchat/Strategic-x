@@ -1,0 +1,75 @@
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
+import { resolveShopContext, loadProducts } from '@/lib/shop';
+import Sidebar from '@/components/dashboard/sidebar';
+import Topbar from '@/components/dashboard/topbar';
+import ProductsClient from '@/components/products/products-client';
+
+// Server Component: ported 1:1 (layout/copy) from products.html — stats
+// row, search/filter bar, and the products table/empty-state. Products
+// are fetched server-side, then handed to the client-side ProductsClient
+// for the interactive search/filter behavior the static page's script did.
+export default async function ProductsPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  const meta = (user.user_metadata as Record<string, unknown>) || {};
+  const isOnboarded = !!meta.sx_onboarded;
+  if (!isOnboarded) {
+    redirect('/onboarding');
+  }
+
+  const ctx = await resolveShopContext(supabase, user);
+  const isStaff = meta.sx_shop_role === 'staff';
+  if (isStaff && !ctx) {
+    redirect('/staff-join');
+  }
+
+  const shop = ctx!;
+  const products = shop.shopId ? await loadProducts(supabase, shop.shopId) : [];
+
+  const shopMeta = shop.category
+    ? shop.category + (shop.marketPlatform !== 'Not set yet' ? ' · ' + shop.marketPlatform : '')
+    : shop.marketPlatform;
+  const shopInitial = shop.shopName.charAt(0).toUpperCase() || 'S';
+
+  return (
+    <div className="flex min-h-screen bg-[#0a0a0a]">
+      <Sidebar
+        shopName={shop.shopName}
+        shopMeta={shopMeta}
+        shopInitial={shopInitial}
+        logoUrl={shop.logoUrl}
+        isStaff={shop.isStaff}
+        role={shop.role}
+      />
+
+      <div className="flex flex-1 flex-col bg-[#f5f5f6] text-[#111113]">
+        <Topbar firstName={((meta.sx_full_name as string) || '').trim().split(' ')[0] || 'there'} profileInitial={shopInitial} />
+
+        <div className="flex-1 px-8 pb-12 pt-7 max-md:px-4.5 max-md:pb-24 max-md:pt-5.5">
+          <h1 className="text-[1.5rem] font-extrabold">My Products</h1>
+          <p className="mb-5.5 mt-1 text-[0.86rem] text-[#6b6f76]">Manage your products, stock and inventory.</p>
+
+          <ProductsClient products={products} />
+        </div>
+
+        <div className="flex items-center justify-between border-t border-[#e2e3e6] px-8 py-4.5 text-[0.74rem] text-[#6b6f76] max-md:mb-16 max-md:flex-col max-md:items-start max-md:gap-2 max-md:px-4.5">
+          <div>© 2026 Strategic X. All rights reserved.</div>
+          <div className="flex gap-4.5">
+            <a href="/terms">Terms &amp; Conditions</a>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="#">Contact Support</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
