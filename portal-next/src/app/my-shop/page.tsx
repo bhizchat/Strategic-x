@@ -147,9 +147,9 @@ export default async function MyShopPage() {
                 <div className="flex flex-col">
                   <InfoRow label="Shop Name" value={details.shopName} />
                   <InfoRow label="Category" value={details.category || '—'} />
-                  <InfoRow label="Market Platform" value={details.marketPlatform} editHref="/onboarding-step2" />
-                  <InfoRow label="Phone Number (Public)" value={details.phone || '—'} />
-                  <InfoRow label="WhatsApp Number (Public)" value={details.whatsapp || '—'} />
+                  <InfoRow label="Market Platform" value={details.marketPlatform} editHref="/onboarding/step2" />
+                  <InfoRow label="Phone Number (Public)" value={details.phone || '—'} editHref="/onboarding/step2" />
+                  <InfoRow label="WhatsApp Number (Public)" value={details.whatsapp || '—'} editHref="/onboarding/step2" />
                   <InfoRow label="Shop Address" value={details.location || '—'} />
                   <InfoRow label="Shop Tagline" value={details.tagline || '—'} isLast />
                 </div>

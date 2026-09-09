@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
+import { normalizeWhatsAppNumber } from '@/lib/phone';
 
 const CATEGORIES = [
   { value: 'fashion', label: 'Clothing & Fashion' },
@@ -95,7 +96,7 @@ export default function OnboardingStep2Page() {
           sx_full_name: fullName.trim(),
           sx_phone: phoneNumber.trim(),
           sx_business_email: bizEmail.trim(),
-          sx_whatsapp: whatsapp.trim(),
+          sx_whatsapp: normalizeWhatsAppNumber(whatsapp),
           sx_shop_name: shopName.trim(),
           sx_category: category,
           sx_market_platform: marketPlatform,

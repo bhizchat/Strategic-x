@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
+import { normalizeWhatsAppNumber } from '@/lib/phone';
 
 const MAX_LOGO_SIZE_BYTES = 2 * 1024 * 1024;
 const MAX_BANNER_SIZE_BYTES = 5 * 1024 * 1024;
@@ -148,7 +149,10 @@ export default function OnboardingStep3Page() {
         full_name: meta.sx_full_name || '',
         email: meta.sx_business_email || currentUser?.email || '',
         phone: meta.sx_phone || '',
-        whatsapp: meta.sx_whatsapp || '',
+        // Defensively re-normalize here too (not just at step2 capture):
+        // accounts that went through onboarding before this fix existed
+        // still have a raw local-format number sitting in user_metadata.
+        whatsapp: meta.sx_whatsapp ? normalizeWhatsAppNumber(meta.sx_whatsapp as string) : '',
         category: meta.sx_category || '',
         market_platform: meta.sx_market_platform || '',
         location: trimmedAddress,
