@@ -37,8 +37,10 @@ export default async function DashboardPage() {
   const firstName = fullName ? fullName.split(' ')[0] : 'there';
 
   const shop = ctx!;
-  const stats = shop.shopId ? await loadShopStats(supabase, shop.shopId) : null;
-  const viewShopUrl = await loadViewShopUrl(supabase, shop.shopId, shop.marketPlatform);
+  const [stats, viewShopUrl] = await Promise.all([
+    shop.shopId ? loadShopStats(supabase, shop.shopId) : Promise.resolve(null),
+    loadViewShopUrl(supabase, shop.shopId, shop.marketPlatform),
+  ]);
 
   const shopMeta = shop.category
     ? shop.category + (shop.marketPlatform !== 'Not set yet' ? ' · ' + shop.marketPlatform : '')
