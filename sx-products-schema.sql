@@ -25,6 +25,7 @@ create table if not exists public.sx_products (
   category text not null,
   subcategory text,
   brand text,
+  sku text,
   description text not null,
   tags text[] not null default '{}',
   images text[] not null default '{}',
@@ -38,10 +39,11 @@ create table if not exists public.sx_products (
   updated_at timestamptz not null default now()
 );
 
--- Adds subcategory/brand to tables created before these columns existed
--- (safe to run multiple times).
+-- Adds subcategory/brand/sku to tables created before these columns
+-- existed (safe to run multiple times).
 alter table public.sx_products add column if not exists subcategory text;
 alter table public.sx_products add column if not exists brand text;
+alter table public.sx_products add column if not exists sku text;
 
 create index if not exists sx_products_owner_id_idx on public.sx_products (owner_id);
 create index if not exists sx_products_shop_id_idx on public.sx_products (shop_id);
@@ -101,6 +103,7 @@ select
   p.category,
   p.subcategory,
   p.brand,
+  p.sku,
   p.description,
   p.tags,
   p.images,
