@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -39,8 +40,25 @@ const BOTTOM_NAV_ITEMS = NAV_ITEMS.slice(0, 4);
 // fixed bottom tab bar for quick access to the main sections.
 export default function Sidebar({ shopName, shopMeta, shopInitial, logoUrl, isStaff, role, reviewsCount = 0 }: SidebarProps) {
   const [supportOpen, setSupportOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
   const mobileOpen = useMobileNavOpen();
+
+  // Support & Help panel positioning depends on viewport: on mobile the
+  // sidebar drawer itself has a CSS transform (for the slide-in animation),
+  // which makes any `position: fixed` descendant resolve against the
+  // drawer's box instead of the real viewport. The static site worked
+  // around this by reparenting the panel to <body> right before it opens
+  // (sx-auth.js's wireSupportHelp); we do the same here via a React portal.
+  useEffect(() => {
+    const mobileQuery = window.matchMedia('(max-width: 767px)');
+    setIsMobile(mobileQuery.matches);
+    function handleChange(e: MediaQueryListEvent) {
+      setIsMobile(e.matches);
+    }
+    mobileQuery.addEventListener('change', handleChange);
+    return () => mobileQuery.removeEventListener('change', handleChange);
+  }, []);
 
   // Close the drawer whenever the route changes (i.e. after tapping a nav
   // link) and on Escape, matching the static site's wireMobileSidebar().
@@ -154,67 +172,91 @@ export default function Sidebar({ shopName, shopMeta, shopInitial, logoUrl, isSt
               <span className="flex-1">Support &amp; Help</span>
             </button>
 
-            {supportOpen && (
-              <div className="absolute bottom-0 left-[calc(100%+12px)] z-[300] flex w-[280px] flex-col gap-4 rounded-[14px] border border-[#e2e3e6] bg-white p-4 text-[#111113] shadow-[0_14px_34px_rgba(0,0,0,0.18)]">
-                <div className="relative pr-7">
-                  <button
-                    type="button"
-                    onClick={() => setSupportOpen(false)}
-                    aria-label="Close"
-                    className="absolute -right-1.5 -top-1.5 flex h-6.5 w-6.5 items-center justify-center rounded-full bg-[#e5e6e8] text-[1.1rem] leading-none hover:bg-[#e2e3e6]"
-                  >
-                    &times;
-                  </button>
-                  <div className="text-[0.95rem] font-extrabold">Need more help?</div>
-                  <div className="mt-0.5 text-[0.72rem] text-[#6b6f76]">Our support team is here to assist you personally.</div>
-                </div>
-
-                <div className="flex gap-2.5">
-                  <div className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-lg bg-[#e5e6e8]">
-                    <Image src="/assets/whatsapp.png" alt="" width={16} height={16} className="h-4 w-4 object-contain" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[0.82rem] font-bold">Chat with us</div>
-                    <div className="mt-0.5 text-[0.72rem] text-[#6b6f76]">Chat live with our support team in real-time.</div>
-                    <a
-                      href="https://wa.me/2349134333745"
-                      target="_blank"
-                      rel="noopener"
-                      className="mt-2 inline-block rounded-[7px] border border-[#f4b740] px-3 py-1.5 text-[0.74rem] font-bold text-[#f4b740] hover:bg-[#f4b740]/10"
+            {supportOpen && (() => {
+              const panelBody = (
+                <>
+                  <div className="relative pr-7">
+                    <button
+                      type="button"
+                      onClick={() => setSupportOpen(false)}
+                      aria-label="Close"
+                      className="absolute -right-1.5 -top-1.5 flex h-6.5 w-6.5 items-center justify-center rounded-full bg-[#e5e6e8] text-[1.1rem] leading-none hover:bg-[#e2e3e6]"
                     >
-                      Start Live Chat
-                    </a>
-                    <div className="mt-1.5 text-[0.66rem] text-[#6b6f76]">Available Mon - Sat, 8AM - 6PM</div>
+                      &times;
+                    </button>
+                    <div className="text-[0.95rem] font-extrabold">Need more help?</div>
+                    <div className="mt-0.5 text-[0.72rem] text-[#6b6f76]">Our support team is here to assist you personally.</div>
                   </div>
-                </div>
 
-                <div className="flex gap-2.5 border-t border-[#e2e3e6] pt-3.5">
-                  <div className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-lg bg-[#e5e6e8]">
-                    <Image src="/assets/email.png" alt="" width={16} height={16} className="h-4 w-4 object-contain" />
+                  <div className="flex gap-2.5">
+                    <div className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-lg bg-[#e5e6e8]">
+                      <Image src="/assets/whatsapp.png" alt="" width={16} height={16} className="h-4 w-4 object-contain" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[0.82rem] font-bold">Chat with us</div>
+                      <div className="mt-0.5 text-[0.72rem] text-[#6b6f76]">Chat live with our support team in real-time.</div>
+                      <a
+                        href="https://wa.me/2349134333745"
+                        target="_blank"
+                        rel="noopener"
+                        className="mt-2 inline-block rounded-[7px] border border-[#f4b740] px-3 py-1.5 text-[0.74rem] font-bold text-[#f4b740] hover:bg-[#f4b740]/10"
+                      >
+                        Start Live Chat
+                      </a>
+                      <div className="mt-1.5 text-[0.66rem] text-[#6b6f76]">Available Mon - Sat, 8AM - 6PM</div>
+                    </div>
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[0.82rem] font-bold">Email Support</div>
-                    <div className="mt-0.5 text-[0.72rem] text-[#6b6f76]">Send us an email and we&apos;ll get back to you.</div>
-                    <a href="mailto:victoredochie10@gmail.com" className="mt-1.5 inline-block border-b border-[#f4b740]/40 text-[0.78rem] font-bold text-[#f4b740]">
-                      victoredochie10@gmail.com
-                    </a>
-                  </div>
-                </div>
 
-                <div className="flex gap-2.5 border-t border-[#e2e3e6] pt-3.5">
-                  <div className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-lg bg-[#e5e6e8]">
-                    <Image src="/assets/telephone.png" alt="" width={16} height={16} className="h-4 w-4 object-contain" />
+                  <div className="flex gap-2.5 border-t border-[#e2e3e6] pt-3.5">
+                    <div className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-lg bg-[#e5e6e8]">
+                      <Image src="/assets/email.png" alt="" width={16} height={16} className="h-4 w-4 object-contain" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[0.82rem] font-bold">Email Support</div>
+                      <div className="mt-0.5 text-[0.72rem] text-[#6b6f76]">Send us an email and we&apos;ll get back to you.</div>
+                      <a href="mailto:victoredochie10@gmail.com" className="mt-1.5 inline-block border-b border-[#f4b740]/40 text-[0.78rem] font-bold text-[#f4b740]">
+                        victoredochie10@gmail.com
+                      </a>
+                    </div>
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[0.82rem] font-bold">Call Us</div>
-                    <div className="mt-0.5 text-[0.72rem] text-[#6b6f76]">Speak with our support team directly.</div>
-                    <a href="tel:+2349134333745" className="mt-1.5 inline-block border-b border-[#f4b740]/40 text-[0.78rem] font-bold text-[#f4b740]">
-                      +234 913 433 3745
-                    </a>
+
+                  <div className="flex gap-2.5 border-t border-[#e2e3e6] pt-3.5">
+                    <div className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-lg bg-[#e5e6e8]">
+                      <Image src="/assets/telephone.png" alt="" width={16} height={16} className="h-4 w-4 object-contain" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[0.82rem] font-bold">Call Us</div>
+                      <div className="mt-0.5 text-[0.72rem] text-[#6b6f76]">Speak with our support team directly.</div>
+                      <a href="tel:+2349134333745" className="mt-1.5 inline-block border-b border-[#f4b740]/40 text-[0.78rem] font-bold text-[#f4b740]">
+                        +234 913 433 3745
+                      </a>
+                    </div>
                   </div>
+                </>
+              );
+
+              if (isMobile) {
+                return createPortal(
+                  <>
+                    <div
+                      className="fixed inset-0 z-550 bg-black/60"
+                      onClick={() => setSupportOpen(false)}
+                      aria-hidden="true"
+                    />
+                    <div className="fixed left-1/2 top-1/2 z-560 flex max-h-[calc(100vh-40px)] w-[min(320px,calc(100vw-32px))] -translate-x-1/2 -translate-y-1/2 flex-col gap-4.5 overflow-y-auto rounded-[14px] border border-[#e2e3e6] bg-white p-5 text-[#111113] shadow-[0_20px_50px_rgba(0,0,0,0.35)]">
+                      {panelBody}
+                    </div>
+                  </>,
+                  document.body
+                );
+              }
+
+              return (
+                <div className="absolute bottom-0 left-[calc(100%+12px)] z-[300] flex w-[280px] flex-col gap-4 rounded-[14px] border border-[#e2e3e6] bg-white p-4 text-[#111113] shadow-[0_14px_34px_rgba(0,0,0,0.18)]">
+                  {panelBody}
                 </div>
-              </div>
-            )}
+              );
+            })()}
           </li>
         </ul>
       </div>
