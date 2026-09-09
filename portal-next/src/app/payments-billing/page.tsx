@@ -51,10 +51,10 @@ export default async function PaymentsBillingPage() {
         role={shop.role}
       />
 
-      <div className="flex flex-1 flex-col bg-[#f5f5f6] text-[#111113]">
+      <div className="flex min-w-0 flex-1 flex-col bg-[#f5f5f6] text-[#111113]">
         <Topbar firstName={((meta.sx_full_name as string) || '').trim().split(' ')[0] || 'there'} profileInitial={shopInitial} />
 
-        <div className="flex-1 px-8 pb-12 pt-7 max-md:px-4.5 max-md:pb-24 max-md:pt-5.5">
+        <div className="min-w-0 flex-1 px-8 pb-12 pt-7 max-md:px-4.5 max-md:pb-24 max-md:pt-5.5">
           <div className="mb-2.5 flex items-center gap-1.5 text-[0.8rem] text-[#6b6f76]">
             <a href="/payments-billing" className="hover:underline">
               Payments &amp; Billing

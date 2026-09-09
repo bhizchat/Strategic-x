@@ -56,10 +56,10 @@ export default async function DashboardPage() {
         reviewsCount={stats?.reviewCount ?? 0}
       />
 
-      <div className="flex flex-1 flex-col bg-[#f5f5f6] text-[#111113]">
+      <div className="flex min-w-0 flex-1 flex-col bg-[#f5f5f6] text-[#111113]">
         <Topbar firstName={firstName} profileInitial={firstName.charAt(0).toUpperCase() || 'U'} />
 
-        <div className="flex-1 px-8 pb-12 pt-7 max-md:px-4.5 max-md:pb-24 max-md:pt-5.5">
+        <div className="min-w-0 flex-1 px-8 pb-12 pt-7 max-md:px-4.5 max-md:pb-24 max-md:pt-5.5">
           <h1 className="text-[1.5rem] font-extrabold">Welcome back, {firstName}! 👋</h1>
           <p className="mb-5.5 mt-1 text-[0.86rem] text-[#6b6f76]">Here&apos;s what&apos;s happening with your shop today.</p>
 
