@@ -21,6 +21,16 @@ create table if not exists public.platform_links (
   updated_at timestamptz not null default now()
 );
 
+-- Security hardening: the storefront's anon write policy below lets an
+-- unauthenticated caller set base_url to anything, and the dashboard
+-- renders it directly as an outbound link (see loadViewShopUrl() in
+-- portal-next/src/lib/shop.ts). Restricting to https:// at the DB level
+-- stops that from ever becoming a javascript:/data:/http: (or other
+-- scheme) redirect, even if application-side validation is bypassed.
+alter table public.platform_links drop constraint if exists platform_links_base_url_https;
+alter table public.platform_links
+  add constraint platform_links_base_url_https check (base_url like 'https://%');
+
 alter table public.platform_links enable row level security;
 
 -- Strategic X's dashboard (logged-in vendors) needs to read the base_url

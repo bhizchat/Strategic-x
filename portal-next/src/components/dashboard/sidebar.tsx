@@ -198,7 +198,7 @@ export default function Sidebar({ shopName, shopMeta, shopInitial, logoUrl, isSt
                       <a
                         href="https://wa.me/2349134333745"
                         target="_blank"
-                        rel="noopener"
+                        rel="noopener noreferrer"
                         className="mt-2 inline-block rounded-[7px] border border-[#f4b740] px-3 py-1.5 text-[0.74rem] font-bold text-[#f4b740] hover:bg-[#f4b740]/10"
                       >
                         Start Live Chat

@@ -148,7 +148,12 @@ export async function loadViewShopUrl(
     .maybeSingle();
 
   const baseUrl = data?.base_url as string | undefined;
-  if (!baseUrl) return null;
+  // Defense in depth: platform_links.base_url is writable by an
+  // unauthenticated storefront role (see sx-platform-links-schema.sql), so
+  // never trust it as a rendered link target unless it's an https:// URL —
+  // this stops a compromised/malicious row from turning "View Shop" into a
+  // javascript:/data:/http: (or other scheme) redirect.
+  if (!baseUrl || !baseUrl.startsWith('https://')) return null;
 
   return baseUrl.replace(/\/$/, '') + '/shops/shops.html?sxshop=' + shopId;
 }

@@ -25,9 +25,15 @@
 --      own folder path (e.g. "<user-id>/id-card/..."). No public policy,
 --      no cross-user access, no update/delete.
 
-insert into storage.buckets (id, name, public)
-values ('sx-verification-docs', 'sx-verification-docs', false)
-on conflict (id) do update set public = false;
+-- file_size_limit/allowed_mime_types are enforced by Supabase Storage
+-- server-side as defense in depth, matching the <input accept=...>
+-- restriction already used on the upload form.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('sx-verification-docs', 'sx-verification-docs', false, 5242880, array['image/png','image/jpeg','image/webp'])
+on conflict (id) do update set
+  public = false,
+  file_size_limit = 5242880,
+  allowed_mime_types = array['image/png','image/jpeg','image/webp'];
 
 drop policy if exists "Shop owners can upload their own verification docs" on storage.objects;
 create policy "Shop owners can upload their own verification docs"

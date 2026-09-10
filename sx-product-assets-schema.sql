@@ -18,9 +18,18 @@
 --   3. Allows owners to delete their own uploaded images (e.g. when
 --      editing/removing a product later).'
 
-insert into storage.buckets (id, name, public)
-values ('sx-product-images', 'sx-product-images', true)
-on conflict (id) do nothing;
+-- file_size_limit/allowed_mime_types are enforced by Supabase Storage
+-- server-side, so even a client that bypasses the <input accept=...> UI
+-- hint (e.g. a direct API call) can't upload oversized files or
+-- non-image content (such as an SVG with an embedded <script>, which the
+-- browser can execute if the file is opened directly from this public
+-- bucket's URL).
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('sx-product-images', 'sx-product-images', true, 5242880, array['image/png','image/jpeg','image/webp'])
+on conflict (id) do update set
+  public = true,
+  file_size_limit = 5242880,
+  allowed_mime_types = array['image/png','image/jpeg','image/webp'];
 
 drop policy if exists "Shop owners can upload their own product images" on storage.objects;
 create policy "Shop owners can upload their own product images"

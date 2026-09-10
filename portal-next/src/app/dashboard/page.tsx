@@ -73,7 +73,7 @@ export default async function DashboardPage() {
               <a
                 href={viewShopUrl}
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 className="float-right rounded-lg border border-white/[0.08] bg-[#f4b740] px-4 py-2 text-[#0a0a0a]"
               >
                 View Shop
