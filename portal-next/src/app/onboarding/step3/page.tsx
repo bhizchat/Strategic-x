@@ -116,9 +116,13 @@ export default function OnboardingStep3Page() {
     setSubmitting(true);
     try {
       const supabase = createClient();
-      const logoUrl = await uploadOptionalImage(logo.file, 'logo');
-      const bannerUrl = await uploadOptionalImage(banner.file, 'banner');
-      const idCardPath = await uploadRequiredIdCard(idCard.file!);
+      // Logo, banner, and ID card uploads don't depend on each other, so
+      // run them in parallel instead of sequentially awaiting each one.
+      const [logoUrl, bannerUrl, idCardPath] = await Promise.all([
+        uploadOptionalImage(logo.file, 'logo'),
+        uploadOptionalImage(banner.file, 'banner'),
+        uploadRequiredIdCard(idCard.file!),
+      ]);
 
       const trimmedAddress = shopAddress.trim();
       const trimmedTagline = shopTagline.trim();

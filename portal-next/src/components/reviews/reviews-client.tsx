@@ -120,19 +120,27 @@ export default function ReviewsClient({
     }
     if (!replyingId) return;
 
-    setSaving(true);
-    const supabase = createClient();
+    const targetId = replyingId;
     const nowIso = new Date().toISOString();
-    const { error } = await supabase.from('reviews').update({ shop_reply: text, shop_reply_at: nowIso }).eq('id', replyingId);
+    const previousReviews = reviews;
+
+    // Apply the reply locally and close the modal immediately instead of
+    // waiting on the full network round-trip; roll back and reopen with
+    // an error message if the write actually fails.
+    setReviews((prev) => prev.map((r) => (r.id === targetId ? { ...r, shopReply: text, shopReplyAt: nowIso } : r)));
+    closeReplyModal();
+    setSaving(true);
+
+    const supabase = createClient();
+    const { error } = await supabase.from('reviews').update({ shop_reply: text, shop_reply_at: nowIso }).eq('id', targetId);
     setSaving(false);
 
     if (error) {
+      setReviews(previousReviews);
+      setReplyingId(targetId);
+      setReplyText(text);
       setReplyError(error.message || 'Could not save your reply. Please try again.');
-      return;
     }
-
-    setReviews((prev) => prev.map((r) => (r.id === replyingId ? { ...r, shopReply: text, shopReplyAt: nowIso } : r)));
-    closeReplyModal();
   }
 
   return (

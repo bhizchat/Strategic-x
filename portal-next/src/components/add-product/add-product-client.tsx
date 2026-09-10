@@ -110,9 +110,10 @@ export default function AddProductClient({ shopId }: { shopId: string | null }) 
   }
 
   async function uploadProductImages(supabase: ReturnType<typeof createClient>, userId: string, productId: string) {
-    const urls: string[] = [];
-    for (let i = 0; i < imageFiles.length; i++) {
-      const file = imageFiles[i];
+    // Uploads are independent of each other, so run them in parallel
+    // instead of one-at-a-time to cut total upload time roughly to the
+    // slowest single upload rather than the sum of all of them.
+    const uploads = imageFiles.map(async (file, i) => {
       const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
       const path = `${userId}/${productId}/${Date.now()}-${i}-${safeName}`;
       const { error: uploadError } = await supabase.storage
@@ -120,9 +121,9 @@ export default function AddProductClient({ shopId }: { shopId: string | null }) 
         .upload(path, file, { cacheControl: '3600', upsert: false });
       if (uploadError) throw uploadError;
       const { data } = supabase.storage.from('sx-product-images').getPublicUrl(path);
-      urls.push(data.publicUrl);
-    }
-    return urls;
+      return data.publicUrl;
+    });
+    return Promise.all(uploads);
   }
 
   async function saveProduct(status: 'draft' | 'published') {

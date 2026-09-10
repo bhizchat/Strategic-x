@@ -193,7 +193,9 @@ export async function loadShopDetails(
   if (isStaff) {
     const { data: membership } = await supabase
       .from('sx_shop_members')
-      .select('role, sx_shops(*)')
+      .select(
+        'role, sx_shops(id, shop_name, category, market_platform, phone, whatsapp, location, tagline, logo_url, banner_url, invite_code, created_at)'
+      )
       .eq('user_id', user.id)
       .maybeSingle();
 
@@ -202,7 +204,11 @@ export async function loadShopDetails(
     shopRow = ((Array.isArray(shopRelation) ? shopRelation[0] : shopRelation) as Record<string, unknown>) || {};
     role = (membership.role as string) || null;
   } else {
-    const { data } = await supabase.from('sx_shops').select('*').eq('owner_id', user.id).maybeSingle();
+    const { data } = await supabase
+      .from('sx_shops')
+      .select('id, shop_name, category, market_platform, phone, whatsapp, location, tagline, logo_url, banner_url, invite_code, created_at')
+      .eq('owner_id', user.id)
+      .maybeSingle();
     shopRow = data || {};
     role = 'owner';
   }
@@ -268,7 +274,7 @@ export type StaffMember = {
 export async function loadStaffMembers(supabase: SupabaseClient, shopId: string): Promise<StaffMember[]> {
   const { data } = await supabase
     .from('sx_shop_members')
-    .select('*')
+    .select('id, full_name, role, joined_at')
     .eq('shop_id', shopId)
     .order('joined_at', { ascending: true });
 
@@ -363,7 +369,7 @@ export async function loadShopReviews(supabase: SupabaseClient, shopId: string):
   if (productIds.length > 0) {
     const { data: reviewsData, error } = await supabase
       .from('reviews')
-      .select('*')
+      .select('id, shop_key, reviewer_name, rating, comment, shop_reply, shop_reply_at, created_at')
       .in('shop_key', productIds)
       .order('created_at', { ascending: false });
 
