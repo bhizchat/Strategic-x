@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/server';
-import { loadShopDetails, loadShopOverviewStats, loadStaffMembers } from '@/lib/shop';
+import { loadShopDetails, loadShopOverviewStats, loadStaffMembers, STAFF_PAGE_SIZE } from '@/lib/shop';
 import Sidebar from '@/components/dashboard/sidebar';
 import Topbar from '@/components/dashboard/topbar';
 
@@ -26,7 +26,7 @@ const ROLE_LABELS: Record<string, string> = { manager: 'Manager', staff: 'Staff'
 // fetched server-side before render (shop details, product/rating stats,
 // staff list), so the page arrives fully populated with no client-side
 // loading skeleton.
-export default async function MyShopPage() {
+export default async function MyShopPage({ searchParams }: { searchParams: Promise<{ staffPage?: string }> }) {
   const supabase = await createClient();
 
   const {
@@ -50,10 +50,16 @@ export default async function MyShopPage() {
   }
 
   const details = shop!;
-  const [stats, staff] = await Promise.all([
+  const staffPage = Math.max(1, Number((await searchParams).staffPage) || 1);
+  const staffOffset = (staffPage - 1) * STAFF_PAGE_SIZE;
+  const [stats, staffResult] = await Promise.all([
     details.id ? loadShopOverviewStats(supabase, details.id) : Promise.resolve({ productCount: 0, avgRating: null }),
-    details.id ? loadStaffMembers(supabase, details.id) : Promise.resolve([]),
+    details.id
+      ? loadStaffMembers(supabase, details.id, { offset: staffOffset })
+      : Promise.resolve({ staff: [], totalCount: 0 }),
   ]);
+  const { staff, totalCount: staffTotalCount } = staffResult;
+  const staffTotalPages = Math.max(1, Math.ceil(staffTotalCount / STAFF_PAGE_SIZE));
 
   const shopMeta = details.category
     ? details.category + (details.marketPlatform !== 'Not set yet' ? ' · ' + details.marketPlatform : '')
@@ -257,6 +263,34 @@ export default async function MyShopPage() {
                         )}
                       </div>
                     ))}
+                  </div>
+                )}
+
+                {staffTotalPages > 1 && (
+                  <div className="mt-3.5 flex items-center justify-between text-[0.76rem] text-[#6b6f76]">
+                    <span>
+                      Page {staffPage} of {staffTotalPages} ({staffTotalCount} total)
+                    </span>
+                    <div className="flex gap-2">
+                      <a
+                        href={staffPage > 1 ? `/my-shop?staffPage=${staffPage - 1}` : '#'}
+                        aria-disabled={staffPage <= 1}
+                        className={`rounded-lg border border-[#e2e3e6] px-2.5 py-1.25 font-bold ${
+                          staffPage <= 1 ? 'pointer-events-none opacity-40' : 'hover:bg-[#e5e6e8]'
+                        }`}
+                      >
+                        ← Prev
+                      </a>
+                      <a
+                        href={staffPage < staffTotalPages ? `/my-shop?staffPage=${staffPage + 1}` : '#'}
+                        aria-disabled={staffPage >= staffTotalPages}
+                        className={`rounded-lg border border-[#e2e3e6] px-2.5 py-1.25 font-bold ${
+                          staffPage >= staffTotalPages ? 'pointer-events-none opacity-40' : 'hover:bg-[#e5e6e8]'
+                        }`}
+                      >
+                        Next →
+                      </a>
+                    </div>
                   </div>
                 )}
 

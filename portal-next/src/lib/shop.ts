@@ -269,21 +269,40 @@ export type StaffMember = {
   joinedAt: string | null;
 };
 
-// Server-side port of my-shop.html's loadStaffMembers(): every row in
-// sx_shop_members for this shop, ordered by join date.
-export async function loadStaffMembers(supabase: SupabaseClient, shopId: string): Promise<StaffMember[]> {
-  const { data } = await supabase
-    .from('sx_shop_members')
-    .select('id, full_name, role, joined_at')
-    .eq('shop_id', shopId)
-    .order('joined_at', { ascending: true });
+export const STAFF_PAGE_SIZE = 20;
 
-  return ((data as Record<string, unknown>[]) || []).map((member) => ({
+export type StaffMembersPage = {
+  staff: StaffMember[];
+  totalCount: number;
+};
+
+// Server-side port of my-shop.html's loadStaffMembers(): rows in
+// sx_shop_members for this shop, ordered by join date. Offset-paginated
+// (`.range()`) since a single shop's team is a small, page-scoped list —
+// not worth the added complexity of cursor-based pagination.
+export async function loadStaffMembers(
+  supabase: SupabaseClient,
+  shopId: string,
+  opts: { limit?: number; offset?: number } = {}
+): Promise<StaffMembersPage> {
+  const limit = opts.limit ?? STAFF_PAGE_SIZE;
+  const offset = opts.offset ?? 0;
+
+  const { data, count } = await supabase
+    .from('sx_shop_members')
+    .select('id, full_name, role, joined_at', { count: 'exact' })
+    .eq('shop_id', shopId)
+    .order('joined_at', { ascending: true })
+    .range(offset, offset + limit - 1);
+
+  const staff = ((data as Record<string, unknown>[]) || []).map((member) => ({
     id: member.id as string,
     fullName: (member.full_name as string) || 'Unnamed',
     role: (member.role as string) || null,
     joinedAt: (member.joined_at as string) || null,
   }));
+
+  return { staff, totalCount: count ?? staff.length };
 }
 
 export type Product = {
@@ -298,17 +317,15 @@ export type Product = {
   status: string;
 };
 
-// Server-side port of products.html's loadProducts(): every product row
-// (draft + published) owned by this shop, newest first. Requires
-// sx-products-schema.sql to have been run in Supabase.
-export async function loadProducts(supabase: SupabaseClient, shopId: string): Promise<Product[]> {
-  const { data } = await supabase
-    .from('sx_products')
-    .select('id, product_name, category, description, images, selling_price, stock_quantity, condition, status')
-    .eq('shop_id', shopId)
-    .order('created_at', { ascending: false });
+export const PRODUCTS_PAGE_SIZE = 20;
 
-  return ((data as Record<string, unknown>[]) || []).map((p) => ({
+export type ProductsPage = {
+  products: Product[];
+  totalCount: number;
+};
+
+function mapProductRow(p: Record<string, unknown>): Product {
+  return {
     id: p.id as string,
     productName: (p.product_name as string) || '',
     category: (p.category as string) || '',
@@ -318,7 +335,67 @@ export async function loadProducts(supabase: SupabaseClient, shopId: string): Pr
     stockQuantity: (p.stock_quantity as number) || 0,
     condition: (p.condition as string) || '',
     status: (p.status as string) || 'draft',
-  }));
+  };
+}
+
+// Server-side port of products.html's loadProducts(): one page of product
+// rows (draft + published) owned by this shop, newest first, plus the
+// shop's total product count (so the caller can show "Load More"/paging
+// controls without pulling the entire table into memory). Requires
+// sx-products-schema.sql to have been run in Supabase.
+export async function loadProducts(
+  supabase: SupabaseClient,
+  shopId: string,
+  opts: { limit?: number; offset?: number } = {}
+): Promise<ProductsPage> {
+  const limit = opts.limit ?? PRODUCTS_PAGE_SIZE;
+  const offset = opts.offset ?? 0;
+
+  const { data, count } = await supabase
+    .from('sx_products')
+    .select('id, product_name, category, description, images, selling_price, stock_quantity, condition, status', {
+      count: 'exact',
+    })
+    .eq('shop_id', shopId)
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  const products = ((data as Record<string, unknown>[]) || []).map(mapProductRow);
+  return { products, totalCount: count ?? products.length };
+}
+
+export type ProductStockStats = {
+  total: number;
+  inStock: number;
+  lowStock: number;
+  outOfStock: number;
+};
+
+// Stat-card counts for products.html's "Total Products/In Stock/Low
+// Stock/Out of Stock" cards. Deliberately separate from loadProducts()
+// above: these need to reflect the WHOLE shop's inventory even when only
+// one page of products has been loaded into the table, so each is its own
+// count-only (head: true) query rather than being derived from whichever
+// page happens to be in memory.
+export async function loadProductStockStats(supabase: SupabaseClient, shopId: string): Promise<ProductStockStats> {
+  const [totalResult, inStockResult, lowStockResult, outOfStockResult] = await Promise.all([
+    supabase.from('sx_products').select('id', { count: 'exact', head: true }).eq('shop_id', shopId),
+    supabase.from('sx_products').select('id', { count: 'exact', head: true }).eq('shop_id', shopId).gt('stock_quantity', 5),
+    supabase
+      .from('sx_products')
+      .select('id', { count: 'exact', head: true })
+      .eq('shop_id', shopId)
+      .gt('stock_quantity', 0)
+      .lte('stock_quantity', 5),
+    supabase.from('sx_products').select('id', { count: 'exact', head: true }).eq('shop_id', shopId).lte('stock_quantity', 0),
+  ]);
+
+  return {
+    total: totalResult.count ?? 0,
+    inStock: inStockResult.count ?? 0,
+    lowStock: lowStockResult.count ?? 0,
+    outOfStock: outOfStockResult.count ?? 0,
+  };
 }
 
 export type ReviewProduct = {
@@ -341,15 +418,28 @@ export type Review = {
 export type ReviewsData = {
   products: ReviewProduct[];
   reviews: Review[];
+  totalCount: number;
   loadError: string | null;
 };
+
+export const REVIEWS_PAGE_SIZE = 20;
 
 // Server-side port of reviews.html's loadReviews(): reviews are stored in
 // a shared "reviews" table keyed by shop_key = the REVIEWED PRODUCT's own
 // sx_products.id (not the shop's id), so every review for a shop is found
 // by first fetching that shop's product ids, then matching reviews whose
-// shop_key is in that list.
-export async function loadShopReviews(supabase: SupabaseClient, shopId: string): Promise<ReviewsData> {
+// shop_key is in that list. The review rows themselves are offset-
+// paginated (`.range()`); use loadShopReviewStats() alongside this for
+// aggregate figures (avg rating, rating breakdown, top rated products)
+// that must reflect ALL reviews, not just the current page.
+export async function loadShopReviews(
+  supabase: SupabaseClient,
+  shopId: string,
+  opts: { limit?: number; offset?: number } = {}
+): Promise<ReviewsData> {
+  const limit = opts.limit ?? REVIEWS_PAGE_SIZE;
+  const offset = opts.offset ?? 0;
+
   const { data: productsData } = await supabase
     .from('sx_products')
     .select('id, product_name, images')
@@ -364,14 +454,16 @@ export async function loadShopReviews(supabase: SupabaseClient, shopId: string):
 
   const productIds = products.map((p) => p.id);
   let reviews: Review[] = [];
+  let totalCount = 0;
   let loadError: string | null = null;
 
   if (productIds.length > 0) {
-    const { data: reviewsData, error } = await supabase
+    const { data: reviewsData, count, error } = await supabase
       .from('reviews')
-      .select('id, shop_key, reviewer_name, rating, comment, shop_reply, shop_reply_at, created_at')
+      .select('id, shop_key, reviewer_name, rating, comment, shop_reply, shop_reply_at, created_at', { count: 'exact' })
       .in('shop_key', productIds)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
 
     if (error) {
       // Most likely cause: the "reviews" table's RLS only grants SELECT to
@@ -380,6 +472,7 @@ export async function loadShopReviews(supabase: SupabaseClient, shopId: string):
       // sx-reviews-read-policy.sql for the fix.
       loadError = error.message;
     } else {
+      totalCount = count ?? 0;
       reviews = ((reviewsData as Record<string, unknown>[]) || []).map((r) => ({
         id: r.id as string,
         shopKey: (r.shop_key as string) || '',
@@ -393,6 +486,33 @@ export async function loadShopReviews(supabase: SupabaseClient, shopId: string):
     }
   }
 
-  return { products, reviews, loadError };
+  return { products, reviews, totalCount, loadError };
+}
+
+export type ReviewStatsEntry = {
+  shopKey: string;
+  rating: number;
+  hasReply: boolean;
+};
+
+// Lightweight companion to loadShopReviews(): every review's rating/
+// shop_key/reply-status (NOT the full row — no reviewer name/comment/
+// timestamps) for this shop's products, unpaginated. reviews.html's stats
+// bar (total/avg rating/rating breakdown) and "Top Rated Products" panel
+// are aggregates across the WHOLE review set, so they must be computed
+// from every review, not just whichever page of full review objects is
+// currently loaded in the table.
+export async function loadShopReviewStats(supabase: SupabaseClient, shopId: string): Promise<ReviewStatsEntry[]> {
+  const { data: productsData } = await supabase.from('sx_products').select('id').eq('shop_id', shopId);
+  const productIds = ((productsData as { id: string }[]) || []).map((p) => p.id);
+  if (productIds.length === 0) return [];
+
+  const { data } = await supabase.from('reviews').select('shop_key, rating, shop_reply').in('shop_key', productIds);
+
+  return ((data as Record<string, unknown>[]) || []).map((r) => ({
+    shopKey: (r.shop_key as string) || '',
+    rating: (r.rating as number) || 0,
+    hasReply: !!(r.shop_reply as string)?.trim(),
+  }));
 }
 

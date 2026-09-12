@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { resolveShopContext, loadProducts } from '@/lib/shop';
+import { resolveShopContext, loadProducts, loadProductStockStats, PRODUCTS_PAGE_SIZE } from '@/lib/shop';
 import Sidebar from '@/components/dashboard/sidebar';
 import Topbar from '@/components/dashboard/topbar';
 import ProductsClient from '@/components/products/products-client';
@@ -33,7 +33,9 @@ export default async function ProductsPage() {
   }
 
   const shop = ctx!;
-  const products = shop.shopId ? await loadProducts(supabase, shop.shopId) : [];
+  const [productsPage, stockStats] = shop.shopId
+    ? await Promise.all([loadProducts(supabase, shop.shopId), loadProductStockStats(supabase, shop.shopId)])
+    : [{ products: [], totalCount: 0 }, { total: 0, inStock: 0, lowStock: 0, outOfStock: 0 }];
 
   const shopMeta = shop.category
     ? shop.category + (shop.marketPlatform !== 'Not set yet' ? ' · ' + shop.marketPlatform : '')
@@ -58,7 +60,13 @@ export default async function ProductsPage() {
           <h1 className="text-[1.5rem] font-extrabold">My Products</h1>
           <p className="mb-5.5 mt-1 text-[0.86rem] text-[#6b6f76]">Manage your products, stock and inventory.</p>
 
-          <ProductsClient products={products} />
+          <ProductsClient
+            shopId={shop.shopId}
+            initialProducts={productsPage.products}
+            totalCount={productsPage.totalCount}
+            stockStats={stockStats}
+            pageSize={PRODUCTS_PAGE_SIZE}
+          />
         </div>
 
         <div className="flex items-center justify-between border-t border-[#e2e3e6] px-8 py-4.5 text-[0.74rem] text-[#6b6f76] max-md:mb-16 max-md:flex-col max-md:items-start max-md:gap-2 max-md:px-4.5">

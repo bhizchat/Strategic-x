@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
-import type { Product } from '@/lib/shop';
+import type { Product, ProductStockStats } from '@/lib/shop';
 import { createClient } from '@/lib/supabase/client';
 
 // Same category list add-product.html/add-product-client.tsx uses, so the
@@ -31,12 +31,29 @@ type EditForm = {
 };
 
 // Client Component: ported from products.html's stats/search/filter/table
-// script logic. Products are fetched server-side (page.tsx) and passed in
-// as a prop; all filtering below happens client-side against that same
-// array, matching the static site's getFilteredProducts()/
-// renderProductsTable() behavior exactly.
-export default function ProductsClient({ products: initialProducts }: { products: Product[] }) {
+// script logic. The first page of products (plus the shop's full stock
+// stats and total product count) is fetched server-side (page.tsx) and
+// passed in as props; "Load More" fetches subsequent pages directly from
+// Supabase (same RLS-scoped read the server already did) and appends them.
+// Search/category/status/stock filtering below applies to whatever
+// products have been loaded so far, matching the static site's
+// getFilteredProducts()/renderProductsTable() behavior for that subset.
+export default function ProductsClient({
+  shopId,
+  initialProducts,
+  totalCount,
+  stockStats,
+  pageSize,
+}: {
+  shopId: string | null;
+  initialProducts: Product[];
+  totalCount: number;
+  stockStats: ProductStockStats;
+  pageSize: number;
+}) {
   const [products, setProducts] = useState(initialProducts);
+  const [loadedCount, setLoadedCount] = useState(initialProducts.length);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [status, setStatus] = useState('');
@@ -47,10 +64,40 @@ export default function ProductsClient({ products: initialProducts }: { products
   const [saving, setSaving] = useState(false);
   const [editError, setEditError] = useState('');
 
-  const total = products.length;
-  const inStock = products.filter((p) => p.stockQuantity > 5).length;
-  const lowStock = products.filter((p) => p.stockQuantity > 0 && p.stockQuantity <= 5).length;
-  const outOfStock = products.filter((p) => p.stockQuantity <= 0).length;
+  const total = stockStats.total;
+  const inStock = stockStats.inStock;
+  const lowStock = stockStats.lowStock;
+  const outOfStock = stockStats.outOfStock;
+  const hasMore = loadedCount < totalCount;
+
+  async function loadMore() {
+    if (!shopId || loadingMore || !hasMore) return;
+    setLoadingMore(true);
+
+    const supabase = createClient();
+    const { data } = await supabase
+      .from('sx_products')
+      .select('id, product_name, category, description, images, selling_price, stock_quantity, condition, status')
+      .eq('shop_id', shopId)
+      .order('created_at', { ascending: false })
+      .range(loadedCount, loadedCount + pageSize - 1);
+
+    const nextPage = ((data as Record<string, unknown>[]) || []).map((p) => ({
+      id: p.id as string,
+      productName: (p.product_name as string) || '',
+      category: (p.category as string) || '',
+      description: (p.description as string) || '',
+      images: (p.images as string[]) || [],
+      sellingPrice: (p.selling_price as number) || 0,
+      stockQuantity: (p.stock_quantity as number) || 0,
+      condition: (p.condition as string) || '',
+      status: (p.status as string) || 'draft',
+    }));
+
+    setProducts((prev) => [...prev, ...nextPage]);
+    setLoadedCount((prev) => prev + nextPage.length);
+    setLoadingMore(false);
+  }
 
   const categories = useMemo(() => {
     const set = new Set<string>();
@@ -292,6 +339,19 @@ export default function ProductsClient({ products: initialProducts }: { products
           </div>
         )}
       </div>
+
+      {hasMore && (
+        <div className="mt-4 flex justify-center">
+          <button
+            type="button"
+            onClick={loadMore}
+            disabled={loadingMore}
+            className="rounded-[10px] border border-[#e2e3e6] bg-white px-5 py-2.5 text-[0.82rem] font-extrabold text-[#0a0a0a] hover:bg-[#e5e6e8] disabled:opacity-50"
+          >
+            {loadingMore ? 'Loading…' : `Load More (${loadedCount} of ${totalCount})`}
+          </button>
+        </div>
+      )}
 
       {editingProduct && editForm && (
         <div

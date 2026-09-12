@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { resolveShopContext, loadShopReviews } from '@/lib/shop';
+import { resolveShopContext, loadShopReviews, loadShopReviewStats, REVIEWS_PAGE_SIZE } from '@/lib/shop';
 import Sidebar from '@/components/dashboard/sidebar';
 import Topbar from '@/components/dashboard/topbar';
 import ReviewsClient from '@/components/reviews/reviews-client';
@@ -34,9 +34,9 @@ export default async function ReviewsPage() {
   }
 
   const shop = ctx!;
-  const reviewsData = shop.shopId
-    ? await loadShopReviews(supabase, shop.shopId)
-    : { products: [], reviews: [], loadError: null };
+  const [reviewsData, statsEntries] = shop.shopId
+    ? await Promise.all([loadShopReviews(supabase, shop.shopId), loadShopReviewStats(supabase, shop.shopId)])
+    : [{ products: [], reviews: [], totalCount: 0, loadError: null }, []];
 
   const shopMeta = shop.category
     ? shop.category + (shop.marketPlatform !== 'Not set yet' ? ' · ' + shop.marketPlatform : '')
@@ -52,7 +52,7 @@ export default async function ReviewsPage() {
         logoUrl={shop.logoUrl}
         isStaff={shop.isStaff}
         role={shop.role}
-        reviewsCount={reviewsData.reviews.length}
+        reviewsCount={statsEntries.length}
       />
 
       <div className="flex min-w-0 flex-1 flex-col bg-[#f5f5f6] text-[#111113]">
@@ -62,7 +62,15 @@ export default async function ReviewsPage() {
           <h1 className="text-[1.5rem] font-extrabold">Reviews</h1>
           <p className="mb-5.5 mt-1 text-[0.86rem] text-[#6b6f76]">See what customers are saying about your products.</p>
 
-          <ReviewsClient initialReviews={reviewsData.reviews} products={reviewsData.products} loadError={reviewsData.loadError} />
+          <ReviewsClient
+            shopId={shop.shopId}
+            initialReviews={reviewsData.reviews}
+            totalCount={reviewsData.totalCount}
+            pageSize={REVIEWS_PAGE_SIZE}
+            statsEntries={statsEntries}
+            products={reviewsData.products}
+            loadError={reviewsData.loadError}
+          />
         </div>
 
         <div className="flex items-center justify-between border-t border-[#e2e3e6] px-8 py-4.5 text-[0.74rem] text-[#6b6f76] max-md:mb-16 max-md:flex-col max-md:items-start max-md:gap-2 max-md:px-4.5">

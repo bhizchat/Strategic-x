@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import type { Review, ReviewProduct } from '@/lib/shop';
+import type { Review, ReviewProduct, ReviewStatsEntry } from '@/lib/shop';
 
 function starString(rating: number) {
   const full = Math.max(0, Math.min(5, Math.round(rating)));
@@ -26,20 +26,35 @@ function formatDate(dateString: string | null) {
 type Tab = 'all' | 'pending' | 'responded';
 
 // Client Component: ported from reviews.html's tabs/stats/search/filter/
-// reply-modal script logic. Reviews + products are fetched server-side
-// (page.tsx) and passed in as props; filtering and the reply modal (which
-// writes directly to the shared "reviews" table, same as the static site)
-// happen client-side.
+// reply-modal script logic. A first page of full review rows (plus
+// products, and every review's rating/reply-status via statsEntries) is
+// fetched server-side (page.tsx) and passed in as props; "Load More"
+// fetches subsequent pages of full review rows directly from Supabase and
+// appends them, while the reply modal writes directly to the shared
+// "reviews" table, same as the static site. The stats bar/rating
+// breakdown/Top Rated panel are computed from statsEntries (ALL reviews)
+// so they stay accurate regardless of how many full review rows have been
+// loaded into the table below.
 export default function ReviewsClient({
+  shopId,
   initialReviews,
+  totalCount,
+  pageSize,
+  statsEntries,
   products,
   loadError,
 }: {
+  shopId: string | null;
   initialReviews: Review[];
+  totalCount: number;
+  pageSize: number;
+  statsEntries: ReviewStatsEntry[];
   products: ReviewProduct[];
   loadError: string | null;
 }) {
   const [reviews, setReviews] = useState(initialReviews);
+  const [loadedCount, setLoadedCount] = useState(initialReviews.length);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [tab, setTab] = useState<Tab>('all');
   const [search, setSearch] = useState('');
   const [productFilter, setProductFilter] = useState('');
@@ -49,26 +64,57 @@ export default function ReviewsClient({
   const [replyError, setReplyError] = useState('');
   const [saving, setSaving] = useState(false);
 
+  const hasMore = loadedCount < totalCount;
+
+  async function loadMore() {
+    if (!shopId || loadingMore || !hasMore) return;
+    setLoadingMore(true);
+
+    const supabase = createClient();
+    const productIds = products.map((p) => p.id);
+    const { data } = await supabase
+      .from('reviews')
+      .select('id, shop_key, reviewer_name, rating, comment, shop_reply, shop_reply_at, created_at')
+      .in('shop_key', productIds)
+      .order('created_at', { ascending: false })
+      .range(loadedCount, loadedCount + pageSize - 1);
+
+    const nextPage = ((data as Record<string, unknown>[]) || []).map((r) => ({
+      id: r.id as string,
+      shopKey: (r.shop_key as string) || '',
+      reviewerName: (r.reviewer_name as string) || '',
+      rating: (r.rating as number) || 0,
+      comment: (r.comment as string) || '',
+      shopReply: (r.shop_reply as string) || '',
+      shopReplyAt: (r.shop_reply_at as string) || null,
+      createdAt: (r.created_at as string) || null,
+    }));
+
+    setReviews((prev) => [...prev, ...nextPage]);
+    setLoadedCount((prev) => prev + nextPage.length);
+    setLoadingMore(false);
+  }
+
   const productById = useMemo(() => {
     const map = new Map<string, ReviewProduct>();
     products.forEach((p) => map.set(p.id, p));
     return map;
   }, [products]);
 
-  const total = reviews.length;
-  const avg = total ? reviews.reduce((sum, r) => sum + r.rating, 0) / total : 0;
-  const fiveStar = reviews.filter((r) => r.rating === 5).length;
+  const total = statsEntries.length;
+  const avg = total ? statsEntries.reduce((sum, r) => sum + r.rating, 0) / total : 0;
+  const fiveStar = statsEntries.filter((r) => r.rating === 5).length;
   const fiveStarPct = total ? Math.round((fiveStar / total) * 100) : 0;
 
   const breakdown = [5, 4, 3, 2, 1].map((star) => {
-    const count = reviews.filter((r) => r.rating === star).length;
+    const count = statsEntries.filter((r) => r.rating === star).length;
     const pct = total ? Math.round((count / total) * 100) : 0;
     return { star, count, pct };
   });
 
   const topRated = useMemo(() => {
     const byProduct: Record<string, number[]> = {};
-    reviews.forEach((r) => {
+    statsEntries.forEach((r) => {
       if (!r.shopKey) return;
       (byProduct[r.shopKey] ||= []).push(r.rating);
     });
@@ -82,7 +128,7 @@ export default function ReviewsClient({
       .slice(0, 3)
       .map((entry) => ({ ...entry, product: productById.get(entry.productId) }))
       .filter((entry) => entry.product);
-  }, [reviews, productById]);
+  }, [statsEntries, productById]);
 
   const filtered = reviews.filter((review) => {
     if (productFilter && review.shopKey !== productFilter) return false;
@@ -334,6 +380,19 @@ export default function ReviewsClient({
                   })}
                 </tbody>
               </table>
+            </div>
+          )}
+
+          {hasMore && (
+            <div className="flex justify-center border-t border-[#e2e3e6] p-4">
+              <button
+                type="button"
+                onClick={loadMore}
+                disabled={loadingMore}
+                className="rounded-[10px] border border-[#e2e3e6] bg-white px-5 py-2.5 text-[0.82rem] font-extrabold text-[#0a0a0a] hover:bg-[#e5e6e8] disabled:opacity-50"
+              >
+                {loadingMore ? 'Loading…' : `Load More (${loadedCount} of ${totalCount})`}
+              </button>
             </div>
           )}
         </div>
