@@ -3,17 +3,49 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import type { Product } from '@/lib/shop';
+import { createClient } from '@/lib/supabase/client';
+
+// Same category list add-product.html/add-product-client.tsx uses, so the
+// edit modal's Category dropdown matches what's offered when a product is
+// first created.
+const CATEGORY_OPTIONS = [
+  { value: 'fashion', label: 'Clothing & Fashion' },
+  { value: 'electronics', label: 'Electronics & Gadgets' },
+  { value: 'fabrics', label: 'Fabrics & Textiles' },
+  { value: 'foodstuff', label: 'Foodstuffs & Oils' },
+  { value: 'accessories', label: 'Accessories' },
+  { value: 'other', label: 'Other' },
+];
+
+const editInputClass =
+  'w-full rounded-lg border border-[#e2e3e6] bg-[#f5f5f6] px-3 py-2.25 text-[0.86rem] max-md:text-[16px] text-[#111113] outline-none focus:border-[#8a8d91]';
+
+type EditForm = {
+  productName: string;
+  category: string;
+  description: string;
+  sellingPrice: string;
+  stockQuantity: string;
+  condition: string;
+  status: string;
+};
 
 // Client Component: ported from products.html's stats/search/filter/table
 // script logic. Products are fetched server-side (page.tsx) and passed in
 // as a prop; all filtering below happens client-side against that same
 // array, matching the static site's getFilteredProducts()/
 // renderProductsTable() behavior exactly.
-export default function ProductsClient({ products }: { products: Product[] }) {
+export default function ProductsClient({ products: initialProducts }: { products: Product[] }) {
+  const [products, setProducts] = useState(initialProducts);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [status, setStatus] = useState('');
   const [stock, setStock] = useState('');
+
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<EditForm | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [editError, setEditError] = useState('');
 
   const total = products.length;
   const inStock = products.filter((p) => p.stockQuantity > 5).length;
@@ -44,6 +76,81 @@ export default function ProductsClient({ products }: { products: Product[] }) {
       return true;
     });
   }, [products, search, category, status, stock]);
+
+  const editingProduct = editingId ? products.find((p) => p.id === editingId) || null : null;
+
+  function openEditModal(p: Product) {
+    setEditingId(p.id);
+    setEditForm({
+      productName: p.productName,
+      category: p.category,
+      description: p.description,
+      sellingPrice: String(p.sellingPrice),
+      stockQuantity: String(p.stockQuantity),
+      condition: p.condition || 'new',
+      status: p.status,
+    });
+    setEditError('');
+  }
+
+  function closeEditModal() {
+    setEditingId(null);
+    setEditForm(null);
+    setEditError('');
+  }
+
+  async function saveEdit() {
+    if (!editingId || !editForm) return;
+
+    if (!editForm.productName.trim()) {
+      setEditError('Product name is required.');
+      return;
+    }
+
+    const targetId = editingId;
+    const previousProducts = products;
+    const updates = {
+      product_name: editForm.productName.trim(),
+      category: editForm.category,
+      description: editForm.description,
+      selling_price: Number(editForm.sellingPrice) || 0,
+      stock_quantity: Number(editForm.stockQuantity) || 0,
+      condition: editForm.condition,
+      status: editForm.status,
+    };
+
+    // Apply the edit locally and close the modal immediately instead of
+    // waiting on the network round-trip; roll back and reopen with an
+    // error message if the write actually fails.
+    setProducts((prev) =>
+      prev.map((p) =>
+        p.id === targetId
+          ? {
+              ...p,
+              productName: updates.product_name,
+              category: updates.category,
+              description: updates.description,
+              sellingPrice: updates.selling_price,
+              stockQuantity: updates.stock_quantity,
+              condition: updates.condition,
+              status: updates.status,
+            }
+          : p
+      )
+    );
+    closeEditModal();
+    setSaving(true);
+
+    const supabase = createClient();
+    const { error } = await supabase.from('sx_products').update(updates).eq('id', targetId);
+    setSaving(false);
+
+    if (error) {
+      setProducts(previousProducts);
+      openEditModal(previousProducts.find((p) => p.id === targetId)!);
+      setEditError(error.message || 'Could not save changes. Please try again.');
+    }
+  }
 
   return (
     <>
@@ -172,6 +279,7 @@ export default function ProductsClient({ products }: { products: Product[] }) {
                       <button
                         type="button"
                         title="Edit product"
+                        onClick={() => openEditModal(p)}
                         className="flex h-7.5 w-7.5 items-center justify-center rounded-lg border border-[#e2e3e6] bg-[#e5e6e8] text-[0.86rem] text-[#6b6f76] hover:border-[#8a8d91] hover:bg-white hover:text-[#111113]"
                       >
                         ✎
@@ -184,6 +292,122 @@ export default function ProductsClient({ products }: { products: Product[] }) {
           </div>
         )}
       </div>
+
+      {editingProduct && editForm && (
+        <div
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black/55 p-5"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeEditModal();
+          }}
+        >
+          <div className="max-h-[88vh] w-full max-w-[480px] overflow-y-auto rounded-2xl border border-[#e2e3e6] bg-white p-6">
+            <div className="mb-4 border-b border-[#e2e3e6] pb-3.5 text-[1rem] font-bold">Edit Product</div>
+            {editError && <div className="mb-3 text-[0.78rem] text-[#e08a8a]">{editError}</div>}
+
+            <div className="mb-3.5">
+              <label className="mb-1.5 block text-[0.78rem] font-semibold text-[#6b6f76]">Product Name</label>
+              <input
+                type="text"
+                value={editForm.productName}
+                onChange={(e) => setEditForm({ ...editForm, productName: e.target.value })}
+                className={editInputClass}
+              />
+            </div>
+
+            <div className="mb-3.5">
+              <label className="mb-1.5 block text-[0.78rem] font-semibold text-[#6b6f76]">Category</label>
+              <select
+                value={editForm.category}
+                onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
+                className={editInputClass}
+              >
+                <option value="">Select a category</option>
+                {CATEGORY_OPTIONS.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mb-3.5">
+              <label className="mb-1.5 block text-[0.78rem] font-semibold text-[#6b6f76]">Description</label>
+              <textarea
+                value={editForm.description}
+                onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                className={`min-h-20 resize-y ${editInputClass}`}
+              />
+            </div>
+
+            <div className="mb-3.5 grid grid-cols-2 gap-3">
+              <div>
+                <label className="mb-1.5 block text-[0.78rem] font-semibold text-[#6b6f76]">Selling Price</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={editForm.sellingPrice}
+                  onChange={(e) => setEditForm({ ...editForm, sellingPrice: e.target.value })}
+                  className={editInputClass}
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-[0.78rem] font-semibold text-[#6b6f76]">Stock Quantity</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={editForm.stockQuantity}
+                  onChange={(e) => setEditForm({ ...editForm, stockQuantity: e.target.value })}
+                  className={editInputClass}
+                />
+              </div>
+            </div>
+
+            <div className="mb-4 grid grid-cols-2 gap-3">
+              <div>
+                <label className="mb-1.5 block text-[0.78rem] font-semibold text-[#6b6f76]">Condition</label>
+                <select
+                  value={editForm.condition}
+                  onChange={(e) => setEditForm({ ...editForm, condition: e.target.value })}
+                  className={editInputClass}
+                >
+                  <option value="new">New</option>
+                  <option value="used">Used</option>
+                  <option value="refurbished">Refurbished</option>
+                </select>
+              </div>
+              <div>
+                <label className="mb-1.5 block text-[0.78rem] font-semibold text-[#6b6f76]">Status</label>
+                <select
+                  value={editForm.status}
+                  onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
+                  className={editInputClass}
+                >
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-1.5 flex justify-end gap-2.5">
+              <button
+                type="button"
+                onClick={closeEditModal}
+                className="rounded-[10px] border border-[#e2e3e6] bg-transparent px-4 py-2.5 text-[0.82rem] font-bold text-[#6b6f76] hover:bg-[#e5e6e8] hover:text-[#111113]"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={saveEdit}
+                disabled={saving}
+                className="rounded-[10px] border-none bg-white px-4 py-2.5 text-[0.82rem] font-extrabold text-[#0a0a0a] shadow-[0_0_0_1px_#e2e3e6] hover:bg-[#e5e6e8] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {saving ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
